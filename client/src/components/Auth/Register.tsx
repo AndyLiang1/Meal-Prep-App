@@ -4,23 +4,46 @@ import * as Yup from 'yup';
 import { gql, useMutation } from '@apollo/client';
 import { useState } from 'react';
 
-export interface ILoginProps {}
+export interface IRegisterProps {}
 
-const REGISTER_USER = gql`
-    mutation($input: RegisterInput!) {
-        register(input: $input) {
-            username
-        }
-    }
-`;
-interface UserInfo {
+interface RegisterInfo {
     username: string;
     email: string;
     password: string;
 }
 
-export function Login(props: ILoginProps) {
-    const initialValues: UserInfo = {
+const REGISTER_USER = gql`
+    mutation($input: RegisterInput!) {
+        register(input: $input) {
+            ... on RegisterSuccess {
+                user {
+                    id
+                    username
+                    email
+                    password
+                    token
+                    days {
+                        meals {
+                            foods {
+                                calories
+                            }
+                        }
+                    }
+                }
+            }
+
+            ... on RegisterError {
+                message
+            }
+            # username
+        }
+    }
+`;
+
+
+
+export function Register(props: IRegisterProps) {
+    const initialValues: RegisterInfo = {
         username: '',
         email: '',
         password: ''
@@ -31,23 +54,13 @@ export function Login(props: ILoginProps) {
         email: Yup.string().email('Invalid email').required(),
         password: Yup.string().max(50).required()
     });
-    const [registerErrorMsg, setRegisterErrorMsg] = useState<any>();
 
+    const [registerErrorMsg, setRegisterErrorMsg] = useState<string>();
     const [registerUser] = useMutation(REGISTER_USER);
-    const onSubmit = async (userInfo: any) => {
+    const onSubmit = async (userInfo: RegisterInfo) => {
         const { username, email, password } = userInfo;
-        // registerUser({
-        //     variables: {
-        //         input: {
-        //             username,
-        //             email,
-        //             password
-        //         }
-        //     }
-        // }).then((user) => console.log('ayaya')).catch((err) => {console.log(err)})
         try {
-            console.log('heree')
-            await registerUser({
+            const {data} = await registerUser({
                 variables: {
                     input: {
                         username,
@@ -56,11 +69,14 @@ export function Login(props: ILoginProps) {
                     }
                 }
             });
-        } catch (e: any) {
-            setRegisterErrorMsg(e.message);
-            for (const property in e) {
-                console.log(property)
+            if (data.register.message) {
+                setRegisterErrorMsg(data.register.message);
+
             }
+
+        } catch (error: any) {
+            console.log('Error with registering: ')
+            console.log(error);
         }
     };
 
@@ -90,7 +106,7 @@ export function Login(props: ILoginProps) {
                             <Field className="sign_up_field" name="password" type="password" />
                             {errors.password && touched.password ? <div className="sign_up_field_errors">{errors.password}</div> : null}
                         </div>
-                        <div className="sign_up_error_msg">hey{registerErrorMsg}</div>
+                        <div className="sign_up_error_msg">{registerErrorMsg}</div>
 
                         <button type="submit">Submit</button>
                     </Form>

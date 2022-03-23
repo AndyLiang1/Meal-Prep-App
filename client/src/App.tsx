@@ -1,6 +1,7 @@
 import React from 'react';
 import './App.css';
-import { Login } from './components/Login/Login';
+import { Register } from './components/Auth/Register';
+import { Login } from './components/Auth/Login'
 import { ApolloClient, InMemoryCache, ApolloProvider } from '@apollo/client';
 
 function App() {
@@ -12,6 +13,7 @@ function App() {
         <ApolloProvider client = {client}>
             <div className="App">
                 HelloWorld
+                <Register></Register>
                 <Login></Login>
             </div>
         </ApolloProvider>

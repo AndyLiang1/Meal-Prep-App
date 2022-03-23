@@ -29,6 +29,7 @@ const typeDefs = gql`
     type Query {
         # health check
         boop: String!
+        clearDb: String
     }
 
     input RegisterInput {
@@ -47,8 +48,19 @@ const typeDefs = gql`
 
     union RegisterResult = RegisterSuccess | RegisterError
 
+    type LoginSuccess {
+        user: User!
+    }
+
+    type LoginError {
+        message: String!
+    }
+
+    union LoginResult = LoginSuccess | LoginError
+
     type Mutation {
-        register(input: RegisterInput!): User!
+        register(input: RegisterInput!): RegisterResult!
+        login(email: String!, password: String!): LoginResult!
     }
 `;
 

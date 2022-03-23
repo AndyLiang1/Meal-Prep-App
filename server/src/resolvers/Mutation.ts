@@ -5,20 +5,20 @@ import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 import { config } from '../config/config';
 
-import {UserInputError} from 'apollo-server'
+import { UserInputError } from 'apollo-server';
 
 const Mutation = {
-    async register(parent: any, { input }: any, context: any, info: any) {
+    async register(parent: any, {input}: any, context: any, info: any) {        
         const { username, email, password } = input;
         const userWithSameEmail = await User.findOne({ email: email });
         if (userWithSameEmail) {
-            // return { message: 'User already exists in our database' }
-            throw new UserInputError('Username is taken', {
-                error: {
-                    message: 'This username is taken'
-                }
-            })
-            ;
+            return { message: 'User already exists in our database' };
+            // throw new UserInputError('Username is taken', {
+            //     error: {
+            //         message: 'This username is taken'
+            //     }
+            // })
+            // ;
         }
         const hashedPass = await bcrypt.hash(password, 10);
         const days: any = [];
@@ -29,7 +29,7 @@ const Mutation = {
             password: hashedPass,
             days
         });
-        console.log(`User is ${user}`)
+
         const returnedUser = await user.save().catch((error) => Logging.error(error));
         let token = '';
         let id = '';
@@ -47,18 +47,51 @@ const Mutation = {
                     id: returnedUser._id,
                     username,
                     email,
-                    password, 
+                    password,
                     token,
                     days
                 }
             };
-            
-            console.log('returned user');
-            console.log(returnedUser);
-            console.log('ret is')
-            console.log(ret)
-            return ret.user
-            // return ret;
+            // return ret.user
+            return ret;
+        }
+    },
+
+    async login(parent: any, args: any, context: any, info: any) {
+        const { email, password } = args;
+
+        const userWithSameEmail = await User.findOne({ email: email });
+        if (!userWithSameEmail) {
+            return { message: 'No user has registered with that email' };
+            // throw new UserInputError('Username is taken', {
+            //     error: {
+            //         message: 'This username is taken'
+            //     }
+            // })
+            // ;
+        }
+        try {
+            const match = await bcrypt.compare(password, userWithSameEmail.password);
+            if (!match) {
+                return { message: 'Wrong username and password combination' };
+            } else {
+                const accessToken = jwt.sign({ username: userWithSameEmail.username, id: userWithSameEmail.id }, config.server.JWT_SECRET);
+                const days: any = [];
+
+                const ret = {
+                    user: {
+                        id: userWithSameEmail._id,
+                        username: userWithSameEmail.username,
+                        email,
+                        password,
+                        token: accessToken,
+                        days
+                    }
+                };
+                return ret;
+            }
+        } catch (error) {
+            console.log(error);
         }
     }
 };

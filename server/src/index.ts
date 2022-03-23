@@ -7,7 +7,7 @@ import {ApolloServer, gql} from 'apollo-server'
 import typeDefs from './schema'
 import Query from './resolvers/Query'
 import Mutation from './resolvers/Mutation'
-import RegisterResult from './resolvers/RegisterResult'
+import {RegisterResult, LoginResult } from './resolvers/Auth'
 import {makeExecutableSchema} from '@graphql-tools/schema'
 
 /** First try to connect to mongo */
@@ -37,7 +37,7 @@ const startServer = ():void => {
     const resolvers = {
         Query,
         Mutation,
-        RegisterResult
+        RegisterResult, LoginResult
     };
 
     if (config.server.env === 'dev') {
@@ -47,7 +47,7 @@ const startServer = ():void => {
         })
         const loggingMiddleware = async(resolve: any, root: any, args: any, context: any, info: any) => {
             const result = await resolve(root, args, context, info)
-            Logging.info(`Successfully hit endpoint. Request type: ${info.schema._queryType ? 'Query' : 'Mutation'} | Request name: ${info.fieldName} `);
+            Logging.info(`Successfully hit endpoint. Request type: ${info.path.typename} | Request name: ${info.path.key} `);
             return result
         }
         const schemaWithMiddleware = applyMiddleware(schema, loggingMiddleware)
