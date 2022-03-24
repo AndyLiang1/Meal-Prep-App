@@ -3,7 +3,7 @@ import { UserInfoInterface } from '../helpers/IUserInfo';
 export const defaultUserInfo: UserInfoInterface = {
     username: '',
     id: '',
-    token: '',
+    accessToken: '',
     loggedIn: false
 };
 const reducer = (state: UserInfoInterface | null = defaultUserInfo, action: any) => {

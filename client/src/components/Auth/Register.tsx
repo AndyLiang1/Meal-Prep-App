@@ -21,7 +21,7 @@ const REGISTER_USER = gql`
                     username
                     email
                     password
-                    token
+                    accessToken
                     days {
                         meals {
                             foods {
@@ -39,8 +39,6 @@ const REGISTER_USER = gql`
         }
     }
 `;
-
-
 
 export function Register(props: IRegisterProps) {
     const initialValues: RegisterInfo = {
@@ -60,7 +58,7 @@ export function Register(props: IRegisterProps) {
     const onSubmit = async (userInfo: RegisterInfo) => {
         const { username, email, password } = userInfo;
         try {
-            const {data} = await registerUser({
+            const { data } = await registerUser({
                 variables: {
                     input: {
                         username,
@@ -71,11 +69,9 @@ export function Register(props: IRegisterProps) {
             });
             if (data.register.message) {
                 setRegisterErrorMsg(data.register.message);
-
             }
-
         } catch (error: any) {
-            console.log('Error with registering: ')
+            console.log('Error with registering: ');
             console.log(error);
         }
     };

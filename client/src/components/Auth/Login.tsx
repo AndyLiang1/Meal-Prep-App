@@ -23,7 +23,7 @@ const LOGIN_USER = gql`
                 user {
                     id
                     username
-                    token
+                    accessToken
                 }
             }
             ... on LoginError {
@@ -64,14 +64,14 @@ export function Login(props: ILoginProps) {
             if (data.login.message) {
                 setLoginErrorMsg(data.login.message);
             }
-            const { username, token, id } = data.login.user;
-            // localStorage.setItem('accessToken', token);
-            // localStorage.setItem('username', username);
-            // localStorage.setItem('id', id);
-            // localStorage.setItem('loggedIn', 'true');
+            const { username, accessToken, id } = data.login.user;
+            localStorage.setItem('accessToken', accessToken);
+            localStorage.setItem('username', username);
+            localStorage.setItem('id', id);
+            localStorage.setItem('loggedIn', 'true');
             login({
                 username,
-                token,
+                accessToken,
                 id,
                 loggedIn: true
             });

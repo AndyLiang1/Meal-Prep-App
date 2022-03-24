@@ -1,6 +1,6 @@
 export interface UserInfoInterface {
     username: string;
     id: string;
-    token: string;
+    accessToken: string;
     loggedIn: boolean;
 }

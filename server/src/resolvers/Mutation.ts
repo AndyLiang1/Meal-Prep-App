@@ -31,10 +31,10 @@ const Mutation = {
         });
 
         const returnedUser = await user.save().catch((error) => Logging.error(error));
-        let token = '';
+        let accessToken = '';
         let id = '';
         if (returnedUser) {
-            token = jwt.sign(
+            accessToken = jwt.sign(
                 {
                     id: returnedUser.id,
                     username: returnedUser.username
@@ -48,7 +48,7 @@ const Mutation = {
                     username,
                     email,
                     password,
-                    token,
+                    accessToken,
                     days
                 }
             };
@@ -84,7 +84,7 @@ const Mutation = {
                         username: userWithSameEmail.username,
                         email,
                         password,
-                        token: accessToken,
+                        accessToken,
                         days
                     }
                 };
