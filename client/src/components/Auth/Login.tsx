@@ -3,6 +3,11 @@ import { Formik, Form, Field } from 'formik';
 import * as React from 'react';
 import { useState } from 'react';
 import * as Yup from 'yup';
+import { bindActionCreators } from 'redux';
+import { login } from '../../state/action-creators';
+import { useDispatch } from 'react-redux';
+import { actionCreators } from '../../state';
+import { useNavigate } from 'react-router-dom';
 
 export interface ILoginProps {}
 
@@ -18,7 +23,7 @@ const LOGIN_USER = gql`
                 user {
                     id
                     username
-                    token 
+                    token
                 }
             }
             ... on LoginError {
@@ -39,6 +44,12 @@ export function Login(props: ILoginProps) {
         password: Yup.string().max(50).required()
     });
 
+    const dispatch = useDispatch();
+    const navigate = useNavigate();
+
+    //
+    const { login } = bindActionCreators(actionCreators, dispatch);
+
     const [loginErrorMsg, setLoginErrorMsg] = useState<string>();
     const [loginUser] = useMutation(LOGIN_USER);
     const onSubmit = async (userInfo: RegisterInfo) => {
@@ -53,12 +64,18 @@ export function Login(props: ILoginProps) {
             if (data.login.message) {
                 setLoginErrorMsg(data.login.message);
             }
-            console.log(data);
-            const { username, token, id } = data.login.user 
-            localStorage.setItem('accessToken', token);
-            localStorage.setItem('username', username);
-            localStorage.setItem('id', id);
-            localStorage.setItem('loggedIn', 'true');
+            const { username, token, id } = data.login.user;
+            // localStorage.setItem('accessToken', token);
+            // localStorage.setItem('username', username);
+            // localStorage.setItem('id', id);
+            // localStorage.setItem('loggedIn', 'true');
+            login({
+                username,
+                token,
+                id,
+                loggedIn: true
+            });
+            navigate('./userData');
         } catch (error) {
             console.log(error);
         }
