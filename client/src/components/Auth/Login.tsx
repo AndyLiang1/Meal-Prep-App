@@ -9,6 +9,7 @@ import { useDispatch } from 'react-redux';
 import { actionCreators } from '../../state';
 import { useNavigate } from 'react-router-dom';
 import { addUserToStore } from '../../state/action-creators';
+import { RegisterResult, User } from '../../types';
 
 export interface ILoginProps {}
 
@@ -18,7 +19,7 @@ interface RegisterInfo {
 }
 
 const LOGIN_USER = gql`
-    mutation($email: String!, $password: String!) {
+    mutation LoginUser($email: String!, $password: String!) {
         login(email: $email, password: $password) {
             ... on LoginSuccess {
                 user {

@@ -13,7 +13,7 @@ interface RegisterInfo {
 }
 
 const REGISTER_USER = gql`
-    mutation($input: RegisterInput!) {
+    mutation RegisterUser($input: RegisterInput!) {
         register(input: $input) {
             ... on RegisterSuccess {
                 user {

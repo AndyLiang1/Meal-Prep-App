@@ -7,10 +7,11 @@ import { Header } from '../components/Others/Header';
 import { addUserToStore } from '../state/action-creators';
 // import { login } from '../state/action-creators';
 import { RootState } from '../state/reducers';
+import { GetUserQuery, QueryGetUserArgs, Scalars, User } from '../types';
 export interface IMealDataProps {}
 
 const GET_USER = gql`
-    query($getUserId: ID!) {
+    query GetUser($getUserId: ID!) {
         getUser(id: $getUserId) {
             username
             id
@@ -38,19 +39,28 @@ const GET_USER = gql`
 `;
 
 export function UserData(props: IMealDataProps) {
-    const userId = localStorage.getItem('id')!;
+    const userId: string = localStorage.getItem('id')!;
+    const bob = {
+        name: 'hi'
+    }
     const dispatch = useDispatch();
     const { loading, error, data } = useQuery(GET_USER, {
         variables: {
             getUserId: userId
         }
     });
+    // const { loading, error, data } = useQuery(GET_USER, {
+    //     variables: {
+    //         getUserId: userId
+    //     }
+    // });
     useEffect(() => {
         if (loading) {
             console.log('loading');
         } else {
             console.log(data);
-            const { username, id, days } = data.getUser;
+            const user: User = data.getUser
+            const { username, id, days } = user;
             // add userData to store
             dispatch(
                 addUserToStore({
