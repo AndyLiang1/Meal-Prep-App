@@ -7,8 +7,17 @@ import { config } from '../config/config';
 
 import { UserInputError } from 'apollo-server';
 
+enum Days {
+    MONDAY,
+    TUESDAY,
+    WEDNESDAY,
+    THURSDAY,
+    FRIDAY,
+    SATURDAY,
+    SUNDAY
+}
 const Mutation = {
-    async register(parent: any, {input}: any, context: any, info: any) {        
+    async register(parent: any, { input }: any, context: any, info: any) {
         const { username, email, password } = input;
         const userWithSameEmail = await User.findOne({ email: email });
         if (userWithSameEmail) {
@@ -20,8 +29,21 @@ const Mutation = {
             // })
             // ;
         }
+
         const hashedPass = await bcrypt.hash(password, 10);
-        const days: any = [];
+        let days = [];
+        for (let i = 0; i < 7; i++) {
+            const day = {
+                name: Days[i],
+                meals: [
+                    {
+                        foods: []
+                    }
+                ]
+            };
+            days.push(day);
+        }
+
         const user = new User({
             _id: new mongoose.Types.ObjectId(),
             username,
@@ -32,7 +54,6 @@ const Mutation = {
 
         const returnedUser = await user.save().catch((error) => Logging.error(error));
         let accessToken = '';
-        let id = '';
         if (returnedUser) {
             accessToken = jwt.sign(
                 {
@@ -52,6 +73,7 @@ const Mutation = {
                     days
                 }
             };
+            Logging.info(ret.user.days);
             // return ret.user
             return ret;
         }

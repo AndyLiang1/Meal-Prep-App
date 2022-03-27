@@ -11,10 +11,11 @@ const typeDefs = gql`
     }
 
     type Day {
-        meals: [Meal!]!
+        name: String!
+        meals: [Meal]
     }
     type Meal {
-        foods: [Food!]!
+        foods: [Food]
     }
 
     type Food {
@@ -23,13 +24,14 @@ const typeDefs = gql`
         proteins: Float!
         carbs: Float!
         fats: Float!
-        ingredients: [Food!]!
+        ingredients: [Food]
     }
 
     type Query {
         # health check
         boop: String!
         clearDb: String
+        getUser(id: ID!): User!
     }
 
     input RegisterInput {

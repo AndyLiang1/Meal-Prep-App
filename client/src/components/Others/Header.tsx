@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { MealData } from '../../components/MealData/MealData';
+import { MealData } from '../MealData/MealsInDay';
 import style from './Header.module.css'
 export interface IHeaderProps {
 }

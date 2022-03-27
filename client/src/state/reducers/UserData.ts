@@ -4,13 +4,14 @@ export const defaultUserInfo: UserInfoInterface = {
     username: '',
     id: '',
     accessToken: '',
-    loggedIn: false
+    loggedIn: false,
+    days: []
 };
 const reducer = (state: UserInfoInterface | null = defaultUserInfo, action: any) => {
     switch (action.type) {
-        case 'login':
+        case 'addUserToStore':
             return action.payload;
-        case 'logout':
+        case 'clearUserFromStore':
             return defaultUserInfo;
         default:
             return state;

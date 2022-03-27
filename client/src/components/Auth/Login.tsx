@@ -4,10 +4,11 @@ import * as React from 'react';
 import { useState } from 'react';
 import * as Yup from 'yup';
 import { bindActionCreators } from 'redux';
-import { login } from '../../state/action-creators';
+// import { login } from '../../state/action-creators';
 import { useDispatch } from 'react-redux';
 import { actionCreators } from '../../state';
 import { useNavigate } from 'react-router-dom';
+import { addUserToStore } from '../../state/action-creators';
 
 export interface ILoginProps {}
 
@@ -48,8 +49,6 @@ export function Login(props: ILoginProps) {
     const navigate = useNavigate();
 
     //
-    const { login } = bindActionCreators(actionCreators, dispatch);
-
     const [loginErrorMsg, setLoginErrorMsg] = useState<string>();
     const [loginUser] = useMutation(LOGIN_USER);
     const onSubmit = async (userInfo: RegisterInfo) => {
@@ -69,12 +68,6 @@ export function Login(props: ILoginProps) {
             localStorage.setItem('username', username);
             localStorage.setItem('id', id);
             localStorage.setItem('loggedIn', 'true');
-            login({
-                username,
-                accessToken,
-                id,
-                loggedIn: true
-            });
             navigate('./userData');
         } catch (error) {
             console.log(error);

@@ -3,4 +3,5 @@ export interface UserInfoInterface {
     id: string;
     accessToken: string;
     loggedIn: boolean;
+    days?: []
 }

@@ -1,0 +1,17 @@
+.container {
+    height: 70vh;
+    width: 40vw;
+    background-color: blue;
+}
+
+
+.dayName_container {
+    height: 10%;
+    width: 100%;
+    background-color: yellow;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+}
