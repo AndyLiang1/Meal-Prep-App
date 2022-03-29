@@ -9,7 +9,6 @@ import { useDispatch } from 'react-redux';
 import { actionCreators } from '../../state';
 import { useNavigate } from 'react-router-dom';
 import { addUserToStore } from '../../state/action-creators';
-import { RegisterResult, User } from '../../types';
 
 export interface ILoginProps {}
 

@@ -5,10 +5,18 @@ import { useDispatch, useSelector } from 'react-redux';
 import { MealData } from '../components/MealData/MealsInDay';
 import { Header } from '../components/Others/Header';
 import { addUserToStore } from '../state/action-creators';
+import { UserInfoInterface } from '../state/helpers/IUserInfo';
 // import { login } from '../state/action-creators';
 import { RootState } from '../state/reducers';
-import { GetUserQuery, QueryGetUserArgs, Scalars, User } from '../types';
 export interface IMealDataProps {}
+
+interface GetUserParams {
+    getUserId: string;
+}
+
+interface UserData {
+    getUser: UserInfoInterface
+}
 
 const GET_USER = gql`
     query GetUser($getUserId: ID!) {
@@ -18,6 +26,7 @@ const GET_USER = gql`
             days {
                 name
                 meals {
+                    id
                     foods {
                         name
                         calories
@@ -40,11 +49,10 @@ const GET_USER = gql`
 
 export function UserData(props: IMealDataProps) {
     const userId: string = localStorage.getItem('id')!;
-    const bob = {
-        name: 'hi'
-    }
+
+    
     const dispatch = useDispatch();
-    const { loading, error, data } = useQuery(GET_USER, {
+    const { loading, error, data } = useQuery<UserData, GetUserParams>(GET_USER, {
         variables: {
             getUserId: userId
         }
@@ -59,7 +67,7 @@ export function UserData(props: IMealDataProps) {
             console.log('loading');
         } else {
             console.log(data);
-            const user: User = data.getUser
+            const user = (data!).getUser
             const { username, id, days } = user;
             // add userData to store
             dispatch(
