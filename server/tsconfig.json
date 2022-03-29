@@ -100,5 +100,5 @@
   },
   "include": [
     "src/**/*"
-, "jest.config.js"  ]
+, "jest.config.js", "../client/src/state/helpers/IUserInfo.ts", "../client/src/state/helpers/IMeal.ts", "../client/src/state/helpers/IFood.ts", "../client/src/state/helpers/IDay.ts"  ]
 }

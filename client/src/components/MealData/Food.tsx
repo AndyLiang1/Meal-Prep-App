@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { FoodInterface } from '../../state/helpers/IFood';
+import  FoodInterface  from '../../state/helpers/IFood';
 import style from './Food.module.css'
 
 export interface IFoodProps {

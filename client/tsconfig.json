@@ -22,5 +22,5 @@
   },
   "include": [
     "src"
-  ]
+, "src/state/helpers/IUserInfo.ts", "src/state/helpers/IFood.ts"  ]
 }

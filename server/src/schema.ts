@@ -8,14 +8,16 @@ const typeDefs = gql`
         password: String!
         accessToken: String!
         days: [Day!]!
+        foodList: [Food]
     }
 
     type Day {
         name: String!
-        meals: [Meal]
+        meals: [Meal!]!
     }
     type Meal {
-        foods: [Food]
+        id: ID!
+        foods: [Food!]!
     }
 
     type Food {
@@ -24,14 +26,14 @@ const typeDefs = gql`
         proteins: Float!
         carbs: Float!
         fats: Float!
-        ingredients: [Food]
+        ingredients: [Food!]!
     }
 
     type Query {
         # health check
         boop: String!
         clearDb: String
-        getUser(id: ID!): User!
+        getUser(id: ID!): User
     }
 
     input RegisterInput {
@@ -59,10 +61,21 @@ const typeDefs = gql`
     }
 
     union LoginResult = LoginSuccess | LoginError
-
+    input CreateFoodInput {
+        userId: ID!
+        mealId: ID!
+        name: String!
+        calories: Float!
+        proteins: Float!
+        carbs: Float!
+        fats: Float!
+        ingredientNames: [String!]!
+    }
     type Mutation {
         register(input: RegisterInput!): RegisterResult!
         login(email: String!, password: String!): LoginResult!
+
+        createFood(input: CreateFoodInput!): Food
     }
 `;
 

@@ -6,11 +6,13 @@ const Query = {
     boop: (parent: any, args: any, context: any, info: any): any => {
         return 'Beep! Hello world! :D';
     },
-
     getUser: async (parent: any, args: any, context: any, info: any) => {
         try {
             const { id } = args;
-            return await User.findOne({ id: id });
+            console.log(id)
+            const user = await User.findOne({ _id: id });
+            console.log(user)
+            return user
         } catch (error) {
             Logging.error(error);
         }
