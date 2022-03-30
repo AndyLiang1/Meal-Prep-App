@@ -18,7 +18,7 @@ const UserSchema: Schema = new Schema(
         username: { type: String, required: true },
         email: { type: String, required: true },
         password: { type: String, required: true },
-        // days: {type: Array, required: true},
+        // days: {type: Array},
         // days: [[[{type: String}]]],
         days: [{
             name: String, 
