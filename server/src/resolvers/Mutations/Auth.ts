@@ -1,12 +1,13 @@
 import mongoose from 'mongoose';
 import Logging from '../../library/Logging';
-import User from '../../models/User';
+import UserModel from '../../models/User';
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 import { config } from '../../config/config';
 import DayInterface from '../../../../client/src/state/helpers/IDay';
 import FoodInterface from '../../../../client/src/state/helpers/IFood';
 import MealInterface from '../../../../client/src/state/helpers/IMeal';
+import { Day, Food, Meal, MutationLoginArgs, MutationRegisterArgs, User } from '../../generated/graphql-server';
 
 enum Days {
     MONDAY,
@@ -17,35 +18,33 @@ enum Days {
     SATURDAY,
     SUNDAY
 }
-const createUID = () => {
+const createUID = (): string => {
     return Date.now().toString(36) + Math.random().toString(36).substr(2);
 };
 
-export const register = async (parent: any, { input }: any, context: any, info: any) => {
+export const register = async (parent: any, { input }: MutationRegisterArgs, context: any, info: any) => {
     const { username, email, password } = input;
-    const userWithSameEmail = await User.findOne({ email: email });
+    const userWithSameEmail = await UserModel.findOne({ email: email });
     if (userWithSameEmail) {
         return { message: 'User already exists in our database' };
     }
 
-    const hashedPass = await bcrypt.hash(password, 10);
-    let days: DayInterface[] = [];
-    for (let i = 0; i < 7; i++) {
-        const foods: FoodInterface[] = []
-        const meal = {
+    const hashedPass: string = await bcrypt.hash(password, 10);
+    let days: Day[] = [];
+    for (let i: number = 0; i < 7; i++) {
+        const foods: Food[] = [];
+        const meal: Meal = {
             id: createUID(),
             foods
         };
-        const day = {
+        const day: Day = {
             name: Days[i],
-            meals: [
-                meal
-            ]
+            meals: [meal]
         };
         days.push(day);
     }
-    const foodList: FoodInterface[] = []
-    const user = new User({
+    const foodList: Food[] = [];
+    const user = new UserModel({
         _id: new mongoose.Types.ObjectId(),
         username,
         email,
@@ -55,7 +54,7 @@ export const register = async (parent: any, { input }: any, context: any, info: 
     });
 
     const returnedUser = await user.save().catch((error) => Logging.error(error));
-    let accessToken = '';
+    let accessToken: string = '';
     if (returnedUser) {
         accessToken = jwt.sign(
             {
@@ -80,10 +79,10 @@ export const register = async (parent: any, { input }: any, context: any, info: 
     }
 };
 
-export const login = async (parent: any, args: any, context: any, info: any) => {
+export const login = async (parent: any, args: MutationLoginArgs, context: any, info: any) => {
     const { email, password } = args;
 
-    const userWithSameEmail = await User.findOne({ email: email });
+    const userWithSameEmail = await UserModel.findOne({ email: email });
     if (!userWithSameEmail) {
         return { message: 'No user has registered with that email' };
         // throw new UserInputError('Username is taken', {
@@ -98,8 +97,8 @@ export const login = async (parent: any, args: any, context: any, info: any) => 
         if (!match) {
             return { message: 'Wrong username and password combination' };
         } else {
-            const accessToken = jwt.sign({ username: userWithSameEmail.username, id: userWithSameEmail.id }, config.server.JWT_SECRET);
-            const days: any = [];
+            const accessToken:string = jwt.sign({ username: userWithSameEmail.username, id: userWithSameEmail.id }, config.server.JWT_SECRET);
+            const days: Days[] = [];
 
             const ret = {
                 user: {

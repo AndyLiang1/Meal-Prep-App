@@ -1,6 +1,7 @@
 import Logging from '../library/Logging';
 import mongoose from 'mongoose';
 import User from '../models/User';
+import { Scalars } from '../generated/graphql-server';
 
 const Query = {
     boop: (parent: any, args: any, context: any, info: any): any => {
@@ -8,11 +9,9 @@ const Query = {
     },
     getUser: async (parent: any, args: any, context: any, info: any) => {
         try {
-            const { id } = args;
-            console.log(id)
+            const { id }: { id: string } = args;
             const user = await User.findOne({ _id: id });
-            console.log(user)
-            return user
+            return user;
         } catch (error) {
             Logging.error(error);
         }

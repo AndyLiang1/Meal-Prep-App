@@ -1,22 +1,23 @@
 import Logging from '../../library/Logging';
-import User from '../../models/User';
+import UserModel from '../../models/User';
 
 import DayInterface from '../../../../client/src/state/helpers/IDay';
 import MealInterface from '../../../../client/src/state/helpers/IMeal';
 import FoodInterface from '../../../../client/src/state/helpers/IFood';
+import { Day, Food, Meal, MutationCreateFoodArgs, User } from '../../generated/graphql-server';
 
-export const createFood = async (parent: any, { input }: any, context: any, info: any) => {
+export const createFood = async (parent: any, { input }: MutationCreateFoodArgs, context: any, info: any) => {
     try {
         const { userId, mealId, name, calories, proteins, carbs, fats } = input;
         let ingredientNames: string[] = input.ingredientNames;
-        const user = await User.findOne({ _id: userId });
+        const user = await UserModel.findOne({ _id: userId });
         if (!user) {
             Logging.error('No user found from createFood resolver');
         }
 
-        const ingredients: FoodInterface[] = [];
+        const ingredients: Food[] = [];
 
-        user!.foodList.forEach((foodFromUserFoodList) => {
+        user!.foodList.forEach((foodFromUserFoodList: Food) => {
             if (ingredientNames.includes(foodFromUserFoodList.name)) {
                 ingredientNames = ingredientNames.filter((namesOfFoodWeWant: string) => {
                     return namesOfFoodWeWant != foodFromUserFoodList.name;
@@ -25,7 +26,7 @@ export const createFood = async (parent: any, { input }: any, context: any, info
             }
         });
 
-        const food: FoodInterface = {
+        const food: Food = {
             name,
             calories,
             proteins,
@@ -35,21 +36,21 @@ export const createFood = async (parent: any, { input }: any, context: any, info
         };
         user!.foodList.push(food);
 
-        user!.days.forEach((day: DayInterface) => {
-            day.meals.forEach((meal: MealInterface) => {
+        user!.days.forEach((day: Day) => {
+            day.meals.forEach((meal: Meal) => {
                 // Logging.info(meal.id)
                 // Logging.info(mealId)
                 // console.log(meal.id == mealId);
                 if (meal.id == mealId) {
                     meal.foods.push(food);
-                    console.log(user)
+                    console.log(user);
                 }
             });
         });
         user!.username = 'bobb';
 
-        user!.save()
-        console.log(user)
+        user!.save();
+        console.log(user);
         return food;
     } catch (error) {
         Logging.error(error);
