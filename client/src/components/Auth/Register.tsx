@@ -3,14 +3,9 @@ import { Formik, Form, Field } from 'formik';
 import * as Yup from 'yup';
 import { gql, useMutation } from '@apollo/client';
 import { useState } from 'react';
+import { RegisterInput, RegisterResult, RegisterError } from '../../generated/graphql-client';
 
 export interface IRegisterProps {}
-
-interface RegisterInfo {
-    username: string;
-    email: string;
-    password: string;
-}
 
 const REGISTER_USER = gql`
     mutation RegisterUser($input: RegisterInput!) {
@@ -41,7 +36,7 @@ const REGISTER_USER = gql`
 `;
 
 export function Register(props: IRegisterProps) {
-    const initialValues: RegisterInfo = {
+    const initialValues: RegisterInput = {
         username: '',
         email: '',
         password: ''
@@ -54,8 +49,8 @@ export function Register(props: IRegisterProps) {
     });
 
     const [registerErrorMsg, setRegisterErrorMsg] = useState<string>();
-    const [registerUser] = useMutation(REGISTER_USER);
-    const onSubmit = async (userInfo: RegisterInfo) => {
+    const [registerUser] = useMutation<{ register: RegisterResult }, { input: RegisterInput }>(REGISTER_USER);
+    const onSubmit = async (userInfo: RegisterInput) => {
         const { username, email, password } = userInfo;
         try {
             const { data } = await registerUser({
@@ -67,8 +62,9 @@ export function Register(props: IRegisterProps) {
                     }
                 }
             });
-            if (data.register.message) {
-                setRegisterErrorMsg(data.register.message);
+            // make the data!.resiger into a register error first 
+            if ((data!.register as RegisterError).message) {
+                setRegisterErrorMsg((data!.register as RegisterError).message);
             }
         } catch (error: any) {
             console.log('Error with registering: ');

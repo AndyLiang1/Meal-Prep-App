@@ -8,15 +8,16 @@ const typeDefs = gql`
         password: String!
         accessToken: String!
         days: [Day!]!
-        foodList: [Food]
+        foodList: [Food!]!
     }
 
     type Day {
         name: String!
         meals: [Meal!]!
     }
+
     type Meal {
-        id: ID!
+        index: Int!
         foods: [Food!]!
     }
 
@@ -63,7 +64,7 @@ const typeDefs = gql`
     union LoginResult = LoginSuccess | LoginError
     input CreateFoodInput {
         userId: ID!
-        mealId: ID!
+        mealIndex: Int!
         name: String!
         calories: Float!
         proteins: Float!
@@ -75,7 +76,8 @@ const typeDefs = gql`
         register(input: RegisterInput!): RegisterResult!
         login(email: String!, password: String!): LoginResult!
 
-        createFood(input: CreateFoodInput!): Food
+        createFood(input: CreateFoodInput!): Food!
+        createMeal(userId: ID!, dayName: String!): Meal!
     }
 `;
 

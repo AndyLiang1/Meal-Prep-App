@@ -1,14 +1,13 @@
 import { any } from 'joi';
 import mongoose, { Document, Schema } from 'mongoose';
-import DayInterface from '../../../client/src/state/helpers/IDay';
-import FoodInterface from '../../../client/src/state/helpers/IFood';
+import { Day, Food } from '../generated/graphql-server';
 
 export interface IUser {
     username: string;
     email: string;
     password: string;
-    days: DayInterface[];
-    foodList: FoodInterface[]
+    days: Day[];
+    foodList: Food[]
 }
 
 export interface IUserModel extends IUser, Document {}
@@ -24,7 +23,7 @@ const UserSchema: Schema = new Schema(
             name: String, 
             meals: [
                 {
-                    id: String, 
+                    index: Number, 
                     foods: [
                         {
                             name: String, 

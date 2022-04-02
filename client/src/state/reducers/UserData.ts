@@ -1,5 +1,13 @@
-import { UserInfoInterface } from '../helpers/IUserInfo';
+import { Day, User } from "../../generated/graphql-client";
 
+export interface UserInfoInterface { 
+    username: string, 
+    id: string, 
+    accessToken: string, 
+    loggedIn: boolean, 
+    days: Day[]
+
+}
 export const defaultUserInfo: UserInfoInterface = {
     username: '',
     id: '',

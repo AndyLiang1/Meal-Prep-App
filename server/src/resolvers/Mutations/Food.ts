@@ -1,14 +1,11 @@
 import Logging from '../../library/Logging';
 import UserModel from '../../models/User';
 
-import DayInterface from '../../../../client/src/state/helpers/IDay';
-import MealInterface from '../../../../client/src/state/helpers/IMeal';
-import FoodInterface from '../../../../client/src/state/helpers/IFood';
 import { Day, Food, Meal, MutationCreateFoodArgs, User } from '../../generated/graphql-server';
 
 export const createFood = async (parent: any, { input }: MutationCreateFoodArgs, context: any, info: any) => {
     try {
-        const { userId, mealId, name, calories, proteins, carbs, fats } = input;
+        const { userId, mealIndex, name, calories, proteins, carbs, fats } = input;
         let ingredientNames: string[] = input.ingredientNames;
         const user = await UserModel.findOne({ _id: userId });
         if (!user) {
@@ -41,7 +38,7 @@ export const createFood = async (parent: any, { input }: MutationCreateFoodArgs,
                 // Logging.info(meal.id)
                 // Logging.info(mealId)
                 // console.log(meal.id == mealId);
-                if (meal.id == mealId) {
+                if (meal.index == mealIndex) {
                     meal.foods.push(food);
                     console.log(user);
                 }

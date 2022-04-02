@@ -4,8 +4,9 @@ import { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { MealData } from '../components/MealData/MealsInDay';
 import { Header } from '../components/Others/Header';
+import { Query, User } from '../generated/graphql-client';
 import { addUserToStore } from '../state/action-creators';
-import { UserInfoInterface } from '../state/helpers/IUserInfo';
+
 // import { login } from '../state/action-creators';
 import { RootState } from '../state/reducers';
 export interface IMealDataProps {}
@@ -15,18 +16,18 @@ interface GetUserParams {
 }
 
 interface UserData {
-    getUser: UserInfoInterface
+    getUser: User
 }
 
 const GET_USER = gql`
-    query GetUser($getUserId: ID!) {
+    query GET_USER($getUserId: ID!) {
         getUser(id: $getUserId) {
             username
             id
             days {
                 name
                 meals {
-                    id
+                    index
                     foods {
                         name
                         calories

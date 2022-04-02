@@ -9,10 +9,11 @@ import { useDispatch } from 'react-redux';
 import { actionCreators } from '../../state';
 import { useNavigate } from 'react-router-dom';
 import { addUserToStore } from '../../state/action-creators';
+import { LoginError, LoginResult, LoginSuccess } from '../../generated/graphql-client';
 
 export interface ILoginProps {}
 
-interface RegisterInfo {
+interface LoginInput {
     email: string;
     password: string;
 }
@@ -35,7 +36,7 @@ const LOGIN_USER = gql`
 `;
 
 export function Login(props: ILoginProps) {
-    const initialValues: RegisterInfo = {
+    const initialValues: LoginInput = {
         email: '',
         password: ''
     };
@@ -50,8 +51,8 @@ export function Login(props: ILoginProps) {
 
     //
     const [loginErrorMsg, setLoginErrorMsg] = useState<string>();
-    const [loginUser] = useMutation(LOGIN_USER);
-    const onSubmit = async (userInfo: RegisterInfo) => {
+    const [loginUser] = useMutation<{ login: LoginResult }, LoginInput>(LOGIN_USER);
+    const onSubmit = async (userInfo: LoginInput) => {
         const { email, password } = userInfo;
         try {
             const { data } = await loginUser({
@@ -60,10 +61,10 @@ export function Login(props: ILoginProps) {
                     password
                 }
             });
-            if (data.login.message) {
-                setLoginErrorMsg(data.login.message);
-            }
-            const { username, accessToken, id } = data.login.user;
+             if ((data!.login as LoginError).message) {
+                 setLoginErrorMsg((data!.login as LoginError).message);
+             }
+            const { username, accessToken, id } = (data!.login as LoginSuccess).user;
             localStorage.setItem('accessToken', accessToken);
             localStorage.setItem('username', username);
             localStorage.setItem('id', id);

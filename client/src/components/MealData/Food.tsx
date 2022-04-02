@@ -1,12 +1,12 @@
 import * as React from 'react';
-import  FoodInterface  from '../../state/helpers/IFood';
 import style from './Food.module.css'
+import {Food} from '../../generated/graphql-client'
 
 export interface IFoodProps {
-    food: FoodInterface
+    food: Food
 }
 
-export function Food (props: IFoodProps) {
+export function FoodInMeal (props: IFoodProps) {
   return (
     <div className = {style.container}>
       hello

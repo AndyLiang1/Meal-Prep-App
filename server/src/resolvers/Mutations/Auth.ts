@@ -4,9 +4,7 @@ import UserModel from '../../models/User';
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 import { config } from '../../config/config';
-import DayInterface from '../../../../client/src/state/helpers/IDay';
-import FoodInterface from '../../../../client/src/state/helpers/IFood';
-import MealInterface from '../../../../client/src/state/helpers/IMeal';
+
 import { Day, Food, Meal, MutationLoginArgs, MutationRegisterArgs, User } from '../../generated/graphql-server';
 
 enum Days {
@@ -34,7 +32,7 @@ export const register = async (parent: any, { input }: MutationRegisterArgs, con
     for (let i: number = 0; i < 7; i++) {
         const foods: Food[] = [];
         const meal: Meal = {
-            id: createUID(),
+            index: 0,
             foods
         };
         const day: Day = {

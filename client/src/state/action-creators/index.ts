@@ -1,7 +1,6 @@
 // action creators are a fct that dispatches an action
-import { UserInfoInterface } from '../helpers/IUserInfo';
 import { defaultUserInfo } from '../reducers/UserData';
-
+import {UserInfoInterface} from '../reducers/UserData'
 // // login-action-creator returns a dispatch function ? 
 // export const login = (user: UserInfoInterface) => {
 //     return (dispatch: (arg0: { type: string; payload: any }) => void) => {
