@@ -1,8 +1,9 @@
 import { combineReducers } from "redux"
 import userReducer from './UserData'
+import dayReducer from './Day'
 const reducers = combineReducers({
-    user: userReducer
+    user: userReducer,
+    day: dayReducer
 })
-export type RootState = ReturnType<typeof reducers>;
-
+export type IRootState = ReturnType<typeof reducers>;
 export default reducers;

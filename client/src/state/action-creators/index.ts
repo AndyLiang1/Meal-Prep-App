@@ -1,4 +1,5 @@
 // action creators are a fct that dispatches an action
+import {Day} from '../reducers/Day';
 import { defaultUserInfo } from '../reducers/UserData';
 import {UserInfoInterface} from '../reducers/UserData'
 // // login-action-creator returns a dispatch function ? 
@@ -29,3 +30,12 @@ export const addUserToStore = (user: UserInfoInterface) => {
         });
     };
 };
+
+export const changeDay = (day: Day) => {
+    return (dispatch: (arg0: { type: string; payload: Day }) => void) => {
+        dispatch({
+            type: 'changeDay',
+            payload: day
+        });
+    };
+}

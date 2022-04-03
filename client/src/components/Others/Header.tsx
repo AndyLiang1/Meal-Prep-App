@@ -1,5 +1,4 @@
 import * as React from 'react';
-import { MealData } from '../MealList/Meal/MealList';
 import style from './Header.module.css'
 export interface IHeaderProps {
 }

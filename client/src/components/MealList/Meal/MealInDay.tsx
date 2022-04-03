@@ -9,7 +9,6 @@ export interface IMealInDayProps {
 }
 
 export function MealInDay({ foods }: IMealInDayProps) {
-    console.log(foods);
     const [addingFood, setAddingFood] = useState<boolean>(false)
 
     

@@ -24,12 +24,6 @@ export type CreateFoodInput = {
   userId: Scalars['ID'];
 };
 
-export type Day = {
-  __typename?: 'Day';
-  meals: Array<Meal>;
-  name: Scalars['String'];
-};
-
 export type Food = {
   __typename?: 'Food';
   calories: Scalars['Float'];
@@ -55,13 +49,14 @@ export type LoginSuccess = {
 export type Meal = {
   __typename?: 'Meal';
   foods: Array<Food>;
+  id: Scalars['ID'];
   index: Scalars['Int'];
 };
 
 export type Mutation = {
   __typename?: 'Mutation';
   createFood: Food;
-  createMeal: Meal;
+  createMeal: User;
   login: LoginResult;
   register: RegisterResult;
 };
@@ -121,9 +116,14 @@ export type RegisterSuccess = {
 export type User = {
   __typename?: 'User';
   accessToken: Scalars['String'];
-  days: Array<Day>;
+  day1: Array<Meal>;
+  day2: Array<Meal>;
+  day3: Array<Meal>;
+  day4: Array<Meal>;
+  day5: Array<Meal>;
+  day6: Array<Meal>;
+  day7: Array<Meal>;
   email: Scalars['String'];
-  foodList: Array<Food>;
   id: Scalars['ID'];
   password: Scalars['String'];
   username: Scalars['String'];

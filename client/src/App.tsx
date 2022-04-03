@@ -4,7 +4,7 @@ import { Register } from './components/Auth/Register';
 import { Login } from './components/Auth/Login';
 import { ApolloClient, InMemoryCache, ApolloProvider } from '@apollo/client';
 import { Auth } from './pages/Auth';
-import { UserData } from './pages/MealData';
+import { UserPage } from './pages/UserPage';
 
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 
@@ -19,7 +19,7 @@ function App() {
                 <Router>
                     <Routes>
                         <Route path="/" element={<Auth/>} />
-                        <Route path="/userData" element={<UserData/>}/>
+                        <Route path="/userData" element={<UserPage/>}/>
                     </Routes>
                 </Router>
             </div>

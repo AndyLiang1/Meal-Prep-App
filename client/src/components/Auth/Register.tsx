@@ -17,11 +17,11 @@ const REGISTER_USER = gql`
                     email
                     password
                     accessToken
-                    days {
-                        meals {
-                            foods {
-                                calories
-                            }
+                    day1 {
+                        foods {
+                            name
+                            calories
+                            proteins
                         }
                     }
                 }
