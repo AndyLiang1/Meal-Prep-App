@@ -40,9 +40,7 @@ export function UserPage(props: IUserPageProps) {
 
     useEffect(() => {
         if (loading) {
-            console.log('loading');
         } else {
-            console.log(data);
             const user = data!.getUser;
             const { username, id } = user;
 

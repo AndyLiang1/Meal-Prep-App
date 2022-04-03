@@ -12,27 +12,46 @@ export interface IMealListProps {
     // getUser: any
 }
 
+// const CREATE_MEAL = gql`
+//     mutation CREATE_MEAL($userId: ID!, $dayIndex: Int!) {
+//         createMeal(userId: $userId, dayIndex: $dayIndex) {
+//             username
+//             day1 @include(if: $day1)
+//             day2 @include(if: $day2)
+//             day3 @include(if: $day3)
+//             day4 @include(if: $day4)
+//             day5 @include(if: $day5)
+//             day6 @include(if: $day6)
+//             day7 @include(if: $day7)
+//         }
+//     }
+// `;
 
 const CREATE_MEAL = gql`
-    mutation CREATE_MEAL($userId: ID!, $dayName: String!) {
-        createMeal(userId: $userId, dayName: $dayName) {
+    mutation CREATE_MEAL($userId: ID!, $dayIndex: Int!) {
+        createMeal(userId: $userId, dayIndex: $dayIndex) {
             username
             id
-            day1 {
-                name
+            day4 {
+                foods {
+                    name
+                    calories
+                    proteins
+                    fats
+                    carbs
+                }
             }
-
         }
     }
 `;
 
 interface CreateMealArgs {
-    userId: string, 
-    dayName: string
+    userId: string;
+    dayName: string;
 }
 
 interface newMeal {
-    createMeal: Meal
+    createMeal: Meal;
 }
 
 enum Days {
@@ -46,47 +65,83 @@ enum Days {
 }
 
 export function MealList(Props: IMealListProps) {
-    const dispatch = useDispatch()
-    const {dayIndex} = useSelector((state:IRootState) => state.day)
+    const dispatch = useDispatch();
+    const { dayIndex } = useSelector((state: IRootState) => state.day);
     const { user } = useSelector((state: any) => state);
     // const [dayIndex, setDayIndex] = useState<number>(0);
 
     // const dispatch = useDispatch()
 
-    const [createMeal, {data, loading, error} ] = useMutation(CREATE_MEAL)
+    const [createMeal, { data, loading, error }] = useMutation(CREATE_MEAL);
 
-    const addMeal = async() => {
-        const {data} = await createMeal({
-            variables: {
-                userId: user.id,
-                dayName: Days[dayIndex]
+    const addMeal = async () => {
+        try {
+            console.log(user.id);
+            console.log(dayIndex)
+            const { data } = await createMeal({
+                variables: {
+                    userId: user.id,
+                    dayIndex
+                }
+            });
+            const { username, id } = data.createMeal;
+            console.log(data);
+            let day: Meal[] = [];
+            switch (dayIndex) {
+                case 0:
+                    day = data.createMeal.day1;
+                    break;
+                case 1:
+                    day = data.createMeal.day2;
+                    break;
+                case 2:
+                    day = data.createMeal.day3;
+                    break;
+                case 3:
+                    day = data.createMeal.day4;
+                    break;
+                case 4:
+                    day = data.createMeal.day5;
+                    break;
+                case 5:
+                    day = data.createMeal.day6;
+                    break;
+                case 6:
+                    day = data.createMeal.day7;
+                    break;
+                default:
+                    day = data.createMeal.day1;
+                    break;
             }
-        })
-        // const { username, id, days } = userFromDb;
-        // dispatch(
-        //     addUserToStore({
-        //         username,
-        //         id,
-        //         days,
-        //         loggedIn: true,
-        //         accessToken: localStorage.getItem('accessToken')!
-        //     })
-        // );
+            console.log(data.createMeal.day4);
+            console.log(day);
+            dispatch(
+                addUserToStore({
+                    username,
+                    id,
+                    day,
+                    loggedIn: true,
+                    accessToken: localStorage.getItem('accessToken')!
+                })
+            );
+        } catch (error) {
+            console.log(error);
+        }
     };
 
     const changeDayIndex = (direction: string) => {
         if (direction === 'forward') {
             if (dayIndex === 6) {
-                dispatch(changeDay({dayIndex: 0}));
+                dispatch(changeDay({ dayIndex: 0 }));
                 return;
             }
-            dispatch(changeDay({dayIndex: dayIndex + 1}));
+            dispatch(changeDay({ dayIndex: dayIndex + 1 }));
         } else {
             if (dayIndex === 0) {
-                dispatch(changeDay({dayIndex: 6}));
+                dispatch(changeDay({ dayIndex: 6 }));
                 return;
             }
-            dispatch(changeDay({dayIndex: dayIndex - 1}));
+            dispatch(changeDay({ dayIndex: dayIndex - 1 }));
         }
     };
     // useEffect(() => {
@@ -96,7 +151,6 @@ export function MealList(Props: IMealListProps) {
     // }, [dayIndex, user]);
 
     return (
-       
         <div>
             {user.day ? (
                 <div className={style.container}>
@@ -110,17 +164,13 @@ export function MealList(Props: IMealListProps) {
                     {user.day.map((meal: any) => {
                         return <MealInDay foods={meal.foods}></MealInDay>;
                     })}
-                    <button className={style.addMeal}
-                        onClick = {() => addMeal()}
-                    >Add Meal</button>
+                    <button className={style.addMeal} onClick={() => addMeal()}>
+                        Add Meal
+                    </button>
                 </div>
             ) : (
                 <div>Loading...</div>
             )}
         </div>
-        
     );
 }
-
-
-
