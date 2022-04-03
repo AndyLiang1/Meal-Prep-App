@@ -10,10 +10,10 @@ import { addUserToStore, changeDay } from '../state/action-creators';
 import { IRootState } from '../state/reducers';
 import { useState } from 'react';
 import { AnyARecord } from 'dns';
-import { GET_USER } from './GetUserQuery';
+import { GET_MEALS } from './GetUserQuery';
 export interface IUserPageProps {}
 
-interface GetUserArgs {
+interface GetMealsArgs {
     getUserId: string;
     day1: boolean;
     day2: boolean;
@@ -24,8 +24,8 @@ interface GetUserArgs {
     day7: boolean;
 }
 
-interface GetUserRetVal {
-    getUser: User;
+interface GetMealsRetVal {
+    getMeals: User;
 }
 
 
@@ -35,7 +35,7 @@ export function UserPage(props: IUserPageProps) {
     const { dayIndex } = useSelector((state: IRootState) => state.day);
     const dispatch = useDispatch();
     console.log(dayIndex);
-    const { loading, error, data } = useQuery<GetUserRetVal, GetUserArgs>(GET_USER, {
+    const { loading, error, data } = useQuery<GetMealsRetVal, GetMealsArgs>(GET_MEALS, {
         variables: {
             getUserId: userId,
             day1: dayIndex === 0,
@@ -54,7 +54,7 @@ export function UserPage(props: IUserPageProps) {
     useEffect(() => {
         if (loading) {
         } else {
-            const user = data!.getUser;
+            const user = data!.getMeals;
             const { username, id } = user;
 
             let day: Meal[] = [];

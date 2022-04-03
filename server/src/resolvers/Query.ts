@@ -7,7 +7,8 @@ const Query = {
     boop: (parent: any, args: any, context: any, info: any): any => {
         return 'Beep! Hello world! :D';
     },
-    getUser: async (parent: any, args: any, context: any, info: any) => {
+    getMeals: async (parent: any, args: any, context: any, info: any) => {
+        Logging.info('Getting meals')
         try {
             const { id }: { id: string } = args;
             const user = await User.findOne({ _id: id });

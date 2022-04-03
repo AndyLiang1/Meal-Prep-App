@@ -35,7 +35,7 @@ const typeDefs = gql`
         # health check
         boop: String!
         clearDb: String
-        getUser(id: ID!, day1: Boolean!, day2: Boolean!, day3: Boolean!, day4: Boolean!, day5: Boolean!, day6: Boolean!, day7: Boolean!): User
+        getMeals(id: ID!, day1: Boolean!, day2: Boolean!, day3: Boolean!, day4: Boolean!, day5: Boolean!, day6: Boolean!, day7: Boolean!): User
     }
 
     input RegisterInput {

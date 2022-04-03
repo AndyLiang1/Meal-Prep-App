@@ -4,7 +4,7 @@ import UserModel from '../../models/User';
 import { createUID } from './Auth';
 
 export const createMeal = async (parent: any, args: any, context: any, info: any) => {
-    console.log('creating meal')
+    Logging.info('Creating Meals')
     // get my user
     try {
         const { userId, dayIndex } = args;

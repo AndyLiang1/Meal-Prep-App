@@ -1,8 +1,8 @@
 import { gql } from "@apollo/client";
 
-export const GET_USER = gql`
-    query GET_USER($getUserId: ID!, $day1: Boolean!, $day2: Boolean!, $day3: Boolean!, $day4: Boolean!, $day5: Boolean!, $day6: Boolean!, $day7: Boolean!) {
-        getUser(id: $getUserId, day1: $day1, day2: $day2, day3: $day3, day4: $day4, day5: $day5, day6: $day6, day7: $day7) {
+export const GET_MEALS = gql`
+    query GET_MEALS($getUserId: ID!, $day1: Boolean!, $day2: Boolean!, $day3: Boolean!, $day4: Boolean!, $day5: Boolean!, $day6: Boolean!, $day7: Boolean!) {
+        getMeals(id: $getUserId, day1: $day1, day2: $day2, day3: $day3, day4: $day4, day5: $day5, day6: $day6, day7: $day7) {
             username
             id
             day1 @include(if: $day1) {
