@@ -30,14 +30,22 @@ export const register = async (parent: any, { input }: MutationRegisterArgs, con
     const hashedPass: string = await bcrypt.hash(password, 10);
     let days: Day[] = [];
     for (let i: number = 0; i < 7; i++) {
-        const foods: Food[] = [];
+        const food: Food = {
+            name: 'food',
+            calories: 300,
+            proteins: 30,
+            fats: 2,
+            carbs: 15,
+            ingredients: []
+        };
+        const foods: Food[] = [food, food, food, food];
         const meal: Meal = {
             index: 0,
             foods
         };
         const day: Day = {
             name: Days[i],
-            meals: [meal]
+            meals: [meal, meal, meal, meal, meal]
         };
         days.push(day);
     }

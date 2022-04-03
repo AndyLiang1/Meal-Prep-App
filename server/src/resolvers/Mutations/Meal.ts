@@ -23,7 +23,7 @@ export const createMeal = async (parent: any, args: MutationCreateMealArgs, cont
         });
 
         await user!.save();
-        return newMeal;
+        return user;
     } catch (error) {
         Logging.error(error);
     }

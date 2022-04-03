@@ -77,7 +77,7 @@ const typeDefs = gql`
         login(email: String!, password: String!): LoginResult!
 
         createFood(input: CreateFoodInput!): Food!
-        createMeal(userId: ID!, dayName: String!): Meal!
+        createMeal(userId: ID!, dayName: String!): User!
     }
 `;
 

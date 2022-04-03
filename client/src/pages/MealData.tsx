@@ -2,7 +2,7 @@ import { gql, useQuery } from '@apollo/client';
 import * as React from 'react';
 import { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { MealData } from '../components/MealData/MealsInDay';
+import { MealData } from '../components/MealList/Meal/MealList';
 import { Header } from '../components/Others/Header';
 import { Query, User } from '../generated/graphql-client';
 import { addUserToStore } from '../state/action-creators';
@@ -29,17 +29,9 @@ const GET_USER = gql`
                 meals {
                     index
                     foods {
-                        name
-                        calories
-                        proteins
-                        carbs
-                        fats
+                        name                  
                         ingredients {
-                            name
-                            calories
-                            proteins
-                            carbs
-                            fats
+                            name                          
                         }
                     }
                 }

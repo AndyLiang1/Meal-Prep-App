@@ -1,6 +1,6 @@
 import * as React from 'react';
 import style from './Food.module.css'
-import {Food} from '../../generated/graphql-client'
+import {Food} from '../../../generated/graphql-client'
 
 export interface IFoodInMealProps {
     food: Food

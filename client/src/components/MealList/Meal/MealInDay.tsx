@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { useState } from 'react';
-import { AddFoodForm } from './CRUD/AddFood';
-import { FoodInMeal } from './FoodInMeal';
+import { AddFoodForm } from '../Food/AddFoodForm';
+import { FoodInMeal } from '../Food/FoodInMeal';
 import style from './Meal.module.css';
 
 export interface IMealInDayProps {
