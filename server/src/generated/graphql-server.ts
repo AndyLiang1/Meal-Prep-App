@@ -25,12 +25,6 @@ export type CreateFoodInput = {
   userId: Scalars['ID'];
 };
 
-export type Day = {
-  __typename?: 'Day';
-  meals: Array<Meal>;
-  name: Scalars['String'];
-};
-
 export type Food = {
   __typename?: 'Food';
   calories: Scalars['Float'];
@@ -56,13 +50,14 @@ export type LoginSuccess = {
 export type Meal = {
   __typename?: 'Meal';
   foods: Array<Food>;
+  id: Scalars['ID'];
   index: Scalars['Int'];
 };
 
 export type Mutation = {
   __typename?: 'Mutation';
   createFood: Food;
-  createMeal: Meal;
+  createMeal: User;
   login: LoginResult;
   register: RegisterResult;
 };
@@ -74,7 +69,7 @@ export type MutationCreateFoodArgs = {
 
 
 export type MutationCreateMealArgs = {
-  dayName: Scalars['String'];
+  dayIndex: Scalars['Int'];
   userId: Scalars['ID'];
 };
 
@@ -122,9 +117,14 @@ export type RegisterSuccess = {
 export type User = {
   __typename?: 'User';
   accessToken: Scalars['String'];
-  days: Array<Day>;
+  day1: Array<Meal>;
+  day2: Array<Meal>;
+  day3: Array<Meal>;
+  day4: Array<Meal>;
+  day5: Array<Meal>;
+  day6: Array<Meal>;
+  day7: Array<Meal>;
   email: Scalars['String'];
-  foodList: Array<Food>;
   id: Scalars['ID'];
   password: Scalars['String'];
   username: Scalars['String'];
@@ -201,7 +201,6 @@ export type DirectiveResolverFn<TResult = {}, TParent = {}, TContext = {}, TArgs
 export type ResolversTypes = {
   Boolean: ResolverTypeWrapper<Scalars['Boolean']>;
   CreateFoodInput: CreateFoodInput;
-  Day: ResolverTypeWrapper<Day>;
   Float: ResolverTypeWrapper<Scalars['Float']>;
   Food: ResolverTypeWrapper<Food>;
   ID: ResolverTypeWrapper<Scalars['ID']>;
@@ -224,7 +223,6 @@ export type ResolversTypes = {
 export type ResolversParentTypes = {
   Boolean: Scalars['Boolean'];
   CreateFoodInput: CreateFoodInput;
-  Day: Day;
   Float: Scalars['Float'];
   Food: Food;
   ID: Scalars['ID'];
@@ -241,12 +239,6 @@ export type ResolversParentTypes = {
   RegisterSuccess: RegisterSuccess;
   String: Scalars['String'];
   User: User;
-};
-
-export type DayResolvers<ContextType = any, ParentType extends ResolversParentTypes['Day'] = ResolversParentTypes['Day']> = {
-  meals?: Resolver<Array<ResolversTypes['Meal']>, ParentType, ContextType>;
-  name?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
-  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
 export type FoodResolvers<ContextType = any, ParentType extends ResolversParentTypes['Food'] = ResolversParentTypes['Food']> = {
@@ -275,13 +267,14 @@ export type LoginSuccessResolvers<ContextType = any, ParentType extends Resolver
 
 export type MealResolvers<ContextType = any, ParentType extends ResolversParentTypes['Meal'] = ResolversParentTypes['Meal']> = {
   foods?: Resolver<Array<ResolversTypes['Food']>, ParentType, ContextType>;
+  id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
   index?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
 export type MutationResolvers<ContextType = any, ParentType extends ResolversParentTypes['Mutation'] = ResolversParentTypes['Mutation']> = {
   createFood?: Resolver<ResolversTypes['Food'], ParentType, ContextType, RequireFields<MutationCreateFoodArgs, 'input'>>;
-  createMeal?: Resolver<ResolversTypes['Meal'], ParentType, ContextType, RequireFields<MutationCreateMealArgs, 'dayName' | 'userId'>>;
+  createMeal?: Resolver<ResolversTypes['User'], ParentType, ContextType, RequireFields<MutationCreateMealArgs, 'dayIndex' | 'userId'>>;
   login?: Resolver<ResolversTypes['LoginResult'], ParentType, ContextType, RequireFields<MutationLoginArgs, 'email' | 'password'>>;
   register?: Resolver<ResolversTypes['RegisterResult'], ParentType, ContextType, RequireFields<MutationRegisterArgs, 'input'>>;
 };
@@ -308,9 +301,14 @@ export type RegisterSuccessResolvers<ContextType = any, ParentType extends Resol
 
 export type UserResolvers<ContextType = any, ParentType extends ResolversParentTypes['User'] = ResolversParentTypes['User']> = {
   accessToken?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
-  days?: Resolver<Array<ResolversTypes['Day']>, ParentType, ContextType>;
+  day1?: Resolver<Array<ResolversTypes['Meal']>, ParentType, ContextType>;
+  day2?: Resolver<Array<ResolversTypes['Meal']>, ParentType, ContextType>;
+  day3?: Resolver<Array<ResolversTypes['Meal']>, ParentType, ContextType>;
+  day4?: Resolver<Array<ResolversTypes['Meal']>, ParentType, ContextType>;
+  day5?: Resolver<Array<ResolversTypes['Meal']>, ParentType, ContextType>;
+  day6?: Resolver<Array<ResolversTypes['Meal']>, ParentType, ContextType>;
+  day7?: Resolver<Array<ResolversTypes['Meal']>, ParentType, ContextType>;
   email?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
-  foodList?: Resolver<Array<ResolversTypes['Food']>, ParentType, ContextType>;
   id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
   password?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   username?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
@@ -318,7 +316,6 @@ export type UserResolvers<ContextType = any, ParentType extends ResolversParentT
 };
 
 export type Resolvers<ContextType = any> = {
-  Day?: DayResolvers<ContextType>;
   Food?: FoodResolvers<ContextType>;
   LoginError?: LoginErrorResolvers<ContextType>;
   LoginResult?: LoginResultResolvers<ContextType>;

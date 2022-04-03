@@ -7,17 +7,18 @@ const typeDefs = gql`
         email: String!
         password: String!
         accessToken: String!
-        days: [Day!]!
-        foodList: [Food!]!
-    }
-
-    type Day {
-        name: String!
-        meals: [Meal!]!
+        day1: [Meal!]!
+        day2: [Meal!]!
+        day3: [Meal!]!
+        day4: [Meal!]!
+        day5: [Meal!]!
+        day6: [Meal!]!
+        day7: [Meal!]!
     }
 
     type Meal {
         index: Int!
+        id: ID!
         foods: [Food!]!
     }
 
@@ -77,7 +78,7 @@ const typeDefs = gql`
         login(email: String!, password: String!): LoginResult!
 
         createFood(input: CreateFoodInput!): Food!
-        createMeal(userId: ID!, dayName: String!): User!
+        createMeal(userId: ID!, dayIndex: Int!): User!
     }
 `;
 

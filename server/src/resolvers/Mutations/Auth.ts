@@ -5,7 +5,7 @@ import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 import { config } from '../../config/config';
 
-import { Day, Food, Meal, MutationLoginArgs, MutationRegisterArgs, User } from '../../generated/graphql-server';
+import {  Food, Meal, MutationLoginArgs, MutationRegisterArgs, User } from '../../generated/graphql-server';
 
 enum Days {
     MONDAY,
@@ -16,7 +16,7 @@ enum Days {
     SATURDAY,
     SUNDAY
 }
-const createUID = (): string => {
+export const createUID = (): string => {
     return Date.now().toString(36) + Math.random().toString(36).substr(2);
 };
 
@@ -28,34 +28,60 @@ export const register = async (parent: any, { input }: MutationRegisterArgs, con
     }
 
     const hashedPass: string = await bcrypt.hash(password, 10);
-    let days: Day[] = [];
-    for (let i: number = 0; i < 7; i++) {
-        const food: Food = {
-            name: 'food',
-            calories: 300,
-            proteins: 30,
-            fats: 2,
-            carbs: 15,
-            ingredients: []
-        };
-        const foods: Food[] = [food, food, food, food];
-        const meal: Meal = {
+    // let days: Day[] = [];
+    const food: Food = {
+        name: 'food',
+        calories: 300,
+        proteins: 30,
+        fats: 2,
+        carbs: 15,
+        ingredients: []
+    };
+    const meal: Meal = {
+            id: createUID(),
             index: 0,
-            foods
+            foods: [food, food, food, food]
         };
-        const day: Day = {
-            name: Days[i],
-            meals: [meal, meal, meal, meal, meal]
-        };
-        days.push(day);
-    }
+    // for (let i: number = 0; i < 7; i++) {
+    //     const food: Food = {
+    //         name: 'food',
+    //         calories: 300,
+    //         proteins: 30,
+    //         fats: 2,
+    //         carbs: 15,
+    //         ingredients: []
+    //     };
+    //     const foods: Food[] = [food, food, food, food];
+    //     const meal: Meal = {
+    //         index: 0,
+    //         foods
+    //     };
+    //     const day: Day = {
+    //         name: Days[i],
+    //         meals: [meal, meal, meal, meal, meal]
+    //     };
+    //     days.push(day);
+    // }
+    const day1 = [meal, meal, meal, meal, meal];
+    const day2 = [meal, meal, meal, meal, meal];
+    const day3 = [meal, meal, meal, meal, meal];
+    const day4 = [meal, meal, meal, meal, meal];
+    const day5 = [meal, meal, meal, meal, meal];
+    const day6 = [meal, meal, meal, meal, meal];
+    const day7 = [meal, meal, meal, meal, meal];
     const foodList: Food[] = [];
     const user = new UserModel({
         _id: new mongoose.Types.ObjectId(),
         username,
         email,
         password: hashedPass,
-        days,
+        day1,
+        day2,
+        day3,
+        day4,
+        day5,
+        day6,
+        day7,
         foodList
     });
 
@@ -69,7 +95,7 @@ export const register = async (parent: any, { input }: MutationRegisterArgs, con
             },
             config.server.JWT_SECRET
         );
-        const { username, email, password, days } = returnedUser;
+        const { username, email, password, day1, day2, day3, day4, day5, day6, day7 } = returnedUser;
         const ret = {
             user: {
                 id: returnedUser._id,
@@ -77,7 +103,13 @@ export const register = async (parent: any, { input }: MutationRegisterArgs, con
                 email,
                 password,
                 accessToken,
-                days,
+                day1, 
+                day2, 
+                day3, 
+                day4, 
+                day5, 
+                day6,  
+                day7,
                 foodList
             }
         };
@@ -103,7 +135,7 @@ export const login = async (parent: any, args: MutationLoginArgs, context: any, 
         if (!match) {
             return { message: 'Wrong username and password combination' };
         } else {
-            const accessToken:string = jwt.sign({ username: userWithSameEmail.username, id: userWithSameEmail.id }, config.server.JWT_SECRET);
+            const accessToken: string = jwt.sign({ username: userWithSameEmail.username, id: userWithSameEmail.id }, config.server.JWT_SECRET);
             const days: Days[] = [];
 
             const ret = {
