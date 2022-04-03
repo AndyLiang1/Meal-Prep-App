@@ -10,12 +10,20 @@ export const createMeal = async (parent: any, args: MutationCreateMealArgs, cont
         if (!user) {
             Logging.error('No user found from createMeal resolver');
         }
-
+        let foods: Food[] = [];
+        let newMeal: Meal = {
+            index: 0,
+            foods
+        };
         user!.days.forEach((day) => {
-            if(day.name === dayName) {
-                
+            if (day.name === dayName) {
+                newMeal.index = day.meals.length
+                day.meals.push(newMeal);
             }
-        })
+        });
+
+        await user!.save();
+        return newMeal;
     } catch (error) {
         Logging.error(error);
     }

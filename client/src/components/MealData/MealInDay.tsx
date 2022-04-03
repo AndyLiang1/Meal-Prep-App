@@ -1,14 +1,14 @@
 import * as React from 'react';
 import { useState } from 'react';
 import { AddFoodForm } from './CRUD/AddFood';
-import { FoodInMeal } from './Food';
+import { FoodInMeal } from './FoodInMeal';
 import style from './Meal.module.css';
 
-export interface IMealProps {
+export interface IMealInDayProps {
     foods: [];
 }
 
-export function Meal({ foods }: IMealProps) {
+export function MealInDay({ foods }: IMealInDayProps) {
     console.log(foods);
     const [addingFood, setAddingFood] = useState<boolean>(false)
 
