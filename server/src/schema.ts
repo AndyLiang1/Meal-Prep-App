@@ -35,7 +35,7 @@ const typeDefs = gql`
         # health check
         boop: String!
         clearDb: String
-        getUser(id: ID!): User
+        getUser(id: ID!, day1: Boolean!, day2: Boolean!, day3: Boolean!, day4: Boolean!, day5: Boolean!, day6: Boolean!, day7: Boolean!): User
     }
 
     input RegisterInput {
@@ -73,12 +73,13 @@ const typeDefs = gql`
         fats: Float!
         ingredientNames: [String!]!
     }
+
     type Mutation {
         register(input: RegisterInput!): RegisterResult!
         login(email: String!, password: String!): LoginResult!
 
         createFood(input: CreateFoodInput!): Food!
-        createMeal(userId: ID!, dayIndex: Int!): User!
+        createMeal(userId: ID!, dayIndex: Int!, day1: Boolean!, day2: Boolean!, day3: Boolean!, day4: Boolean!, day5: Boolean!, day6: Boolean!, day7: Boolean!): User!
     }
 `;
 

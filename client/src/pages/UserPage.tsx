@@ -6,22 +6,28 @@ import { MealList } from '../components/MealList/Meal/MealList';
 import { Header } from '../components/Others/Header';
 import { Meal, Query, User } from '../generated/graphql-client';
 import { addUserToStore, changeDay } from '../state/action-creators';
-import { GET_DAY1, GET_DAY2, GET_DAY3, GET_DAY4, GET_DAY5, GET_DAY6, GET_DAY7 } from './GetDay';
 // import { login } from '../state/action-creators';
 import { IRootState } from '../state/reducers';
 import { useState } from 'react';
 import { AnyARecord } from 'dns';
+import { GET_USER } from './GetUserQuery';
 export interface IUserPageProps {}
 
-interface GetUserParams {
+interface GetUserArgs {
     getUserId: string;
+    day1: boolean;
+    day2: boolean;
+    day3: boolean;
+    day4: boolean;
+    day5: boolean;
+    day6: boolean;
+    day7: boolean;
 }
 
-interface UserData {
+interface GetUserRetVal {
     getUser: User;
 }
 
-const listOfQueries = [GET_DAY1, GET_DAY2, GET_DAY3, GET_DAY4, GET_DAY5, GET_DAY6, GET_DAY7];
 
 export function UserPage(props: IUserPageProps) {
     const userId: string = localStorage.getItem('id')!;
@@ -29,9 +35,16 @@ export function UserPage(props: IUserPageProps) {
     const { dayIndex } = useSelector((state: IRootState) => state.day);
     const dispatch = useDispatch();
     console.log(dayIndex);
-    const { loading, error, data } = useQuery<UserData, GetUserParams>(listOfQueries[dayIndex], {
+    const { loading, error, data } = useQuery<GetUserRetVal, GetUserArgs>(GET_USER, {
         variables: {
-            getUserId: userId
+            getUserId: userId,
+            day1: dayIndex === 0,
+            day2: dayIndex === 1,
+            day3: dayIndex === 2,
+            day4: dayIndex === 3,
+            day5: dayIndex === 4,
+            day6: dayIndex === 5,
+            day7: dayIndex === 6
         }
     });
     const foo = () => {
