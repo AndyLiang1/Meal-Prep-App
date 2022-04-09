@@ -137,13 +137,17 @@ export function MealList(Props: IMealListProps) {
         <div>
             {user.day ? (
                 <div className={style.container}>
-                    <button onClick={() => changeDayIndex('forward')}>Next</button>
-                    <button onClick={() => changeDayIndex('backward')}>Prev</button>
+                    <div className={style.title_container}>
+                        <button onClick={() => changeDayIndex('backward')}>Prev</button>
+                        <div className={style.dayName_container}>{Days[dayIndex]}</div>
+
+                        <button onClick={() => changeDayIndex('forward')}>Next</button>
+                    </div>
+
                     {/* <div className={style.dayName_container}>{user.days[dayIndex].name}</div>
                     {user.days[dayIndex].meals.map((meal: any) => {
                         return <MealInDay foods={meal.foods}></MealInDay>;
                     })} */}
-                    <div className={style.dayName_container}>{Days[dayIndex]}</div>
                     {user.day.map((meal: any) => {
                         return <MealInDay foods={meal.foods}></MealInDay>;
                     })}

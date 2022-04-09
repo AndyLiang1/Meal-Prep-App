@@ -10,12 +10,18 @@ html {
 }
 
 .header {
-    height: 15vh;
+    height: 12vh;
     width: 100vw;
 
-    background: red;
+    background: rgb(137, 255, 137);
     display: flex;
     justify-content: center;
     align-items: center;
     text-align: center;
+}
+
+
+.title {
+    color: rgb(255, 44, 44);
+    font-size: 30px;
 }

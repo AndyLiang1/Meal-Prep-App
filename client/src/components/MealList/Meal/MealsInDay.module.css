@@ -1,7 +1,7 @@
 .container {
     height: 70vh;
     width: 40vw;
-    background-color: blue;
+    background-color: var(--blue);
 }
 
 
@@ -12,6 +12,13 @@
 
     display: flex;
     justify-content: center;
+    align-items: center;
+    text-align: center;
+}
+
+.title_container {
+     display: flex;
+    justify-content: space-around;
     align-items: center;
     text-align: center;
 }

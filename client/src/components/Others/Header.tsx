@@ -6,7 +6,7 @@ export interface IHeaderProps {
 export function Header (props: IHeaderProps) {
   return (
     <div className = {style.header}>
-      <h1>Meal Prep App</h1>
+      <h1 className = {style.title}>Meal Prep App</h1>
     </div>
   );
 }

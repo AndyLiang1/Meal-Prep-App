@@ -69,6 +69,13 @@ export type MutationCreateFoodArgs = {
 
 
 export type MutationCreateMealArgs = {
+  day1: Scalars['Boolean'];
+  day2: Scalars['Boolean'];
+  day3: Scalars['Boolean'];
+  day4: Scalars['Boolean'];
+  day5: Scalars['Boolean'];
+  day6: Scalars['Boolean'];
+  day7: Scalars['Boolean'];
   dayIndex: Scalars['Int'];
   userId: Scalars['ID'];
 };
@@ -88,11 +95,18 @@ export type Query = {
   __typename?: 'Query';
   boop: Scalars['String'];
   clearDb?: Maybe<Scalars['String']>;
-  getUser?: Maybe<User>;
+  getMeals?: Maybe<User>;
 };
 
 
-export type QueryGetUserArgs = {
+export type QueryGetMealsArgs = {
+  day1: Scalars['Boolean'];
+  day2: Scalars['Boolean'];
+  day3: Scalars['Boolean'];
+  day4: Scalars['Boolean'];
+  day5: Scalars['Boolean'];
+  day6: Scalars['Boolean'];
+  day7: Scalars['Boolean'];
   id: Scalars['ID'];
 };
 
@@ -274,7 +288,7 @@ export type MealResolvers<ContextType = any, ParentType extends ResolversParentT
 
 export type MutationResolvers<ContextType = any, ParentType extends ResolversParentTypes['Mutation'] = ResolversParentTypes['Mutation']> = {
   createFood?: Resolver<ResolversTypes['Food'], ParentType, ContextType, RequireFields<MutationCreateFoodArgs, 'input'>>;
-  createMeal?: Resolver<ResolversTypes['User'], ParentType, ContextType, RequireFields<MutationCreateMealArgs, 'dayIndex' | 'userId'>>;
+  createMeal?: Resolver<ResolversTypes['User'], ParentType, ContextType, RequireFields<MutationCreateMealArgs, 'day1' | 'day2' | 'day3' | 'day4' | 'day5' | 'day6' | 'day7' | 'dayIndex' | 'userId'>>;
   login?: Resolver<ResolversTypes['LoginResult'], ParentType, ContextType, RequireFields<MutationLoginArgs, 'email' | 'password'>>;
   register?: Resolver<ResolversTypes['RegisterResult'], ParentType, ContextType, RequireFields<MutationRegisterArgs, 'input'>>;
 };
@@ -282,7 +296,7 @@ export type MutationResolvers<ContextType = any, ParentType extends ResolversPar
 export type QueryResolvers<ContextType = any, ParentType extends ResolversParentTypes['Query'] = ResolversParentTypes['Query']> = {
   boop?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   clearDb?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
-  getUser?: Resolver<Maybe<ResolversTypes['User']>, ParentType, ContextType, RequireFields<QueryGetUserArgs, 'id'>>;
+  getMeals?: Resolver<Maybe<ResolversTypes['User']>, ParentType, ContextType, RequireFields<QueryGetMealsArgs, 'day1' | 'day2' | 'day3' | 'day4' | 'day5' | 'day6' | 'day7' | 'id'>>;
 };
 
 export type RegisterErrorResolvers<ContextType = any, ParentType extends ResolversParentTypes['RegisterError'] = ResolversParentTypes['RegisterError']> = {

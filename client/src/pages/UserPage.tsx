@@ -4,12 +4,9 @@ import { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { MealList } from '../components/MealList/Meal/MealList';
 import { Header } from '../components/Others/Header';
-import { Meal, Query, User } from '../generated/graphql-client';
 import { addUserToStore, changeDay } from '../state/action-creators';
-// import { login } from '../state/action-creators';
 import { IRootState } from '../state/reducers';
-import { useState } from 'react';
-import { AnyARecord } from 'dns';
+import { GetMealsDocument, GetMealsQuery, Meal, User } from '../generated/graphql-client';
 import { GET_MEALS } from './GetUserQuery';
 export interface IUserPageProps {}
 
@@ -25,9 +22,8 @@ interface GetMealsArgs {
 }
 
 interface GetMealsRetVal {
-    getMeals: User;
+    getMeals: User
 }
-
 
 export function UserPage(props: IUserPageProps) {
     const userId: string = localStorage.getItem('id')!;
@@ -35,7 +31,19 @@ export function UserPage(props: IUserPageProps) {
     const { dayIndex } = useSelector((state: IRootState) => state.day);
     const dispatch = useDispatch();
     console.log(dayIndex);
-    const { loading, error, data } = useQuery<GetMealsRetVal, GetMealsArgs>(GET_MEALS, {
+    // const { loading, error, data } = useQuery<GetMealsRetVal, GetMealsArgs>(GET_MEALS, {
+    //     variables: {
+    //         getUserId: userId,
+    //         day1: dayIndex === 0,
+    //         day2: dayIndex === 1,
+    //         day3: dayIndex === 2,
+    //         day4: dayIndex === 3,
+    //         day5: dayIndex === 4,
+    //         day6: dayIndex === 5,
+    //         day7: dayIndex === 6
+    //     }
+    // });
+    const { loading, error, data } = useQuery<GetMealsRetVal>(GetMealsDocument, {
         variables: {
             getUserId: userId,
             day1: dayIndex === 0,
@@ -48,28 +56,29 @@ export function UserPage(props: IUserPageProps) {
         }
     });
     const foo = () => {
-        dispatch(changeDay({dayIndex: dayIndex + 1}))
-    }
+        dispatch(changeDay({ dayIndex: dayIndex + 1 }));
+    };
 
     useEffect(() => {
         if (loading) {
         } else {
             const user = data!.getMeals;
-            const { username, id } = user;
+            // const user = data!.getMeals;
+            const { username, id } = user!;
 
-            let day: Meal[] = [];
+            let day: any = [];
             switch (dayIndex) {
                 case 0:
                     day = user.day1;
                     break;
                 case 1:
-                    day = user.day2;
+                    day = user.day2!;
                     break;
                 case 2:
-                    day = user.day3;
+                    day = user.day3!;
                     break;
                 case 3:
-                    day = user.day4;
+                    day = user.day4!;
                     break;
                 case 4:
                     day = user.day5;
@@ -103,7 +112,7 @@ export function UserPage(props: IUserPageProps) {
         <div>
             <Header></Header>
             <MealList></MealList>
-            <button onClick = {() => foo()}>yyyyyy</button>
+            <button onClick={() => foo()}>yyyyyy</button>
         </div>
     );
 }
