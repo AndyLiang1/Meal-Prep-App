@@ -1,0 +1,38 @@
+.container {
+    height: 15%;
+    width: 100%;
+
+    background-color: var(--lightblue);
+
+    margin-top: 10px;
+    margin-bottom: 5px;
+
+    padding-right: 5px;
+    padding-bottom: 55px;
+    padding-left: 8px;
+
+    border-radius: 10px;
+}
+
+.headers_container {
+    height: 100%;
+    width: 100%;
+    background-color: var(--grey);
+    display: flex;
+    justify-content: space-around;
+
+    align-items: center;
+    text-align: center;
+}
+
+.headers {
+    height: 100%;
+    width: 90%;
+    background-color: var(--grey);
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    text-align: center;
+
+    font-size: 8px;
+}

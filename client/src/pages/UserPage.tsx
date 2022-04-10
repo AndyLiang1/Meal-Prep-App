@@ -7,6 +7,8 @@ import { Header } from '../components/Others/Header';
 import { addUserToStore, changeDay } from '../state/action-creators';
 import { IRootState } from '../state/reducers';
 import { GetMealsDocument, GetMealsQuery, Meal, User } from '../generated/graphql-client';
+import styles from './UserPage.module.css'
+import { FoodList } from '../components/FoodList/FoodList';
 export interface IUserPageProps {}
 
 export function UserPage(props: IUserPageProps) {
@@ -83,7 +85,10 @@ export function UserPage(props: IUserPageProps) {
     return (
         <div>
             <Header></Header>
-            <MealList></MealList>
+            <div className = {styles.container}>
+                <MealList></MealList>
+                <FoodList></FoodList>
+            </div>
         </div>
     );
 }

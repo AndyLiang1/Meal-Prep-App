@@ -1,0 +1,40 @@
+.container {
+    height: 82vh;
+    width: 55vw;
+    background-color: var(--lighterblue);
+
+    flex-direction: column;
+}
+
+.title_container {
+    height: 5%;
+    width: 100%;
+    background-color: var(--grey);
+
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    text-align: center;
+}
+
+.dayName_container {
+    height: 100%;
+    width: 100%;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+}
+
+.mealList_container {
+    height: 95%;
+    width: 100%;
+    background-color: red;
+
+    flex-direction: column;
+    display: flex;
+    align-items: center;  
+    text-align: center;   
+    overflow-y: auto;
+}

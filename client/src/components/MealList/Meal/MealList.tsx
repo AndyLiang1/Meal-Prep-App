@@ -6,7 +6,7 @@ import { addUserToStore, changeDay } from '../../../state/action-creators';
 import { IRootState } from '../../../state/reducers';
 import { defaultUserInfo } from '../../../state/reducers/UserData';
 import { MealInDay } from './MealInDay';
-import style from './MealsInDay.module.css';
+import styles from './MealList.module.css';
 
 export interface IMealListProps {
     // getUser: any
@@ -121,11 +121,10 @@ export function MealList(Props: IMealListProps) {
     return (
         <div>
             {user.day ? (
-                <div className={style.container}>
-                    <div className={style.title_container}>
+                <div className={styles.container}>
+                    <div className={styles.title_container}>
                         <button onClick={() => changeDayIndex('backward')}>Prev</button>
-                        <div className={style.dayName_container}>{Days[dayIndex]}</div>
-
+                        <div className={styles.dayName_container}>{Days[dayIndex]}</div>
                         <button onClick={() => changeDayIndex('forward')}>Next</button>
                     </div>
 
@@ -133,12 +132,14 @@ export function MealList(Props: IMealListProps) {
                     {user.days[dayIndex].meals.map((meal: any) => {
                         return <MealInDay foods={meal.foods}></MealInDay>;
                     })} */}
-                    {user.day.map((meal: any) => {
-                        return <MealInDay foods={meal.foods}></MealInDay>;
-                    })}
-                    <button className={style.addMeal} onClick={() => addMeal()}>
-                        Add Meal
-                    </button>
+                    <div className={styles.mealList_container}>
+                        {user.day.map((meal: any) => {
+                            return <MealInDay foods={meal.foods}></MealInDay>;
+                        })}
+                        <button className={styles.addMealBtn} onClick={() => addMeal()}>
+                            Add Meal
+                        </button>
+                    </div>
                 </div>
             ) : (
                 <div>Loading...</div>

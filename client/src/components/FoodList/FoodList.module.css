@@ -1,0 +1,6 @@
+.container {
+    height: 82vh;
+    width: 35vw;
+
+    background-color: var(--lighterblue);    
+}

@@ -1,4 +1,7 @@
 :root {
-    --blue: #dfefff;
-    --lightblue: rgb(158, 206, 255);
+    --lighterblue: #dfefff;
+    --lightblue:  lightblue;
+    /* --lighttblue: lightblue; */
+
+    --grey: rgb(189, 189, 189);
 }
