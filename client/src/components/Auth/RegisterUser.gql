@@ -1,0 +1,25 @@
+mutation RegisterUser($input: RegisterInput!) {
+    register(input: $input) {
+        ... on RegisterSuccess {
+            user {
+                id
+                username
+                email
+                password
+                accessToken
+                day1 {
+                    foods {
+                        name
+                        calories
+                        proteins
+                    }
+                }
+            }
+        }
+
+        ... on RegisterError {
+            message
+        }
+        # username
+    }
+}

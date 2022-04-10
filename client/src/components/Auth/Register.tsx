@@ -3,37 +3,9 @@ import { Formik, Form, Field } from 'formik';
 import * as Yup from 'yup';
 import { gql, useMutation } from '@apollo/client';
 import { useState } from 'react';
-import { RegisterInput, RegisterResult, RegisterError } from '../../generated/graphql-client';
+import { RegisterInput, RegisterResult, RegisterError, RegisterUserDocument } from '../../generated/graphql-client';
 
 export interface IRegisterProps {}
-
-const REGISTER_USER = gql`
-    mutation RegisterUser($input: RegisterInput!) {
-        register(input: $input) {
-            ... on RegisterSuccess {
-                user {
-                    id
-                    username
-                    email
-                    password
-                    accessToken
-                    day1 {
-                        foods {
-                            name
-                            calories
-                            proteins
-                        }
-                    }
-                }
-            }
-
-            ... on RegisterError {
-                message
-            }
-            # username
-        }
-    }
-`;
 
 export function Register(props: IRegisterProps) {
     const initialValues: RegisterInput = {
@@ -49,7 +21,7 @@ export function Register(props: IRegisterProps) {
     });
 
     const [registerErrorMsg, setRegisterErrorMsg] = useState<string>();
-    const [registerUser] = useMutation<{ register: RegisterResult }, { input: RegisterInput }>(REGISTER_USER);
+    const [registerUser] = useMutation(RegisterUserDocument);
     const onSubmit = async (userInfo: RegisterInput) => {
         const { username, email, password } = userInfo;
         try {

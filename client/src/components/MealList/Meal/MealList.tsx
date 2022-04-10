@@ -1,32 +1,17 @@
 import { gql, useLazyQuery, useMutation, useQuery } from '@apollo/client';
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { Food, Meal, User } from '../../../generated/graphql-client';
+import { CreateMealDocument, Food, Meal, User } from '../../../generated/graphql-client';
 import { addUserToStore, changeDay } from '../../../state/action-creators';
 import { IRootState } from '../../../state/reducers';
 import { defaultUserInfo } from '../../../state/reducers/UserData';
 import { MealInDay } from './MealInDay';
-import { CREATE_MEAL } from './MealListQuery';
 import style from './MealsInDay.module.css';
 
 export interface IMealListProps {
     // getUser: any
 }
 
-interface CreateMealArgs {
-    userId: string;
-    dayIndex: number;
-    day1: boolean;
-    day2: boolean;
-    day3: boolean;
-    day4: boolean;
-    day5: boolean;
-    day6: boolean;
-    day7: boolean;
-}
-interface CreateMealRetVal {
-    createMeal: User;
-}
 enum Days {
     MONDAY,
     TUESDAY,
@@ -45,7 +30,7 @@ export function MealList(Props: IMealListProps) {
 
     // const dispatch = useDispatch()
 
-    const [createMeal, { data, loading, error }] = useMutation<CreateMealRetVal, CreateMealArgs>(CREATE_MEAL);
+    const [createMeal] = useMutation(CreateMealDocument);
 
     const addMeal = async () => {
         try {
@@ -67,36 +52,36 @@ export function MealList(Props: IMealListProps) {
             });
             if (data) {
                 const { username, id } = data.createMeal;
-                console.log(data);
-                let day: Meal[] = [];
-                switch (dayIndex) {
-                    case 0:
-                        day = data.createMeal.day1;
-                        break;
-                    case 1:
-                        day = data.createMeal.day2;
-                        break;
-                    case 2:
-                        day = data.createMeal.day3;
-                        break;
-                    case 3:
-                        day = data.createMeal.day4;
-                        break;
-                    case 4:
-                        day = data.createMeal.day5;
-                        break;
-                    case 5:
-                        day = data.createMeal.day6;
-                        break;
-                    case 6:
-                        day = data.createMeal.day7;
-                        break;
-                    default:
-                        day = data.createMeal.day1;
-                        break;
-                }
-                console.log(data.createMeal.day4);
-                console.log(day);
+                let day: any = [];
+
+                    switch (dayIndex) {
+                        case 0:
+                            day = data.createMeal.day1!;
+                            break;
+                        case 1:
+                            day = data.createMeal.day2;
+                            break;
+                        case 2:
+                            day = data.createMeal.day3;
+                            break;
+                        case 3:
+                            day = data.createMeal.day4;
+                            break;
+                        case 4:
+                            day = data.createMeal.day5;
+                            break;
+                        case 5:
+                            day = data.createMeal.day6;
+                            break;
+                        case 6:
+                            day = data.createMeal.day7;
+                            break;
+                        default:
+                            day = data.createMeal.day1;
+                            break;
+                    }
+                
+
                 dispatch(
                     addUserToStore({
                         username,

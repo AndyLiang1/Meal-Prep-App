@@ -9,7 +9,7 @@ import { useDispatch } from 'react-redux';
 import { actionCreators } from '../../state';
 import { useNavigate } from 'react-router-dom';
 import { addUserToStore } from '../../state/action-creators';
-import { LoginError, LoginResult, LoginSuccess } from '../../generated/graphql-client';
+import { LoginError, LoginResult, LoginSuccess, LoginUserDocument } from '../../generated/graphql-client';
 
 export interface ILoginProps {}
 
@@ -17,23 +17,6 @@ interface LoginInput {
     email: string;
     password: string;
 }
-
-const LOGIN_USER = gql`
-    mutation LoginUser($email: String!, $password: String!) {
-        login(email: $email, password: $password) {
-            ... on LoginSuccess {
-                user {
-                    id
-                    username
-                    accessToken
-                }
-            }
-            ... on LoginError {
-                message
-            }
-        }
-    }
-`;
 
 export function Login(props: ILoginProps) {
     const initialValues: LoginInput = {
@@ -51,7 +34,7 @@ export function Login(props: ILoginProps) {
 
     //
     const [loginErrorMsg, setLoginErrorMsg] = useState<string>();
-    const [loginUser] = useMutation<{ login: LoginResult }, LoginInput>(LOGIN_USER);
+    const [loginUser] = useMutation(LoginUserDocument);
     const onSubmit = async (userInfo: LoginInput) => {
         const { email, password } = userInfo;
         try {
