@@ -33,7 +33,6 @@ export function UserPage(props: IUserPageProps) {
     useEffect(() => {
         if (loading) {
         } else {
-            console.log(data!);
             const user = data!.getMeals;
             // const user = data!.getMeals;
 

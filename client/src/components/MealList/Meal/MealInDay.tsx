@@ -1,15 +1,22 @@
+import { useMutation } from '@apollo/client';
 import * as React from 'react';
 import { useState } from 'react';
+import { Food, Meal, DeleteMealDocument } from '../../../generated/graphql-client';
 import { AddFoodForm } from '../Food/AddFoodForm';
+import { DeleteMealModal } from '../Food/DeleteMealModal';
 import { FoodInMeal } from '../Food/FoodInMeal';
 import styles from './MealInDay.module.css';
 
 export interface IMealInDayProps {
-    foods: [];
+    foods: Food[];
+    mealId: String;
 }
 
-export function MealInDay({ foods }: IMealInDayProps) {
-    const [addingFood, setAddingFood] = useState<boolean>(false);
+export function MealInDay({ foods, mealId }: IMealInDayProps) {
+    const [addingFoodForm, setAddingFoodForm] = useState<boolean>(false);
+    const [deletingMealModal, setDeletingMealModal] = useState<boolean>(false)
+
+    const [deleteMeal, {data, error, loading}] = useMutation(DeleteMealDocument)
 
     return (
         <div className={styles.container}>
@@ -19,11 +26,11 @@ export function MealInDay({ foods }: IMealInDayProps) {
                 })}
             </div>
             <div className={styles.btn_container}>
-                <button onClick={() => setAddingFood(true)}>Add food </button>
-                <button>Delete food </button>
+                <button onClick={() => setAddingFoodForm(true)}>Add food </button>
+                <button onClick = {() => setDeletingMealModal(true)}>Delete Meal </button>
             </div>
-            {addingFood ? <AddFoodForm setAddingFood={setAddingFood}></AddFoodForm> : null}
-
+            {addingFoodForm ? <AddFoodForm setAddingFoodForm={setAddingFoodForm}></AddFoodForm> : null}
+            {deletingMealModal ? <DeleteMealModal setDeletingMealModal={setDeletingMealModal}></DeleteMealModal> : null}
         </div>
     );
 }

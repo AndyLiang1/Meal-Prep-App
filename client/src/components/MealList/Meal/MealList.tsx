@@ -31,13 +31,12 @@ export function MealList(Props: IMealListProps) {
     // const dispatch = useDispatch()
 
     const [createMeal] = useMutation(CreateMealDocument);
-    const [deleteMeal] = useMutation(DeleteMealDocument)
 
     const addMeal = async () => {
         try {
             console.log(user.id);
             console.log(dayIndex);
-            
+
             const { data } = await createMeal({
                 variables: {
                     userId: user.id,
@@ -53,35 +52,34 @@ export function MealList(Props: IMealListProps) {
             });
             if (data) {
                 const { username, id } = data.createMeal;
+                console.log(data);
                 let day: any = [];
-
-                    switch (dayIndex) {
-                        case 0:
-                            day = data.createMeal.day1!;
-                            break;
-                        case 1:
-                            day = data.createMeal.day2;
-                            break;
-                        case 2:
-                            day = data.createMeal.day3;
-                            break;
-                        case 3:
-                            day = data.createMeal.day4;
-                            break;
-                        case 4:
-                            day = data.createMeal.day5;
-                            break;
-                        case 5:
-                            day = data.createMeal.day6;
-                            break;
-                        case 6:
-                            day = data.createMeal.day7;
-                            break;
-                        default:
-                            day = data.createMeal.day1;
-                            break;
-                    }
-                
+                switch (dayIndex) {
+                    case 0:
+                        day = data.createMeal.day1;
+                        break;
+                    case 1:
+                        day = data.createMeal.day2;
+                        break;
+                    case 2:
+                        day = data.createMeal.day3;
+                        break;
+                    case 3:
+                        day = data.createMeal.day4;
+                        break;
+                    case 4:
+                        day = data.createMeal.day5;
+                        break;
+                    case 5:
+                        day = data.createMeal.day6;
+                        break;
+                    case 6:
+                        day = data.createMeal.day7;
+                        break;
+                    default:
+                        day = data.createMeal.day1;
+                        break;
+                }
 
                 dispatch(
                     addUserToStore({
@@ -127,7 +125,6 @@ export function MealList(Props: IMealListProps) {
                         <button onClick={() => changeDayIndex('backward')}>Prev</button>
                         <div className={styles.dayName_container}>{Days[dayIndex]}</div>
                         <button onClick={() => changeDayIndex('forward')}>Next</button>
-                        
                     </div>
 
                     {/* <div className={style.dayName_container}>{user.days[dayIndex].name}</div>
@@ -135,10 +132,10 @@ export function MealList(Props: IMealListProps) {
                         return <MealInDay foods={meal.foods}></MealInDay>;
                     })} */}
                     <div className={styles.mealList_container}>
-                        {user.day.map((meal: any) => {
-                            return <MealInDay foods={meal.foods}></MealInDay>;
+                        {user.day.map((meal: Meal) => {
+                            return <MealInDay foods={meal.foods} mealId = {meal.id} ></MealInDay>;
                         })}
-                        <button className={styles.addMealBtn} onClick={() => addMeal()}>
+                        <button className={styles.addMealBtn} onClick = {() => addMeal()}>
                             Add Meal
                         </button>
                     </div>

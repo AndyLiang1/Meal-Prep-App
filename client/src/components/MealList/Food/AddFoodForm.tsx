@@ -3,13 +3,14 @@ import { Formik, Form, Field } from 'formik';
 import { setMaxListeners } from 'process';
 import * as React from 'react';
 import * as Yup from 'yup';
+import styles from './AddFoodForm.module.css'
 
 export interface IAddFoodFormProps {
-    setAddingFood: React.Dispatch<React.SetStateAction<boolean>>;
+    setAddingFoodForm: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 
-export function AddFoodForm({setAddingFood}: IAddFoodFormProps) {
+export function AddFoodForm({setAddingFoodForm}: IAddFoodFormProps) {
     const initialValues = {
         name: '',
         calories: 0,
@@ -33,13 +34,13 @@ export function AddFoodForm({setAddingFood}: IAddFoodFormProps) {
 
     const onSubmit = () => {};
     return (
-        <div>
+        <div className = {styles.container}>
             <Formik initialValues={initialValues} validationSchema={validationSchema} onSubmit={onSubmit}>
                 {({ errors, touched }) => (
                     <Form>
                         <div>
                             <h1>Create a new food</h1>
-                            <button onClick = {() => setAddingFood(false)}>X</button>
+                            <button onClick={() => setAddingFoodForm(false)}>X</button>
                         </div>
                         <Field className="add_field" name="name" type="text" />
                         <h1>Calories</h1>
