@@ -1,7 +1,7 @@
 import { gql, useLazyQuery, useMutation, useQuery } from '@apollo/client';
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { CreateMealDocument, Food, Meal, User } from '../../../generated/graphql-client';
+import { CreateMealDocument, DeleteMealDocument, Food, Meal, User } from '../../../generated/graphql-client';
 import { addUserToStore, changeDay } from '../../../state/action-creators';
 import { IRootState } from '../../../state/reducers';
 import { defaultUserInfo } from '../../../state/reducers/UserData';
@@ -31,12 +31,13 @@ export function MealList(Props: IMealListProps) {
     // const dispatch = useDispatch()
 
     const [createMeal] = useMutation(CreateMealDocument);
+    const [deleteMeal] = useMutation(DeleteMealDocument)
 
     const addMeal = async () => {
         try {
             console.log(user.id);
             console.log(dayIndex);
-
+            
             const { data } = await createMeal({
                 variables: {
                     userId: user.id,
@@ -126,6 +127,7 @@ export function MealList(Props: IMealListProps) {
                         <button onClick={() => changeDayIndex('backward')}>Prev</button>
                         <div className={styles.dayName_container}>{Days[dayIndex]}</div>
                         <button onClick={() => changeDayIndex('forward')}>Next</button>
+                        
                     </div>
 
                     {/* <div className={style.dayName_container}>{user.days[dayIndex].name}</div>

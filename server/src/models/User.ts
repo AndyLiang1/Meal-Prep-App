@@ -26,15 +26,15 @@ const UserSchema: Schema = new Schema(
         // days: {type: Array},
         // days: [[[{type: String}]]],
         // days: [{
-        //     name: String, 
+        //     name: String,
         //     meals: [
         //         {
-        //             index: Number, 
+        //             index: Number,
         //             foods: [
         //                 {
-        //                     name: String, 
-        //                     calories: Number, 
-        //                     proteins: Number, 
+        //                     name: String,
+        //                     calories: Number,
+        //                     proteins: Number,
         //                     carbs: Number,
         //                     fats: Number,
         //                     ingredients: Array
@@ -45,12 +45,13 @@ const UserSchema: Schema = new Schema(
         // }],
         day1: [
             {
-                index: Number, 
+                name: String,
+                index: Number,
                 foods: [
                     {
-                        name: String, 
-                        calories: Number, 
-                        proteins: Number, 
+                        name: String,
+                        calories: Number,
+                        proteins: Number,
                         carbs: Number,
                         fats: Number,
                         ingredients: Array
@@ -60,12 +61,13 @@ const UserSchema: Schema = new Schema(
         ],
         day2: [
             {
-                index: Number, 
+                name: String,
+                index: Number,
                 foods: [
                     {
-                        name: String, 
-                        calories: Number, 
-                        proteins: Number, 
+                        name: String,
+                        calories: Number,
+                        proteins: Number,
                         carbs: Number,
                         fats: Number,
                         ingredients: Array
@@ -75,12 +77,13 @@ const UserSchema: Schema = new Schema(
         ],
         day3: [
             {
-                index: Number, 
+                index: Number,
+                name: String,
                 foods: [
                     {
-                        name: String, 
-                        calories: Number, 
-                        proteins: Number, 
+                        name: String,
+                        calories: Number,
+                        proteins: Number,
                         carbs: Number,
                         fats: Number,
                         ingredients: Array
@@ -90,12 +93,13 @@ const UserSchema: Schema = new Schema(
         ],
         day4: [
             {
-                index: Number, 
+                name: String,
+                index: Number,
                 foods: [
                     {
-                        name: String, 
-                        calories: Number, 
-                        proteins: Number, 
+                        name: String,
+                        calories: Number,
+                        proteins: Number,
                         carbs: Number,
                         fats: Number,
                         ingredients: Array
@@ -105,12 +109,13 @@ const UserSchema: Schema = new Schema(
         ],
         day5: [
             {
-                index: Number, 
+                name: String,
+                index: Number,
                 foods: [
                     {
-                        name: String, 
-                        calories: Number, 
-                        proteins: Number, 
+                        name: String,
+                        calories: Number,
+                        proteins: Number,
                         carbs: Number,
                         fats: Number,
                         ingredients: Array
@@ -120,12 +125,13 @@ const UserSchema: Schema = new Schema(
         ],
         day6: [
             {
-                index: Number, 
+                name: String,
+                index: Number,
                 foods: [
                     {
-                        name: String, 
-                        calories: Number, 
-                        proteins: Number, 
+                        name: String,
+                        calories: Number,
+                        proteins: Number,
                         carbs: Number,
                         fats: Number,
                         ingredients: Array
@@ -135,12 +141,13 @@ const UserSchema: Schema = new Schema(
         ],
         day7: [
             {
-                index: Number, 
+                name: String,
+                index: Number,
                 foods: [
                     {
-                        name: String, 
-                        calories: Number, 
-                        proteins: Number, 
+                        name: String,
+                        calories: Number,
+                        proteins: Number,
                         carbs: Number,
                         fats: Number,
                         ingredients: Array
@@ -149,7 +156,7 @@ const UserSchema: Schema = new Schema(
             }
         ],
         // days: any,
-        foodList: {type: Array, required: true}
+        foodList: { type: Array, required: true }
     },
     {
         versionKey: false

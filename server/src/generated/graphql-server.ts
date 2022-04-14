@@ -52,12 +52,14 @@ export type Meal = {
   foods: Array<Food>;
   id: Scalars['ID'];
   index: Scalars['Int'];
+  name: Scalars['String'];
 };
 
 export type Mutation = {
   __typename?: 'Mutation';
   createFood: Food;
   createMeal: User;
+  deleteMeal: User;
   login: LoginResult;
   register: RegisterResult;
 };
@@ -77,6 +79,20 @@ export type MutationCreateMealArgs = {
   day6: Scalars['Boolean'];
   day7: Scalars['Boolean'];
   dayIndex: Scalars['Int'];
+  userId: Scalars['ID'];
+};
+
+
+export type MutationDeleteMealArgs = {
+  day1: Scalars['Boolean'];
+  day2: Scalars['Boolean'];
+  day3: Scalars['Boolean'];
+  day4: Scalars['Boolean'];
+  day5: Scalars['Boolean'];
+  day6: Scalars['Boolean'];
+  day7: Scalars['Boolean'];
+  dayIndex: Scalars['Int'];
+  mealID: Scalars['Int'];
   userId: Scalars['ID'];
 };
 
@@ -283,12 +299,14 @@ export type MealResolvers<ContextType = any, ParentType extends ResolversParentT
   foods?: Resolver<Array<ResolversTypes['Food']>, ParentType, ContextType>;
   id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
   index?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  name?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
 export type MutationResolvers<ContextType = any, ParentType extends ResolversParentTypes['Mutation'] = ResolversParentTypes['Mutation']> = {
   createFood?: Resolver<ResolversTypes['Food'], ParentType, ContextType, RequireFields<MutationCreateFoodArgs, 'input'>>;
   createMeal?: Resolver<ResolversTypes['User'], ParentType, ContextType, RequireFields<MutationCreateMealArgs, 'day1' | 'day2' | 'day3' | 'day4' | 'day5' | 'day6' | 'day7' | 'dayIndex' | 'userId'>>;
+  deleteMeal?: Resolver<ResolversTypes['User'], ParentType, ContextType, RequireFields<MutationDeleteMealArgs, 'day1' | 'day2' | 'day3' | 'day4' | 'day5' | 'day6' | 'day7' | 'dayIndex' | 'mealID' | 'userId'>>;
   login?: Resolver<ResolversTypes['LoginResult'], ParentType, ContextType, RequireFields<MutationLoginArgs, 'email' | 'password'>>;
   register?: Resolver<ResolversTypes['RegisterResult'], ParentType, ContextType, RequireFields<MutationRegisterArgs, 'input'>>;
 };

@@ -38,6 +38,7 @@ export const register = async (parent: any, { input }: MutationRegisterArgs, con
         ingredients: []
     };
     const meal: Meal = {
+            name: "Meal",
             id: createUID(),
             index: 0,
             foods: [food, food, food, food]

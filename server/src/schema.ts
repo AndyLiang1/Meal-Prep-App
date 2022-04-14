@@ -17,6 +17,7 @@ const typeDefs = gql`
     }
 
     type Meal {
+        name: String! 
         index: Int!
         id: ID!
         foods: [Food!]!
@@ -80,6 +81,7 @@ const typeDefs = gql`
 
         createFood(input: CreateFoodInput!): Food!
         createMeal(userId: ID!, dayIndex: Int!, day1: Boolean!, day2: Boolean!, day3: Boolean!, day4: Boolean!, day5: Boolean!, day6: Boolean!, day7: Boolean!): User!
+        deleteMeal(userId: ID!, dayIndex: Int!, mealID: Int!, day1: Boolean!, day2: Boolean!, day3: Boolean!, day4: Boolean!, day5: Boolean!, day6: Boolean!, day7: Boolean!): User!
     }
 `;
 

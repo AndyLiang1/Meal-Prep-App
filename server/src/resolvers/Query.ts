@@ -12,6 +12,7 @@ const Query = {
         try {
             const { id }: { id: string } = args;
             const user = await User.findOne({ _id: id });
+            console.log(user!.day1[0].name)
             return user;
         } catch (error) {
             Logging.error(error);

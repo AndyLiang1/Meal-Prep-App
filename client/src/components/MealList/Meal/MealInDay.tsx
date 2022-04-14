@@ -13,25 +13,17 @@ export function MealInDay({ foods }: IMealInDayProps) {
 
     return (
         <div className={styles.container}>
-            <div className={styles.headers_container}>
-                <div className={styles.headers}>
-                    <h1>Name</h1>
-                    <h1>Calories</h1>
-                    <h1>Proteins</h1>
-                    <h1>Carbs</h1>
-                    <h1>Fats</h1>
-                    <h1>Edit</h1>
-                    <h1>Delete</h1>
-                </div>
-            </div>
-            <div>
+            <div className={styles.foods_container}>
                 {foods.map((food: any) => {
                     return <FoodInMeal food={food}></FoodInMeal>;
                 })}
-                <button onClick={() => setAddingFood(true)}>Add food </button>
             </div>
-
+            <div className={styles.btn_container}>
+                <button onClick={() => setAddingFood(true)}>Add food </button>
+                <button>Delete food </button>
+            </div>
             {addingFood ? <AddFoodForm setAddingFood={setAddingFood}></AddFoodForm> : null}
+
         </div>
     );
 }
