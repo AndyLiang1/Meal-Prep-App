@@ -14,7 +14,7 @@ export const createMeal = async (parent: any, args: any, context: any, info: any
         }
         let foods: Food[] = [];
         let newMeal: Meal = {
-            name: "Meal",
+            name: 'Meal',
             index: 0,
             foods,
             id: createUID()
@@ -53,20 +53,20 @@ export const createMeal = async (parent: any, args: any, context: any, info: any
         // });
 
         await user!.save();
-        return user;
+        return newMeal.id;
     } catch (error) {
         Logging.error(error);
     }
 };
 
 export const deleteMeal = async (parent: any, args: any, context: any, info: any) => {
-    Logging.info('Creating Meals');
+    Logging.info('Deleting Meals');
     // get my user
     try {
         const { userId, dayIndex, mealId } = args;
         const user = await UserModel.findOne({ _id: userId });
         if (!user) {
-            Logging.error('No user found from createMeal resolver');
+            Logging.error('No user found from deleteMeal resolver');
         }
         switch (dayIndex) {
             case 0:
@@ -74,7 +74,6 @@ export const deleteMeal = async (parent: any, args: any, context: any, info: any
                     if (user!.day1[i].id === mealId) {
                         user!.day1.splice(i, 1);
                         break;
-
                     }
                 }
                 break;
@@ -137,7 +136,7 @@ export const deleteMeal = async (parent: any, args: any, context: any, info: any
         // });
 
         await user!.save();
-        return user;
+        return mealId;
     } catch (error) {
         Logging.error(error);
     }

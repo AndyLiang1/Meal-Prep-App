@@ -19,7 +19,7 @@ export function UserPage(props: IUserPageProps) {
 
     const { loading, error, data } = useQuery(GetMealsDocument, {
         variables: {
-            getUserId: userId,
+            userId,
             day1: dayIndex === 0,
             day2: dayIndex === 1,
             day3: dayIndex === 2,

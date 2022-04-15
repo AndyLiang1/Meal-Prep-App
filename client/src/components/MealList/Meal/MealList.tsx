@@ -1,10 +1,12 @@
 import { gql, useLazyQuery, useMutation, useQuery } from '@apollo/client';
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { CreateMealDocument, DeleteMealDocument, Food, Meal, User } from '../../../generated/graphql-client';
+import { updateShorthandPropertyAssignment } from 'typescript';
+import { CreateMealDocument, DeleteMealDocument, Food, GetMealsDocument, Meal, User } from '../../../generated/graphql-client';
 import { addUserToStore, changeDay } from '../../../state/action-creators';
 import { IRootState } from '../../../state/reducers';
 import { defaultUserInfo } from '../../../state/reducers/UserData';
+import { getUserMeals } from '../../helpers/GetMealsFunction';
 import { MealInDay } from './MealInDay';
 import styles from './MealList.module.css';
 
@@ -25,72 +27,44 @@ enum Days {
 export function MealList(Props: IMealListProps) {
     const dispatch = useDispatch();
     const { dayIndex } = useSelector((state: IRootState) => state.day);
-    const { user } = useSelector((state: any) => state);
+    const { user } = useSelector((state: IRootState) => state);
     // const [dayIndex, setDayIndex] = useState<number>(0);
 
     // const dispatch = useDispatch()
 
     const [createMeal] = useMutation(CreateMealDocument);
+    const [getMeals] = useLazyQuery(GetMealsDocument);
 
     const addMeal = async () => {
         try {
             console.log(user.id);
             console.log(dayIndex);
+            const input = {
+                userId: user.id,
+                dayIndex,
+                day1: dayIndex === 0,
+                day2: dayIndex === 1,
+                day3: dayIndex === 2,
+                day4: dayIndex === 3,
+                day5: dayIndex === 4,
+                day6: dayIndex === 5,
+                day7: dayIndex === 6
+            };
 
-            const { data } = await createMeal({
-                variables: {
-                    userId: user.id,
-                    dayIndex,
-                    day1: dayIndex === 0,
-                    day2: dayIndex === 1,
-                    day3: dayIndex === 2,
-                    day4: dayIndex === 3,
-                    day5: dayIndex === 4,
-                    day6: dayIndex === 5,
-                    day7: dayIndex === 6
-                }
+            await createMeal({
+                variables: input
             });
-            if (data) {
-                const { username, id } = data.createMeal;
-                console.log(data);
-                let day: any = [];
-                switch (dayIndex) {
-                    case 0:
-                        day = data.createMeal.day1;
-                        break;
-                    case 1:
-                        day = data.createMeal.day2;
-                        break;
-                    case 2:
-                        day = data.createMeal.day3;
-                        break;
-                    case 3:
-                        day = data.createMeal.day4;
-                        break;
-                    case 4:
-                        day = data.createMeal.day5;
-                        break;
-                    case 5:
-                        day = data.createMeal.day6;
-                        break;
-                    case 6:
-                        day = data.createMeal.day7;
-                        break;
-                    default:
-                        day = data.createMeal.day1;
-                        break;
-                }
+            const day = await getUserMeals(dayIndex, user, getMeals);
 
-                dispatch(
-                    addUserToStore({
-                        username,
-                        id,
-                        day,
-                        loggedIn: true,
-                        accessToken: localStorage.getItem('accessToken')!
-                    })
-                );
-            }
+            dispatch(
+                addUserToStore({
+                    username: user.username,
+                    id:user.id,
+                    day,
+                    loggedIn: true,
+                    accessToken: localStorage.getItem('accessToken')!
+                })
+            );
         } catch (error) {
             console.log(error);
         }
@@ -133,9 +107,9 @@ export function MealList(Props: IMealListProps) {
                     })} */}
                     <div className={styles.mealList_container}>
                         {user.day.map((meal: Meal) => {
-                            return <MealInDay foods={meal.foods} mealId = {meal.id} ></MealInDay>;
+                            return <MealInDay foods={meal.foods} mealId={meal.id}></MealInDay>;
                         })}
-                        <button className={styles.addMealBtn} onClick = {() => addMeal()}>
+                        <button className={styles.addMealBtn} onClick={() => addMeal()}>
                             Add Meal
                         </button>
                     </div>

@@ -58,8 +58,8 @@ export type Meal = {
 export type Mutation = {
   __typename?: 'Mutation';
   createFood: Food;
-  createMeal: User;
-  deleteMeal: User;
+  createMeal: Scalars['ID'];
+  deleteMeal: Scalars['ID'];
   login: LoginResult;
   register: RegisterResult;
 };
@@ -92,7 +92,7 @@ export type MutationDeleteMealArgs = {
   day6: Scalars['Boolean'];
   day7: Scalars['Boolean'];
   dayIndex: Scalars['Int'];
-  mealID: Scalars['Int'];
+  mealId: Scalars['ID'];
   userId: Scalars['ID'];
 };
 
@@ -305,8 +305,8 @@ export type MealResolvers<ContextType = any, ParentType extends ResolversParentT
 
 export type MutationResolvers<ContextType = any, ParentType extends ResolversParentTypes['Mutation'] = ResolversParentTypes['Mutation']> = {
   createFood?: Resolver<ResolversTypes['Food'], ParentType, ContextType, RequireFields<MutationCreateFoodArgs, 'input'>>;
-  createMeal?: Resolver<ResolversTypes['User'], ParentType, ContextType, RequireFields<MutationCreateMealArgs, 'day1' | 'day2' | 'day3' | 'day4' | 'day5' | 'day6' | 'day7' | 'dayIndex' | 'userId'>>;
-  deleteMeal?: Resolver<ResolversTypes['User'], ParentType, ContextType, RequireFields<MutationDeleteMealArgs, 'day1' | 'day2' | 'day3' | 'day4' | 'day5' | 'day6' | 'day7' | 'dayIndex' | 'mealID' | 'userId'>>;
+  createMeal?: Resolver<ResolversTypes['ID'], ParentType, ContextType, RequireFields<MutationCreateMealArgs, 'day1' | 'day2' | 'day3' | 'day4' | 'day5' | 'day6' | 'day7' | 'dayIndex' | 'userId'>>;
+  deleteMeal?: Resolver<ResolversTypes['ID'], ParentType, ContextType, RequireFields<MutationDeleteMealArgs, 'day1' | 'day2' | 'day3' | 'day4' | 'day5' | 'day6' | 'day7' | 'dayIndex' | 'mealId' | 'userId'>>;
   login?: Resolver<ResolversTypes['LoginResult'], ParentType, ContextType, RequireFields<MutationLoginArgs, 'email' | 'password'>>;
   register?: Resolver<ResolversTypes['RegisterResult'], ParentType, ContextType, RequireFields<MutationRegisterArgs, 'input'>>;
 };

@@ -2,14 +2,14 @@ import { useMutation } from '@apollo/client';
 import * as React from 'react';
 import { useState } from 'react';
 import { Food, Meal, DeleteMealDocument } from '../../../generated/graphql-client';
-import { AddFoodForm } from '../Food/AddFoodForm';
-import { DeleteMealModal } from '../Food/DeleteMealModal';
-import { FoodInMeal } from '../Food/FoodInMeal';
+import { AddFoodForm } from '../FormsAndModals/AddFoodForm';
+import { DeleteMealModal } from '../FormsAndModals/DeleteMealModal';
+import { FoodInMeal } from './FoodInMeal';
 import styles from './MealInDay.module.css';
 
 export interface IMealInDayProps {
     foods: Food[];
-    mealId: String;
+    mealId: string;
 }
 
 export function MealInDay({ foods, mealId }: IMealInDayProps) {
@@ -30,7 +30,7 @@ export function MealInDay({ foods, mealId }: IMealInDayProps) {
                 <button onClick = {() => setDeletingMealModal(true)}>Delete Meal </button>
             </div>
             {addingFoodForm ? <AddFoodForm setAddingFoodForm={setAddingFoodForm}></AddFoodForm> : null}
-            {deletingMealModal ? <DeleteMealModal setDeletingMealModal={setDeletingMealModal}></DeleteMealModal> : null}
+            {deletingMealModal ? <DeleteMealModal setDeletingMealModal={setDeletingMealModal} mealId = {mealId} ></DeleteMealModal> : null}
         </div>
     );
 }

@@ -80,8 +80,8 @@ const typeDefs = gql`
         login(email: String!, password: String!): LoginResult!
 
         createFood(input: CreateFoodInput!): Food!
-        createMeal(userId: ID!, dayIndex: Int!, day1: Boolean!, day2: Boolean!, day3: Boolean!, day4: Boolean!, day5: Boolean!, day6: Boolean!, day7: Boolean!): User!
-        deleteMeal(userId: ID!, dayIndex: Int!, mealID: Int!, day1: Boolean!, day2: Boolean!, day3: Boolean!, day4: Boolean!, day5: Boolean!, day6: Boolean!, day7: Boolean!): User!
+        createMeal(userId: ID!, dayIndex: Int!, day1: Boolean!, day2: Boolean!, day3: Boolean!, day4: Boolean!, day5: Boolean!, day6: Boolean!, day7: Boolean!): ID!
+        deleteMeal(userId: ID!, dayIndex: Int!, mealId: ID!, day1: Boolean!, day2: Boolean!, day3: Boolean!, day4: Boolean!, day5: Boolean!, day6: Boolean!, day7: Boolean!): ID!
     }
 `;
 
