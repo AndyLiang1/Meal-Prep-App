@@ -6,7 +6,7 @@ import jwt from 'jsonwebtoken';
 import { config } from '../config/config';
 import {register, login} from './Mutations/Auth'
 import { UserInputError } from 'apollo-server';
-import {createFood} from './Mutations/Food'
+import {createFood, deleteFood} from './Mutations/Food'
 import {createMeal, deleteMeal} from './Mutations/Meal'
 
 
@@ -17,6 +17,7 @@ const Mutation = {
     createFood,
     createMeal, 
     deleteMeal,
+    deleteFood
 };
 
 export default Mutation;

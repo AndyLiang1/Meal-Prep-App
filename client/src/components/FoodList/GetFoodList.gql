@@ -1,0 +1,16 @@
+query getFoodList($getFoodListId: ID!) {
+    getFoodList(id: $getFoodListId) {
+        name
+        calories
+        proteins
+        carbs
+        fats
+        ingredients {
+            name
+            calories
+            proteins
+            carbs
+            fats
+        }
+    }
+}

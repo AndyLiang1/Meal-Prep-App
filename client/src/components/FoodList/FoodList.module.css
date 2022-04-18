@@ -3,4 +3,7 @@
     width: 35vw;
 
     background-color: var(--lighterblue);    
+     display: flex;
+    justify-content: space-around;
+    text-align: center;
 }

@@ -37,7 +37,7 @@ export function UserPage(props: IUserPageProps) {
             // const user = data!.getMeals;
 
             if (user) {
-                const { username, id } = user!;
+                const { username, id, foodList } = user!;
 
                 let day: any = [];
                 switch (dayIndex) {
@@ -76,7 +76,8 @@ export function UserPage(props: IUserPageProps) {
                         id,
                         day,
                         loggedIn: true,
-                        accessToken: localStorage.getItem('accessToken')!
+                        accessToken: localStorage.getItem('accessToken')!,
+                        foodList
                     })
                 );
             }

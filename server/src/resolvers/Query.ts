@@ -8,17 +8,27 @@ const Query = {
         return 'Beep! Hello world! :D';
     },
     getMeals: async (parent: any, args: any, context: any, info: any) => {
-        Logging.info('Getting meals')
+        Logging.info('Getting meals');
         try {
             const { id }: { id: string } = args;
             const user = await User.findOne({ _id: id });
-            console.log(user!.day1[0].name)
             return user;
         } catch (error) {
             Logging.error(error);
         }
     },
 
+    getFoodList: async (parent: any, args: any, context: any, info: any) => {
+        Logging.info('Getting foodlist');
+        try {
+            const { id }: { id: string } = args;
+            const user = await User.findOne({ _id: id });
+            console.log(user)
+            return user!.foodList;
+        } catch (error) {
+            Logging.error(error);
+        }
+    },
     // =========================================================================
     // For testing
     // =========================================================================

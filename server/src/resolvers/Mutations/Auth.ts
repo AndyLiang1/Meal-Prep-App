@@ -37,6 +37,14 @@ export const register = async (parent: any, { input }: MutationRegisterArgs, con
         carbs: 15,
         ingredients: []
     };
+    const food2: Food = {
+        name: 'food2',
+        calories: 300,
+        proteins: 30,
+        fats: 2,
+        carbs: 15,
+        ingredients: []
+    };
     const meal: Meal = {
             name: "Meal",
             id: createUID(),
@@ -70,7 +78,7 @@ export const register = async (parent: any, { input }: MutationRegisterArgs, con
     const day5 = [meal, meal, meal, meal, meal];
     const day6 = [meal, meal, meal, meal, meal];
     const day7 = [meal, meal, meal, meal, meal];
-    const foodList: Food[] = [];
+    const foodList: Food[] = [food, food2];
     const user = new UserModel({
         _id: new mongoose.Types.ObjectId(),
         username,

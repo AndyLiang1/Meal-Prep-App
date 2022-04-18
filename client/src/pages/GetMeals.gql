@@ -135,5 +135,19 @@ query getMeals($userId: ID!, $day1: Boolean!, $day2: Boolean!, $day3: Boolean!, 
                 }
             }
         }
+        foodList {
+            name
+            calories
+            proteins
+            carbs
+            fats
+            ingredients {
+                name
+                calories
+                proteins
+                carbs
+                fats
+            }
+        }
     }
 }

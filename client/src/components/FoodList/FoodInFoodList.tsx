@@ -1,18 +1,17 @@
 import * as React from 'react';
-import styles from './Food.module.css';
-import { Food } from '../../../generated/graphql-client';
-import { DeleteModal } from '../FormsAndModals/DeleteModal';
-import { IRootState } from '../../../state/reducers';
-import { useDispatch, useSelector } from 'react-redux';
 import { useState } from 'react';
-import { setModalStatus } from '../../../state/action-creators';
+import { useSelector, useDispatch } from 'react-redux';
+import { Food } from '../../generated/graphql-client';
+import { setModalStatus } from '../../state/action-creators';
+import { IRootState } from '../../state/reducers';
+import { DeleteModal } from '../MealList/FormsAndModals/DeleteModal';
+import styles from './FoodInFoodList.module.css'
 
-export interface IFoodInMealProps {
+export interface IFoodInFoodListProps {
     food: Food;
-    mealId?: string;
 }
 
-export function FoodInMeal({ food, mealId }: IFoodInMealProps) {
+export function FoodInFoodList({ food }: IFoodInFoodListProps) {
     const { modalStatus } = useSelector((state: IRootState) => state);
     const dispatch = useDispatch();
 
@@ -23,6 +22,9 @@ export function FoodInMeal({ food, mealId }: IFoodInMealProps) {
                 <div className={styles.title_container}>
                     <h1> {food.name}</h1>
                 </div>
+                <h1>Calories: {food.calories}</h1>
+            </div>
+            <div className={styles.right_container}>
                 <div className={styles.btn_container}>
                     <button>Edit</button>
                     <button
@@ -37,15 +39,11 @@ export function FoodInMeal({ food, mealId }: IFoodInMealProps) {
                         Delete
                     </button>
                 </div>
-            </div>
-            <div className={styles.right_container}>
-                <h1>Cals: {food.calories}</h1>
                 <div className={styles.right_smaller_data_container}></div>
                 <h1>P: {food.proteins}</h1>
                 <h1>C: {food.carbs}</h1>
                 <h1>F: {food.fats}</h1>
             </div>
-            {deleteModal ? <DeleteModal objectToDelete={'food'} setDeleteModal={setDeleteModal} mealId={mealId!} foodName={food.name}></DeleteModal> : null}
         </div>
     );
 }

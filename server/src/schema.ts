@@ -14,10 +14,11 @@ const typeDefs = gql`
         day5: [Meal!]!
         day6: [Meal!]!
         day7: [Meal!]!
+        foodList: [Food!]!
     }
 
     type Meal {
-        name: String! 
+        name: String!
         index: Int!
         id: ID!
         foods: [Food!]!
@@ -36,7 +37,8 @@ const typeDefs = gql`
         # health check
         boop: String!
         clearDb: String
-        getMeals(id: ID!, day1: Boolean!, day2: Boolean!, day3: Boolean!, day4: Boolean!, day5: Boolean!, day6: Boolean!, day7: Boolean!): User
+        getFoodList(id: ID!): [Food!]!
+        getMeals(id: ID!, day1: Boolean!, day2: Boolean!, day3: Boolean!, day4: Boolean!, day5: Boolean!, day6: Boolean!, day7: Boolean!): User!
     }
 
     input RegisterInput {
@@ -66,7 +68,7 @@ const typeDefs = gql`
     union LoginResult = LoginSuccess | LoginError
     input CreateFoodInput {
         userId: ID!
-        mealIndex: Int!
+        mealId: ID!
         name: String!
         calories: Float!
         proteins: Float!
@@ -82,6 +84,7 @@ const typeDefs = gql`
         createFood(input: CreateFoodInput!): Food!
         createMeal(userId: ID!, dayIndex: Int!, day1: Boolean!, day2: Boolean!, day3: Boolean!, day4: Boolean!, day5: Boolean!, day6: Boolean!, day7: Boolean!): ID!
         deleteMeal(userId: ID!, dayIndex: Int!, mealId: ID!, day1: Boolean!, day2: Boolean!, day3: Boolean!, day4: Boolean!, day5: Boolean!, day6: Boolean!, day7: Boolean!): ID!
+        deleteFood(userId: ID!, dayIndex: Int!, mealId: ID!, foodName: String!, day1: Boolean!, day2: Boolean!, day3: Boolean!, day4: Boolean!, day5: Boolean!, day6: Boolean!, day7: Boolean!): ID!
     }
 `;
 

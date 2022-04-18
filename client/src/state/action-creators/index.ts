@@ -39,3 +39,12 @@ export const changeDay = (day: Day) => {
         });
     };
 }
+
+export const setModalStatus = (modalStatus: boolean) => {
+    return (dispatch: (arg0: {type: string; payload: boolean}) => void) => {
+        dispatch({
+            type: 'setModalStatus',
+            payload: modalStatus
+        });
+    }
+}

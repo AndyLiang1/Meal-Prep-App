@@ -2,15 +2,19 @@ import { init } from '@graphql-codegen/cli';
 import { Formik, Form, Field } from 'formik';
 import { setMaxListeners } from 'process';
 import * as React from 'react';
+import { useSelector, useDispatch } from 'react-redux';
 import * as Yup from 'yup';
-import styles from './AddFoodForm.module.css'
+import { setModalStatus } from '../../../state/action-creators';
+import { IRootState } from '../../../state/reducers';
+import styles from './AddFoodForm.module.css';
 
 export interface IAddFoodFormProps {
-    setAddingFoodForm: React.Dispatch<React.SetStateAction<boolean>>;
+    setAddFoodForm: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
-
-export function AddFoodForm({setAddingFoodForm}: IAddFoodFormProps) {
+export function AddFoodForm({ setAddFoodForm }: IAddFoodFormProps) {
+    const { modalStatus } = useSelector((state: IRootState) => state);
+    const dispatch = useDispatch();
     const initialValues = {
         name: '',
         calories: 0,
@@ -34,13 +38,20 @@ export function AddFoodForm({setAddingFoodForm}: IAddFoodFormProps) {
 
     const onSubmit = () => {};
     return (
-        <div className = {styles.container}>
+        <div className={styles.container}>
             <Formik initialValues={initialValues} validationSchema={validationSchema} onSubmit={onSubmit}>
                 {({ errors, touched }) => (
                     <Form>
                         <div>
                             <h1>Create a new food</h1>
-                            <button onClick={() => setAddingFoodForm(false)}>X</button>
+                            <button
+                                onClick={() => {
+                                    dispatch(setModalStatus(false));
+                                    setAddFoodForm(false);
+                                }}
+                            >
+                                X
+                            </button>
                         </div>
                         <Field className="add_field" name="name" type="text" />
                         <h1>Calories</h1>
