@@ -1,5 +1,5 @@
 import { init } from '@graphql-codegen/cli';
-import { Formik, Form, Field } from 'formik';
+import { Formik, Form, Field, setIn } from 'formik';
 import { setMaxListeners } from 'process';
 import * as React from 'react';
 import { useEffect } from 'react';
@@ -51,19 +51,6 @@ export function AddFoodForm({ type, setAddFoodForm }: IAddFoodFormProps) {
         givenAmount: Yup.number().typeError('Input a number please').integer().min(1),
         actualAmount: Yup.number().typeError('Input a number please').integer().min(1)
     });
-
-    const onSelectChange = async (e: any) => {
-        const foodName = e.target.value;
-        console.log(foodName);
-        for (let i = 0; i < user.foodList!.length; i++) {
-            if (foodName === user.foodList![i].name) {
-                const foodToAdd = user.foodList![i];
-                const newIngredientsList = ingredients;
-                newIngredientsList.push(foodToAdd);
-                await setIngredients(newIngredientsList);
-            }
-        }
-    };
 
     useEffect(() => {
         for (let i = 0; i < user.foodList!.length; i++) {
@@ -131,9 +118,8 @@ export function AddFoodForm({ type, setAddFoodForm }: IAddFoodFormProps) {
                                 className="add_field"
                                 name="ingredients"
                                 as="select"
-                                onChange={(e: any) => {
+                                onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
                                     setNewIngredient(e.target.value);
-                                    // setTrigger(!trigger);
                                 }}
                                 value={newIngredient}
                             >
@@ -147,7 +133,8 @@ export function AddFoodForm({ type, setAddFoodForm }: IAddFoodFormProps) {
                                 })}
                             </Field>
                             {ingredients.map((food: Food, index: number) => {
-                                return <Ingredient key={index} ingredient={food}></Ingredient>;
+                                return <Ingredient key={index} ingredient={food} ingredients = {ingredients}
+                                setIngredients = {setIngredients}></Ingredient>;
                             })}
                             <button className="add_button" type="submit">
                                 Add
