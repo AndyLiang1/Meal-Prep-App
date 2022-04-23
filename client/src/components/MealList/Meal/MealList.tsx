@@ -62,7 +62,8 @@ export function MealList(Props: IMealListProps) {
                     id:user.id,
                     day,
                     loggedIn: true,
-                    accessToken: localStorage.getItem('accessToken')!
+                    accessToken: localStorage.getItem('accessToken')!,
+                    foodList: user.foodList
                 })
             );
         } catch (error) {
@@ -106,8 +107,8 @@ export function MealList(Props: IMealListProps) {
                         return <MealInDay foods={meal.foods}></MealInDay>;
                     })} */}
                     <div className={styles.mealList_container}>
-                        {user.day.map((meal: Meal) => {
-                            return <MealInDay foods={meal.foods} mealId={meal.id}></MealInDay>;
+                        {user.day.map((meal: Meal, index: number) => {
+                            return <MealInDay key = {index} foods={meal.foods} mealId={meal.id}></MealInDay>;
                         })}
                         <button className={styles.addMealBtn} onClick={() => addMeal()}>
                             Add Meal

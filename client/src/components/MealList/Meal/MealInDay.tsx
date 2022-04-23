@@ -21,12 +21,11 @@ export function MealInDay({ foods, mealId }: IMealInDayProps) {
 
     const { modalStatus } = useSelector((state: IRootState) => state);
     const dispatch = useDispatch();
-    console.log(modalStatus);
     return (
         <div className={styles.container}>
             <div className={styles.foods_container}>
-                {foods.map((food: any) => {
-                    return <FoodInMeal mealId={mealId} food={food}></FoodInMeal>;
+                {foods.map((food: any, index: number) => {
+                    return <FoodInMeal key = {index} mealId={mealId} food={food}></FoodInMeal>;
                 })}
             </div>
             <div className={styles.btn_container}>
@@ -53,7 +52,7 @@ export function MealInDay({ foods, mealId }: IMealInDayProps) {
                     Delete Meal
                 </button>
             </div>
-            {addFoodForm  ? <AddFoodForm setAddFoodForm={setAddFoodForm}></AddFoodForm> : null}
+            {addFoodForm  ? <AddFoodForm type = 'meal' setAddFoodForm={setAddFoodForm}></AddFoodForm> : null}
             {deleteModal  ? <DeleteModal objectToDelete={'meal'} setDeleteModal={setDeleteModal} mealId={mealId}></DeleteModal> : null}
         </div>
     );

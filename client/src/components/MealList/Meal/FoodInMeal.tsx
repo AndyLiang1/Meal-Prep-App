@@ -1,5 +1,5 @@
 import * as React from 'react';
-import styles from './Food.module.css';
+import styles from './FoodInMeal.module.css';
 import { Food } from '../../../generated/graphql-client';
 import { DeleteModal } from '../FormsAndModals/DeleteModal';
 import { IRootState } from '../../../state/reducers';
@@ -21,7 +21,7 @@ export function FoodInMeal({ food, mealId }: IFoodInMealProps) {
         <div className={styles.container}>
             <div className={styles.left_container}>
                 <div className={styles.title_container}>
-                    <h1> {food.name}</h1>
+                    <div> {food.name}</div>
                 </div>
                 <div className={styles.btn_container}>
                     <button>Edit</button>
@@ -39,11 +39,11 @@ export function FoodInMeal({ food, mealId }: IFoodInMealProps) {
                 </div>
             </div>
             <div className={styles.right_container}>
-                <h1>Cals: {food.calories}</h1>
+                <div>Cals: {food.calories}</div>
                 <div className={styles.right_smaller_data_container}></div>
-                <h1>P: {food.proteins}</h1>
-                <h1>C: {food.carbs}</h1>
-                <h1>F: {food.fats}</h1>
+                <div>P: {((food.proteins * food.actualAmount) / food.givenAmount).toFixed(1)}</div>
+                <div>C: {((food.carbs * food.actualAmount) / food.givenAmount).toFixed(1)}</div>
+                <div>F: {((food.fats * food.actualAmount) / food.givenAmount).toFixed(1)}</div>
             </div>
             {deleteModal ? <DeleteModal objectToDelete={'food'} setDeleteModal={setDeleteModal} mealId={mealId!} foodName={food.name}></DeleteModal> : null}
         </div>

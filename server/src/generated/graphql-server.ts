@@ -15,9 +15,11 @@ export type Scalars = {
 };
 
 export type CreateFoodInput = {
+  actualAmount: Scalars['Float'];
   calories: Scalars['Float'];
   carbs: Scalars['Float'];
   fats: Scalars['Float'];
+  givenAmount: Scalars['Float'];
   ingredientNames: Array<Scalars['String']>;
   mealId: Scalars['ID'];
   name: Scalars['String'];
@@ -27,9 +29,11 @@ export type CreateFoodInput = {
 
 export type Food = {
   __typename?: 'Food';
+  actualAmount: Scalars['Float'];
   calories: Scalars['Float'];
   carbs: Scalars['Float'];
   fats: Scalars['Float'];
+  givenAmount: Scalars['Float'];
   ingredients: Array<Food>;
   name: Scalars['String'];
   proteins: Scalars['Float'];
@@ -295,9 +299,11 @@ export type ResolversParentTypes = {
 };
 
 export type FoodResolvers<ContextType = any, ParentType extends ResolversParentTypes['Food'] = ResolversParentTypes['Food']> = {
+  actualAmount?: Resolver<ResolversTypes['Float'], ParentType, ContextType>;
   calories?: Resolver<ResolversTypes['Float'], ParentType, ContextType>;
   carbs?: Resolver<ResolversTypes['Float'], ParentType, ContextType>;
   fats?: Resolver<ResolversTypes['Float'], ParentType, ContextType>;
+  givenAmount?: Resolver<ResolversTypes['Float'], ParentType, ContextType>;
   ingredients?: Resolver<Array<ResolversTypes['Food']>, ParentType, ContextType>;
   name?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   proteins?: Resolver<ResolversTypes['Float'], ParentType, ContextType>;

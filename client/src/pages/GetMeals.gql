@@ -12,12 +12,16 @@ query getMeals($userId: ID!, $day1: Boolean!, $day2: Boolean!, $day3: Boolean!, 
                 proteins
                 carbs
                 fats
+                givenAmount
+                actualAmount
                 ingredients {
                     name
                     calories
                     proteins
                     carbs
                     fats
+                    givenAmount
+                    actualAmount
                 }
             }
         }
@@ -31,12 +35,16 @@ query getMeals($userId: ID!, $day1: Boolean!, $day2: Boolean!, $day3: Boolean!, 
                 proteins
                 carbs
                 fats
+                givenAmount
+                actualAmount
                 ingredients {
                     name
                     calories
                     proteins
                     carbs
                     fats
+                    givenAmount
+                    actualAmount
                 }
             }
         }
@@ -50,12 +58,16 @@ query getMeals($userId: ID!, $day1: Boolean!, $day2: Boolean!, $day3: Boolean!, 
                 proteins
                 carbs
                 fats
+                givenAmount
+                actualAmount
                 ingredients {
                     name
                     calories
                     proteins
                     carbs
                     fats
+                    givenAmount
+                    actualAmount
                 }
             }
         }
@@ -69,12 +81,16 @@ query getMeals($userId: ID!, $day1: Boolean!, $day2: Boolean!, $day3: Boolean!, 
                 proteins
                 carbs
                 fats
+                givenAmount
+                actualAmount
                 ingredients {
                     name
                     calories
                     proteins
                     carbs
                     fats
+                    givenAmount
+                    actualAmount
                 }
             }
         }
@@ -88,12 +104,16 @@ query getMeals($userId: ID!, $day1: Boolean!, $day2: Boolean!, $day3: Boolean!, 
                 proteins
                 carbs
                 fats
+                givenAmount
+                actualAmount
                 ingredients {
                     name
                     calories
                     proteins
                     carbs
                     fats
+                    givenAmount
+                    actualAmount
                 }
             }
         }
@@ -107,12 +127,16 @@ query getMeals($userId: ID!, $day1: Boolean!, $day2: Boolean!, $day3: Boolean!, 
                 proteins
                 carbs
                 fats
+                givenAmount
+                actualAmount
                 ingredients {
                     name
                     calories
                     proteins
                     carbs
                     fats
+                    givenAmount
+                    actualAmount
                 }
             }
         }
@@ -126,12 +150,16 @@ query getMeals($userId: ID!, $day1: Boolean!, $day2: Boolean!, $day3: Boolean!, 
                 proteins
                 carbs
                 fats
+                givenAmount
+                actualAmount
                 ingredients {
                     name
                     calories
                     proteins
                     carbs
                     fats
+                    givenAmount
+                    actualAmount
                 }
             }
         }
@@ -147,7 +175,11 @@ query getMeals($userId: ID!, $day1: Boolean!, $day2: Boolean!, $day3: Boolean!, 
                 proteins
                 carbs
                 fats
+                givenAmount
+                actualAmount
             }
+            givenAmount
+            actualAmount
         }
     }
 }

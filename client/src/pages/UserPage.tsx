@@ -37,7 +37,7 @@ export function UserPage(props: IUserPageProps) {
             // const user = data!.getMeals;
 
             if (user) {
-                const { username, id, foodList } = user!;
+                const { username, id } = user!;
 
                 let day: any = [];
                 switch (dayIndex) {
@@ -66,6 +66,8 @@ export function UserPage(props: IUserPageProps) {
                         day = user.day1;
                         break;
                 }
+                let foodList: any
+                foodList = user.foodList
                 // add userData to store
                 // probably dont need this anymore due to the fact
                 // we dont need to pass around "days" from prev

@@ -10,7 +10,7 @@ export const createFood = async (parent: any, { input }: MutationCreateFoodArgs,
     // ======================================================================
     // =========================================================================
     try {
-        const { userId, mealId, name, calories, proteins, carbs, fats } = input;
+        const { userId, mealId, name, calories, proteins, carbs, fats, givenAmount, actualAmount } = input;
         let ingredientNames: string[] = input.ingredientNames;
         const user = await UserModel.findOne({ _id: userId });
         if (!user) {
@@ -34,7 +34,9 @@ export const createFood = async (parent: any, { input }: MutationCreateFoodArgs,
             proteins,
             carbs,
             fats,
-            ingredients
+            ingredients,
+            givenAmount,
+            actualAmount
         };
         user!.foodList.push(food);
         user!.save();

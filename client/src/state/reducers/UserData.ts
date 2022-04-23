@@ -13,22 +13,8 @@ export interface UserInfoInterface {
     day5?: Meal[];
     day6?: Meal[];
     day7?: Meal[];
-    foodList?: {
-        __typename?: 'Food' | undefined;
-        name: string;
-        calories: number;
-        proteins: number;
-        carbs: number;
-        fats: number;
-        ingredients: {
-            __typename?: 'Food' | undefined;
-            name: string;
-            calories: number;
-            proteins: number;
-            carbs: number;
-            fats: number;
-        }[];
-    }[];
+    // 
+    foodList: Food[]
 }
 export const defaultUserInfo: UserInfoInterface = {
     username: '',

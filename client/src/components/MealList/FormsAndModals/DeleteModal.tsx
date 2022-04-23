@@ -67,7 +67,8 @@ export function DeleteModal({ objectToDelete, setDeleteModal, mealId, foodName }
                 id: user.id,
                 day,
                 loggedIn: true,
-                accessToken: localStorage.getItem('accessToken')!
+                accessToken: localStorage.getItem('accessToken')!,
+                foodList: user.foodList
             })
         );
         setDeleteModal(false);

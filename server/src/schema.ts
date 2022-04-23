@@ -31,6 +31,8 @@ const typeDefs = gql`
         carbs: Float!
         fats: Float!
         ingredients: [Food!]!
+        givenAmount: Float!
+        actualAmount: Float!
     }
 
     type Query {
@@ -75,6 +77,8 @@ const typeDefs = gql`
         carbs: Float!
         fats: Float!
         ingredientNames: [String!]!
+        givenAmount: Float!
+        actualAmount: Float!
     }
 
     type Mutation {

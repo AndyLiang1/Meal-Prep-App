@@ -54,7 +54,9 @@ const UserSchema: Schema = new Schema(
                         proteins: Number,
                         carbs: Number,
                         fats: Number,
-                        ingredients: Array
+                        ingredients: Array,
+                        givenAmount: Number,
+                        actualAmount: Number
                     }
                 ]
             }
@@ -70,7 +72,9 @@ const UserSchema: Schema = new Schema(
                         proteins: Number,
                         carbs: Number,
                         fats: Number,
-                        ingredients: Array
+                        ingredients: Array,
+                        givenAmount: Number,
+                        actualAmount: Number
                     }
                 ]
             }
@@ -86,7 +90,9 @@ const UserSchema: Schema = new Schema(
                         proteins: Number,
                         carbs: Number,
                         fats: Number,
-                        ingredients: Array
+                        ingredients: Array,
+                        givenAmount: Number,
+                        actualAmount: Number
                     }
                 ]
             }
@@ -102,7 +108,9 @@ const UserSchema: Schema = new Schema(
                         proteins: Number,
                         carbs: Number,
                         fats: Number,
-                        ingredients: Array
+                        ingredients: Array,
+                        givenAmount: Number,
+                        actualAmount: Number
                     }
                 ]
             }
@@ -118,7 +126,9 @@ const UserSchema: Schema = new Schema(
                         proteins: Number,
                         carbs: Number,
                         fats: Number,
-                        ingredients: Array
+                        ingredients: Array,
+                        givenAmount: Number,
+                        actualAmount: Number
                     }
                 ]
             }
@@ -134,7 +144,9 @@ const UserSchema: Schema = new Schema(
                         proteins: Number,
                         carbs: Number,
                         fats: Number,
-                        ingredients: Array
+                        ingredients: Array,
+                        givenAmount: Number,
+                        actualAmount: Number
                     }
                 ]
             }
@@ -150,7 +162,9 @@ const UserSchema: Schema = new Schema(
                         proteins: Number,
                         carbs: Number,
                         fats: Number,
-                        ingredients: Array
+                        ingredients: Array,
+                        givenAmount: Number,
+                        actualAmount: Number
                     }
                 ]
             }

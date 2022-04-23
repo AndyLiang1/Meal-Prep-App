@@ -35,7 +35,9 @@ export const register = async (parent: any, { input }: MutationRegisterArgs, con
         proteins: 30,
         fats: 2,
         carbs: 15,
-        ingredients: []
+        ingredients: [],
+        givenAmount: 300,
+        actualAmount: 100
     };
     const food2: Food = {
         name: 'food2',
@@ -43,7 +45,9 @@ export const register = async (parent: any, { input }: MutationRegisterArgs, con
         proteins: 30,
         fats: 2,
         carbs: 15,
-        ingredients: []
+        ingredients: [],
+        givenAmount: 300,
+        actualAmount: 100
     };
     const meal: Meal = {
             name: "Meal",
