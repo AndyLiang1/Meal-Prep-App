@@ -13,6 +13,8 @@ import { UserInfoInterface } from '../../../state/reducers/UserData';
 import styles from './AddFoodForm.module.css';
 import { Ingredient } from './Ingredient';
 
+import { useWhatChanged, setUseWhatChange } from '@simbathesailor/use-what-changed';
+
 export interface IAddFoodFormProps {
     type: string;
     setAddFoodForm: React.Dispatch<React.SetStateAction<boolean>>;
@@ -21,10 +23,9 @@ export interface IAddFoodFormProps {
 export function AddFoodForm({ type, setAddFoodForm }: IAddFoodFormProps) {
     const { modalStatus } = useSelector((state: IRootState) => state);
     const { user }: { user: UserInfoInterface } = useSelector((state: IRootState) => state);
-    const [newIngredient, setNewIngredient] = useState<Food>()
+    const [newIngredient, setNewIngredient] = useState<string>();
     const [foods, setFoods] = useState<Food[]>([]);
     const [ingredients, setIngredients] = useState<Food[]>([]);
-    const [trigger, setTrigger] = useState(false)
 
     const dispatch = useDispatch();
 
@@ -51,13 +52,8 @@ export function AddFoodForm({ type, setAddFoodForm }: IAddFoodFormProps) {
         actualAmount: Yup.number().typeError('Input a number please').integer().min(1)
     });
 
-    useEffect(() => {
-        // This is here so when we click a dropdown option, it 
-        // causes a re-render? 
-    }, [trigger])
-
-    const onSelectChange = async (e:any) => {
-        const foodName = e.target.value
+    const onSelectChange = async (e: any) => {
+        const foodName = e.target.value;
         console.log(foodName);
         for (let i = 0; i < user.foodList!.length; i++) {
             if (foodName === user.foodList![i].name) {
@@ -65,10 +61,22 @@ export function AddFoodForm({ type, setAddFoodForm }: IAddFoodFormProps) {
                 const newIngredientsList = ingredients;
                 newIngredientsList.push(foodToAdd);
                 await setIngredients(newIngredientsList);
-                setTrigger(!trigger)
             }
         }
-    }
+    };
+
+    useEffect(() => {
+        for (let i = 0; i < user.foodList!.length; i++) {
+            if (newIngredient === user.foodList![i].name) {
+                const foodToAdd = user.foodList![i];
+                const newIngredientsList = ingredients;
+                newIngredientsList.push(foodToAdd);
+                setIngredients(newIngredientsList);
+            }
+        }
+        // This allows us to add the same ingredient twice, 
+        setNewIngredient('');
+    }, [newIngredient]);
 
     const submit = (data: any) => {
         console.log('here');
@@ -119,7 +127,16 @@ export function AddFoodForm({ type, setAddFoodForm }: IAddFoodFormProps) {
                             <div>Actual Amount</div>
                             <Field className="add_field" name="actualAmount" type="number" />
                             <div>Ingredients</div>
-                            <Field className="add_field" name="ingredients" as="select" onChange={onSelectChange}>
+                            <Field
+                                className="add_field"
+                                name="ingredients"
+                                as="select"
+                                onChange={(e: any) => {
+                                    setNewIngredient(e.target.value);
+                                    // setTrigger(!trigger);
+                                }}
+                                value={newIngredient}
+                            >
                                 <option value="-"></option>
                                 {user.foodList.map((food: Food, index: number) => {
                                     return (
@@ -130,7 +147,7 @@ export function AddFoodForm({ type, setAddFoodForm }: IAddFoodFormProps) {
                                 })}
                             </Field>
                             {ingredients.map((food: Food, index: number) => {
-                                return <Ingredient ingredient = {food}></Ingredient>
+                                return <Ingredient key={index} ingredient={food}></Ingredient>;
                             })}
                             <button className="add_button" type="submit">
                                 Add
