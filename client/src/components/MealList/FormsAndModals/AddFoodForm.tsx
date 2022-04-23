@@ -11,6 +11,7 @@ import { setModalStatus } from '../../../state/action-creators';
 import { IRootState } from '../../../state/reducers';
 import { UserInfoInterface } from '../../../state/reducers/UserData';
 import styles from './AddFoodForm.module.css';
+import { Ingredient } from './Ingredient';
 
 export interface IAddFoodFormProps {
     type: string;
@@ -20,11 +21,10 @@ export interface IAddFoodFormProps {
 export function AddFoodForm({ type, setAddFoodForm }: IAddFoodFormProps) {
     const { modalStatus } = useSelector((state: IRootState) => state);
     const { user }: { user: UserInfoInterface } = useSelector((state: IRootState) => state);
-
+    const [newIngredient, setNewIngredient] = useState<Food>()
     const [foods, setFoods] = useState<Food[]>([]);
     const [ingredients, setIngredients] = useState<Food[]>([]);
     const [trigger, setTrigger] = useState(false)
-    // const ingredients: Food[] = []
 
     const dispatch = useDispatch();
 
@@ -42,22 +42,18 @@ export function AddFoodForm({ type, setAddFoodForm }: IAddFoodFormProps) {
     };
 
     const validationSchema = Yup.object().shape({
-        // name: Yup.string().max(50),
-        // calories: Yup.number().typeError('Input a number please').integer().min(1),
-        // proteins: Yup.number().typeError('Input a number please').min(1),
-        // carbs: Yup.number().typeError('Input a number please').min(1),
-        // fats: Yup.number().typeError('Input a number please').min(1),
-        // givenAmount: Yup.number().typeError('Input a number please').integer().min(1),
-        // actualAmount: Yup.number().typeError('Input a number please').integer().min(1)
+        name: Yup.string().max(50),
+        calories: Yup.number().typeError('Input a number please').integer().min(1),
+        proteins: Yup.number().typeError('Input a number please').min(1),
+        carbs: Yup.number().typeError('Input a number please').min(1),
+        fats: Yup.number().typeError('Input a number please').min(1),
+        givenAmount: Yup.number().typeError('Input a number please').integer().min(1),
+        actualAmount: Yup.number().typeError('Input a number please').integer().min(1)
     });
 
     useEffect(() => {
-        console.log(ingredients);
-        setIngredients(ingredients)
-    }, [ingredients]);
-
-    useEffect(() => {
-        console.log('hereee')
+        // This is here so when we click a dropdown option, it 
+        // causes a re-render? 
     }, [trigger])
 
     const onSelectChange = async (e:any) => {
@@ -70,7 +66,6 @@ export function AddFoodForm({ type, setAddFoodForm }: IAddFoodFormProps) {
                 newIngredientsList.push(foodToAdd);
                 await setIngredients(newIngredientsList);
                 setTrigger(!trigger)
-                console.log(ingredients);
             }
         }
     }
@@ -125,7 +120,7 @@ export function AddFoodForm({ type, setAddFoodForm }: IAddFoodFormProps) {
                             <Field className="add_field" name="actualAmount" type="number" />
                             <div>Ingredients</div>
                             <Field className="add_field" name="ingredients" as="select" onChange={onSelectChange}>
-                                {/* <option value="-"></option> */}
+                                <option value="-"></option>
                                 {user.foodList.map((food: Food, index: number) => {
                                     return (
                                         <option key={index} value={food.name}>
@@ -135,7 +130,7 @@ export function AddFoodForm({ type, setAddFoodForm }: IAddFoodFormProps) {
                                 })}
                             </Field>
                             {ingredients.map((food: Food, index: number) => {
-                                return <div key = {index}>{food.name}</div>;
+                                return <Ingredient ingredient = {food}></Ingredient>
                             })}
                             <button className="add_button" type="submit">
                                 Add
