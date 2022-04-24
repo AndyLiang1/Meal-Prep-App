@@ -21,7 +21,7 @@ export function FoodInMeal({ food, mealId }: IFoodInMealProps) {
         <div className={styles.container}>
             <div className={styles.left_container}>
                 <div className={styles.title_container}>
-                    <div> {food.name}</div>
+                    <div className={styles.food_name}> {food.name}</div>
                 </div>
                 <div className={styles.btn_container}>
                     <button>Edit</button>
@@ -39,11 +39,11 @@ export function FoodInMeal({ food, mealId }: IFoodInMealProps) {
                 </div>
             </div>
             <div className={styles.right_container}>
-                <div>Cals: {food.calories}</div>
+                <div className={styles.food_stats}>Cals: {(food.calories * food.actualAmount) / food.givenAmount}</div>
                 <div className={styles.right_smaller_data_container}></div>
-                <div>P: {((food.proteins * food.actualAmount) / food.givenAmount).toFixed(1)}</div>
-                <div>C: {((food.carbs * food.actualAmount) / food.givenAmount).toFixed(1)}</div>
-                <div>F: {((food.fats * food.actualAmount) / food.givenAmount).toFixed(1)}</div>
+                <div className={styles.food_stats}>P: {((food.proteins * food.actualAmount) / food.givenAmount).toFixed(1)}</div>
+                <div className={styles.food_stats}>C: {((food.carbs * food.actualAmount) / food.givenAmount).toFixed(1)}</div>
+                <div className={styles.food_stats}>F: {((food.fats * food.actualAmount) / food.givenAmount).toFixed(1)}</div>
             </div>
             {deleteModal ? <DeleteModal objectToDelete={'food'} setDeleteModal={setDeleteModal} mealId={mealId!} foodName={food.name}></DeleteModal> : null}
         </div>

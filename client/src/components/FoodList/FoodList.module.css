@@ -3,7 +3,8 @@
     width: 35vw;
 
     background-color: var(--lighterblue);    
-     display: flex;
+    
+    display: flex-wrap;
     justify-content: space-around;
     text-align: center;
 }

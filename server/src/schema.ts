@@ -70,7 +70,8 @@ const typeDefs = gql`
     union LoginResult = LoginSuccess | LoginError
     input CreateFoodInput {
         userId: ID!
-        mealId: ID!
+        dayIndex: Float
+        mealId: ID 
         name: String!
         calories: Float!
         proteins: Float!

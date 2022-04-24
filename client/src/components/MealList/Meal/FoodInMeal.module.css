@@ -19,6 +19,14 @@
 
     margin-left: 10px;
 }
+
+.food_name {
+    font-size: 20px;
+}
+
+.food_stats {
+    font-size: 12px;
+}
 /* 
 .name_container {
     height: 100%;

@@ -18,10 +18,11 @@ export type CreateFoodInput = {
   actualAmount: Scalars['Float'];
   calories: Scalars['Float'];
   carbs: Scalars['Float'];
+  dayIndex?: InputMaybe<Scalars['Float']>;
   fats: Scalars['Float'];
   givenAmount: Scalars['Float'];
   ingredientNames: Array<Scalars['String']>;
-  mealId: Scalars['ID'];
+  mealId?: InputMaybe<Scalars['ID']>;
   name: Scalars['String'];
   proteins: Scalars['Float'];
   userId: Scalars['ID'];

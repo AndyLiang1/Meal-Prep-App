@@ -1,0 +1,5 @@
+mutation createFoodFromFoodList($createFoodInput2: CreateFoodInput!) {
+    createFood(input: $createFoodInput2) {
+        name
+    }
+}

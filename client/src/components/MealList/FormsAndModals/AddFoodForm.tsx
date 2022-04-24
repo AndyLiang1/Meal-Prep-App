@@ -6,7 +6,7 @@ import { useEffect } from 'react';
 import { useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import * as Yup from 'yup';
-import { Food } from '../../../generated/graphql-client';
+import { CreateFoodFromFoodListDocument, CreateFoodFromMealDocument, CreateFoodInput, Food } from '../../../generated/graphql-client';
 import { setModalStatus } from '../../../state/action-creators';
 import { IRootState } from '../../../state/reducers';
 import { UserInfoInterface } from '../../../state/reducers/UserData';
@@ -14,24 +14,45 @@ import styles from './AddFoodForm.module.css';
 import { Ingredient } from './Ingredient';
 
 import { useWhatChanged, setUseWhatChange } from '@simbathesailor/use-what-changed';
+import { useMutation } from '@apollo/client';
 
 export interface IAddFoodFormProps {
     type: string;
     setAddFoodForm: React.Dispatch<React.SetStateAction<boolean>>;
+    mealId: string;
 }
 
-export function AddFoodForm({ type, setAddFoodForm }: IAddFoodFormProps) {
+interface CreateFoodFromMealInput {
+    existingFood: Food | string;
+    existingFoodActualAmount: number;
+    name: string;
+    calories: number;
+    proteins: number;
+    carbs: number;
+    fats: number;
+    ingredients: Food[];
+    givenAmount: number;
+    actualAmount: number;
+}
+
+export function AddFoodForm({ type, setAddFoodForm, mealId }: IAddFoodFormProps) {
     const { modalStatus } = useSelector((state: IRootState) => state);
     const { user }: { user: UserInfoInterface } = useSelector((state: IRootState) => state);
+    const { dayIndex } = useSelector((state: IRootState) => state.day);
     const [newIngredient, setNewIngredient] = useState<string>();
     const [foods, setFoods] = useState<Food[]>([]);
     const [ingredients, setIngredients] = useState<Food[]>([]);
+    const [errorMsg, setErrorMsg] = useState<string>('')
 
     const dispatch = useDispatch();
 
+    const [createFoodFromMeal] = useMutation(CreateFoodFromMealDocument);
+    const [createFoodFromFoodList] = useMutation(CreateFoodFromFoodListDocument);
+
     useEffect(() => {}, [user]);
-    const initialValues = {
-        existingFood: {},
+    const initialValues: CreateFoodFromMealInput = {
+        existingFood: '',
+        existingFoodActualAmount: 0,
         name: '',
         calories: 0,
         proteins: 0,
@@ -43,13 +64,13 @@ export function AddFoodForm({ type, setAddFoodForm }: IAddFoodFormProps) {
     };
 
     const validationSchema = Yup.object().shape({
-        name: Yup.string().max(50),
-        calories: Yup.number().typeError('Input a number please').integer().min(1),
-        proteins: Yup.number().typeError('Input a number please').min(1),
-        carbs: Yup.number().typeError('Input a number please').min(1),
-        fats: Yup.number().typeError('Input a number please').min(1),
-        givenAmount: Yup.number().typeError('Input a number please').integer().min(1),
-        actualAmount: Yup.number().typeError('Input a number please').integer().min(1)
+        // name: Yup.string().max(50),
+        // calories: Yup.number().typeError('Input a number please').integer().min(1),
+        // proteins: Yup.number().typeError('Input a number please').min(1),
+        // carbs: Yup.number().typeError('Input a number please').min(1),
+        // fats: Yup.number().typeError('Input a number please').min(1),
+        // givenAmount: Yup.number().typeError('Input a number please').integer().min(1),
+        // actualAmount: Yup.number().typeError('Input a number please').integer().min(1)
     });
 
     useEffect(() => {
@@ -61,17 +82,79 @@ export function AddFoodForm({ type, setAddFoodForm }: IAddFoodFormProps) {
                 setIngredients(newIngredientsList);
             }
         }
-        // This allows us to add the same ingredient twice, 
+        // This allows us to add the same ingredient twice,
         setNewIngredient('');
     }, [newIngredient]);
 
-    const submit = (data: any) => {
-        console.log('here');
-        console.log(data);
+    const onSubmit = async (submittedData: CreateFoodFromMealInput) => {
+        if (submittedData.existingFood !== '' && submittedData.name !== '') {
+            setErrorMsg('Please only use one of the options to add a food to this meal. Either add an existing food, or create a new food with a unique name.')
+        }
+        // check what we are adding
+        if (submittedData.existingFood !== '') {
+            let createFoodFromMealArgs: CreateFoodInput;
+            console.log('her2e');
+
+            user.foodList.forEach((food) => {
+                if (submittedData.existingFood === food.name) {
+                    const { name, calories, proteins, carbs, fats, givenAmount, actualAmount } = food;
+                    const ingredientNames: string[] = [];
+                    food.ingredients.forEach((ingredient) => {
+                        ingredientNames.push(ingredient.name);
+                    });
+                    createFoodFromMealArgs = {
+                        userId: user.id,
+                        dayIndex,
+                        mealId,
+                        name,
+                        calories,
+                        proteins,
+                        carbs,
+                        fats,
+                        ingredientNames,
+                        givenAmount,
+                        actualAmount: submittedData.existingFoodActualAmount
+                    };
+                }
+            });
+
+            const { data } = await createFoodFromMeal({
+                variables: {
+                    input: createFoodFromMealArgs!
+                }
+            });
+        } else if (submittedData.name !== '') {
+            // then we are not using exisitng food
+            const { name, calories, proteins, carbs, fats, givenAmount, actualAmount } = submittedData;
+            const ingredientNames: string[] = [];
+            ingredients.forEach((ingredient) => {
+                ingredientNames.push(ingredient.name);
+            });
+            const createFoodFromMealArgs: CreateFoodInput = {
+                userId: user.id,
+                dayIndex,
+                mealId,
+                name,
+                calories,
+                proteins,
+                carbs,
+                fats,
+                ingredientNames,
+                givenAmount,
+                actualAmount
+            };
+            console.log('here');
+            const { data } = await createFoodFromMeal({
+                variables: {
+                    input: createFoodFromMealArgs
+                }
+            });
+        }
     };
+
     return (
         <div className={styles.container}>
-            <Formik initialValues={initialValues} validationSchema={validationSchema} onSubmit={submit}>
+            <Formik initialValues={initialValues} validationSchema={validationSchema} onSubmit={onSubmit}>
                 {({ errors, touched }) => (
                     <Form className={styles.form}>
                         <div className={styles.title_container}>
@@ -89,6 +172,8 @@ export function AddFoodForm({ type, setAddFoodForm }: IAddFoodFormProps) {
                         <div className={styles.existing_food_container}>
                             <div>Use existing food</div>
                             <Field className="add_field" name="existingFood" as="select">
+                                <option value=""></option>
+
                                 {user.foodList!.map((food: Food, index: number) => {
                                     return (
                                         <option key={index} value={food.name}>
@@ -97,6 +182,8 @@ export function AddFoodForm({ type, setAddFoodForm }: IAddFoodFormProps) {
                                     );
                                 })}
                             </Field>
+                            <div>Actual Amount</div>
+                            <Field className="add_field" name="existingFoodActualAmount"></Field>
                         </div>
                         <div className={styles.create_new_food_container}>
                             <div>Name</div>
@@ -123,7 +210,7 @@ export function AddFoodForm({ type, setAddFoodForm }: IAddFoodFormProps) {
                                 }}
                                 value={newIngredient}
                             >
-                                <option value="-"></option>
+                                <option value=""></option>
                                 {user.foodList.map((food: Food, index: number) => {
                                     return (
                                         <option key={index} value={food.name}>
@@ -133,12 +220,15 @@ export function AddFoodForm({ type, setAddFoodForm }: IAddFoodFormProps) {
                                 })}
                             </Field>
                             {ingredients.map((food: Food, index: number) => {
-                                return <Ingredient key={index} ingredient={food} ingredients = {ingredients}
-                                setIngredients = {setIngredients}></Ingredient>;
+                                return <Ingredient key={index} ingredient={food} ingredients={ingredients} setIngredients={setIngredients}></Ingredient>;
                             })}
+                        </div>
+
+                        <div className={styles.btn_container}>
                             <button className="add_button" type="submit">
                                 Add
                             </button>
+                            {errorMsg !== '' ? errorMsg : null }
                         </div>
                     </Form>
                 )}
