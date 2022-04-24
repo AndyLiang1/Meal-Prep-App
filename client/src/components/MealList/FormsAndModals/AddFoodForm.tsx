@@ -42,7 +42,7 @@ export function AddFoodForm({ type, setAddFoodForm, mealId }: IAddFoodFormProps)
     const [newIngredient, setNewIngredient] = useState<string>();
     const [foods, setFoods] = useState<Food[]>([]);
     const [ingredients, setIngredients] = useState<Food[]>([]);
-    const [errorMsg, setErrorMsg] = useState<string>('')
+    const [errorMsg, setErrorMsg] = useState<string>('');
 
     const dispatch = useDispatch();
 
@@ -88,7 +88,8 @@ export function AddFoodForm({ type, setAddFoodForm, mealId }: IAddFoodFormProps)
 
     const onSubmit = async (submittedData: CreateFoodFromMealInput) => {
         if (submittedData.existingFood !== '' && submittedData.name !== '') {
-            setErrorMsg('Please only use one of the options to add a food to this meal. Either add an existing food, or create a new food with a unique name.')
+            setErrorMsg('Please only use one of the options to add a food to this meal. Either add an existing food, or create a new food with a unique name.');
+            return;
         }
         // check what we are adding
         if (submittedData.existingFood !== '') {
@@ -123,9 +124,23 @@ export function AddFoodForm({ type, setAddFoodForm, mealId }: IAddFoodFormProps)
                     input: createFoodFromMealArgs!
                 }
             });
+            dispatch(setModalStatus(false));
+            setAddFoodForm(false);
         } else if (submittedData.name !== '') {
             // then we are not using exisitng food
             const { name, calories, proteins, carbs, fats, givenAmount, actualAmount } = submittedData;
+            let foodHasUniqueName = true;
+            user.foodList.forEach((food) => {
+                if (name === food.name) {
+                    foodHasUniqueName = false;
+                }
+            });
+
+            if (!foodHasUniqueName) {
+                setErrorMsg('A food with the same name already exists.');
+                return;
+            }
+
             const ingredientNames: string[] = [];
             ingredients.forEach((ingredient) => {
                 ingredientNames.push(ingredient.name);
@@ -149,6 +164,8 @@ export function AddFoodForm({ type, setAddFoodForm, mealId }: IAddFoodFormProps)
                     input: createFoodFromMealArgs
                 }
             });
+            dispatch(setModalStatus(false));
+            setAddFoodForm(false);
         }
     };
 
@@ -228,7 +245,7 @@ export function AddFoodForm({ type, setAddFoodForm, mealId }: IAddFoodFormProps)
                             <button className="add_button" type="submit">
                                 Add
                             </button>
-                            {errorMsg !== '' ? errorMsg : null }
+                            {errorMsg !== '' ? errorMsg : null}
                         </div>
                     </Form>
                 )}
