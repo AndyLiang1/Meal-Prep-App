@@ -25,7 +25,7 @@ export function MealInDay({ foods, mealId }: IMealInDayProps) {
         <div className={styles.container}>
             <div className={styles.foods_container}>
                 {foods.map((food: any, index: number) => {
-                    return <FoodInMeal key = {index} mealId={mealId} food={food}></FoodInMeal>;
+                    return <FoodInMeal key={index} mealId={mealId} food={food}></FoodInMeal>;
                 })}
             </div>
             <div className={styles.btn_container}>
@@ -52,8 +52,8 @@ export function MealInDay({ foods, mealId }: IMealInDayProps) {
                     Delete Meal
                 </button>
             </div>
-            {addFoodForm  ? <AddFoodForm type = 'meal' setAddFoodForm={setAddFoodForm} mealId = {mealId}></AddFoodForm> : null}
-            {deleteModal  ? <DeleteModal objectToDelete={'meal'} setDeleteModal={setDeleteModal} mealId={mealId}></DeleteModal> : null}
+            {addFoodForm ? <AddFoodForm type="meal" setAddFoodForm={setAddFoodForm} mealId={mealId}></AddFoodForm> : null}
+            {deleteModal ? <DeleteModal objectToDelete={'meal'} setDeleteModal={setDeleteModal} mealId={mealId} fromWhere={'mealList'}></DeleteModal> : null}
         </div>
     );
 }

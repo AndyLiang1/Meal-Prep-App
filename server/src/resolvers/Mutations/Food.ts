@@ -142,6 +142,21 @@ export const createFood = async (parent: any, { input }: MutationCreateFoodArgs,
     // }
 };
 
+const deleteFoodFromDay = (day: Meal[], mealId: string, foodName: string) => {
+    for (let i = 0; i < day.length; i++) {
+        if (day[i].id === mealId) {
+            const mealWeWant = day[i];
+            for (let j = 0; j < mealWeWant.foods.length; j++) {
+                if (mealWeWant.foods[j].name === foodName) {
+                    mealWeWant.foods.splice(j, 1);
+                    break;
+                }
+            }
+            break;
+        }
+    }
+};
+
 export const deleteFood = async (parent: any, args: any, context: any, info: any) => {
     Logging.info('Deleting Food');
     // get my user
@@ -153,92 +168,26 @@ export const deleteFood = async (parent: any, args: any, context: any, info: any
         }
         switch (dayIndex) {
             case 0:
-                for (let i = 0; i < user!.day1.length; i++) {
-                    if (user!.day1[i].id === mealId) {
-                        const mealWeWant = user!.day1[i];
-                        for (let j = 0; j < mealWeWant.foods.length; j++) {
-                            if (mealWeWant.foods[j].name === foodName) {
-                                mealWeWant.foods.splice(j, 1);
-                                break;
-                            }
-                        }
-                        break;
-                    }
-                }
+                deleteFoodFromDay(user!.day1, mealId, foodName);
                 break;
+
             case 1:
-                for (let i = 0; i < user!.day1.length; i++) {
-                    if (user!.day2[i].id === mealId) {
-                        const mealWeWant = user!.day2[i];
-                        for (let j = 0; j < mealWeWant.foods.length; j++) {
-                            if (mealWeWant.foods[j].name === foodName) {
-                                mealWeWant.foods.splice(j, 1);
-                                break;
-                            }
-                        }
-                        break;
-                    }
-                }
+                deleteFoodFromDay(user!.day2, mealId, foodName);
                 break;
             case 2:
-                for (let i = 0; i < user!.day1.length; i++) {
-                    const mealWeWant = user!.day3[i];
-                    for (let j = 0; j < mealWeWant.foods.length; j++) {
-                        if (mealWeWant.foods[j].name === foodName) {
-                            mealWeWant.foods.splice(j, 1);
-                            break;
-                        }
-                    }
-                    break;
-                }
+                deleteFoodFromDay(user!.day3, mealId, foodName);
                 break;
             case 3:
-                for (let i = 0; i < user!.day1.length; i++) {
-                    const mealWeWant = user!.day4[i];
-                    for (let j = 0; j < mealWeWant.foods.length; j++) {
-                        if (mealWeWant.foods[j].name === foodName) {
-                            mealWeWant.foods.splice(j, 1);
-                            break;
-                        }
-                    }
-                    break;
-                }
+                deleteFoodFromDay(user!.day4, mealId, foodName);
                 break;
             case 4:
-                for (let i = 0; i < user!.day1.length; i++) {
-                    const mealWeWant = user!.day5[i];
-                    for (let j = 0; j < mealWeWant.foods.length; j++) {
-                        if (mealWeWant.foods[j].name === foodName) {
-                            mealWeWant.foods.splice(j, 1);
-                            break;
-                        }
-                    }
-                    break;
-                }
+                deleteFoodFromDay(user!.day5, mealId, foodName);
                 break;
             case 5:
-                for (let i = 0; i < user!.day1.length; i++) {
-                    const mealWeWant = user!.day6[i];
-                    for (let j = 0; j < mealWeWant.foods.length; j++) {
-                        if (mealWeWant.foods[j].name === foodName) {
-                            mealWeWant.foods.splice(j, 1);
-                            break;
-                        }
-                    }
-                    break;
-                }
+                deleteFoodFromDay(user!.day6, mealId, foodName);
                 break;
             case 6:
-                for (let i = 0; i < user!.day1.length; i++) {
-                    const mealWeWant = user!.day7[i];
-                    for (let j = 0; j < mealWeWant.foods.length; j++) {
-                        if (mealWeWant.foods[j].name === foodName) {
-                            mealWeWant.foods.splice(j, 1);
-                            break;
-                        }
-                    }
-                    break;
-                }
+                deleteFoodFromDay(user!.day7, mealId, foodName);
                 break;
             default:
                 break;

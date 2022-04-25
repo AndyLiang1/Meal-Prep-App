@@ -45,7 +45,7 @@ export function FoodInMeal({ food, mealId }: IFoodInMealProps) {
                 <div className={styles.food_stats}>C: {((food.carbs * food.actualAmount) / food.givenAmount).toFixed(1)}</div>
                 <div className={styles.food_stats}>F: {((food.fats * food.actualAmount) / food.givenAmount).toFixed(1)}</div>
             </div>
-            {deleteModal ? <DeleteModal objectToDelete={'food'} setDeleteModal={setDeleteModal} mealId={mealId!} foodName={food.name}></DeleteModal> : null}
+            {deleteModal ? <DeleteModal objectToDelete={'food'} setDeleteModal={setDeleteModal} mealId={mealId!} foodName={food.name} fromWhere={'mealList'}></DeleteModal> : null}
         </div>
     );
 }

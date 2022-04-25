@@ -9,11 +9,12 @@ import styles from './DeleteModal.module.css';
 export interface IDeleteModalProps {
     objectToDelete: string;
     setDeleteModal: React.Dispatch<React.SetStateAction<boolean>>;
-    mealId: string;
+    mealId?: string;
     foodName?: string;
+    fromWhere?: string;
 }
 
-export function DeleteModal({ objectToDelete, setDeleteModal, mealId, foodName }: IDeleteModalProps) {
+export function DeleteModal({ objectToDelete, setDeleteModal, mealId, foodName, fromWhere }: IDeleteModalProps) {
     const { user } = useSelector((state: IRootState) => state);
     const { dayIndex } = useSelector((state: IRootState) => state.day);
     const { modalStatus } = useSelector((state: IRootState) => state);
@@ -24,39 +25,43 @@ export function DeleteModal({ objectToDelete, setDeleteModal, mealId, foodName }
     const [deleteFood] = useMutation(DeleteFoodDocument);
     const deleteUserObject = async () => {
         console.log(objectToDelete);
-        if (objectToDelete === 'meal') {
-            const deleteMealArgs = {
-                userId: user.id,
-                dayIndex,
-                mealId,
-                day1: dayIndex === 0,
-                day2: dayIndex === 1,
-                day3: dayIndex === 2,
-                day4: dayIndex === 3,
-                day5: dayIndex === 4,
-                day6: dayIndex === 5,
-                day7: dayIndex === 6
-            };
-            await deleteMeal({
-                variables: deleteMealArgs
-            });
-        } else if (objectToDelete === 'food') {
-            const deleteFoodArgs = {
-                userId: user.id,
-                dayIndex,
-                mealId,
-                foodName: foodName!,
-                day1: dayIndex === 0,
-                day2: dayIndex === 1,
-                day3: dayIndex === 2,
-                day4: dayIndex === 3,
-                day5: dayIndex === 4,
-                day6: dayIndex === 5,
-                day7: dayIndex === 6
-            };
-            await deleteFood({
-                variables: deleteFoodArgs
-            });
+        if (fromWhere === 'mealList') {
+            if (objectToDelete === 'meal' && mealId) {
+                const deleteMealArgs = {
+                    userId: user.id,
+                    dayIndex,
+                    mealId,
+                    day1: dayIndex === 0,
+                    day2: dayIndex === 1,
+                    day3: dayIndex === 2,
+                    day4: dayIndex === 3,
+                    day5: dayIndex === 4,
+                    day6: dayIndex === 5,
+                    day7: dayIndex === 6
+                };
+                await deleteMeal({
+                    variables: deleteMealArgs
+                });
+            } else if (objectToDelete === 'food' && mealId) {
+                const deleteFoodArgs = {
+                    userId: user.id,
+                    dayIndex,
+                    mealId,
+                    foodName: foodName!,
+                    day1: dayIndex === 0,
+                    day2: dayIndex === 1,
+                    day3: dayIndex === 2,
+                    day4: dayIndex === 3,
+                    day5: dayIndex === 4,
+                    day6: dayIndex === 5,
+                    day7: dayIndex === 6
+                };
+                await deleteFood({
+                    variables: deleteFoodArgs
+                });
+            }
+        } else if (fromWhere === 'foodList') {
+
         }
 
         const day = await getUserMeals(dayIndex, user, getMeals);
@@ -75,8 +80,9 @@ export function DeleteModal({ objectToDelete, setDeleteModal, mealId, foodName }
     };
     return (
         <div className={styles.container}>
-            {objectToDelete === 'meal' && <div>Are you sure you want to delete this meal?</div>}
-            {objectToDelete === 'food' && <div>Are you sure you want to delete this food from your meal?</div>}
+            {fromWhere === 'mealList' && objectToDelete === 'meal' && <div>Are you sure you want to delete this meal?</div>}
+            {fromWhere === 'mealList' && objectToDelete === 'food' && <div>Are you sure you want to delete this food from your meal?</div>}
+            {fromWhere === 'foodList' && <div>Are you sure you want to delete this food? Doing so will delete this food from all meals too!</div>}
             <div className={styles.btn_container}></div>
             <button
                 onClick={() => {
