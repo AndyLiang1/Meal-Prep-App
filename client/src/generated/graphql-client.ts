@@ -96,9 +96,9 @@ export type MutationDeleteFoodArgs = {
   day5: Scalars['Boolean'];
   day6: Scalars['Boolean'];
   day7: Scalars['Boolean'];
-  dayIndex: Scalars['Int'];
+  dayIndex?: InputMaybe<Scalars['Int']>;
   foodName: Scalars['String'];
-  mealId: Scalars['ID'];
+  mealId?: InputMaybe<Scalars['ID']>;
   userId: Scalars['ID'];
 };
 

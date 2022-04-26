@@ -103,53 +103,18 @@ export const createFood = async (parent: any, { input }: MutationCreateFoodArgs,
     } catch (error) {
         Logging.error(error);
     }
-
-    // try {
-    //     const { userId, mealId, name, calories, proteins, carbs, fats, givenAmount, actualAmount } = input;
-    //     let ingredientNames: string[] = input.ingredientNames;
-    //     const user = await UserModel.findOne({ _id: userId });
-    //     if (!user) {
-    //         Logging.error('No user found from createFood resolver');
-    //     }
-
-    //     const ingredients: Food[] = [];
-
-    //     user!.foodList.forEach((foodFromUserFoodList: Food) => {
-    //         if (ingredientNames.includes(foodFromUserFoodList.name)) {
-    //             ingredientNames = ingredientNames.filter((namesOfFoodWeWant: string) => {
-    //                 return namesOfFoodWeWant != foodFromUserFoodList.name;
-    //             });
-    //             ingredients.push(foodFromUserFoodList);
-    //         }
-    //     });
-
-    //     const food: Food = {
-    //         name,
-    //         calories,
-    //         proteins,
-    //         carbs,
-    //         fats,
-    //         ingredients,
-    //         givenAmount,
-    //         actualAmount
-    //     };
-    //     user!.foodList.push(food);
-    //     user!.save();
-    //     console.log(user);
-    //     return food;
-    // } catch (error) {
-    //     Logging.error(error);
-    // }
 };
 
-const deleteFoodFromDay = (day: Meal[], mealId: string, foodName: string) => {
+const deleteFoodFromDay = (day: Meal[], mealId: string, foodName: string, once: boolean) => {
     for (let i = 0; i < day.length; i++) {
         if (day[i].id === mealId) {
             const mealWeWant = day[i];
             for (let j = 0; j < mealWeWant.foods.length; j++) {
                 if (mealWeWant.foods[j].name === foodName) {
                     mealWeWant.foods.splice(j, 1);
-                    break;
+                    if (once) {
+                        break;
+                    }
                 }
             }
             break;
@@ -166,38 +131,48 @@ export const deleteFood = async (parent: any, args: any, context: any, info: any
         if (!user) {
             Logging.error('No user found from deleteFood resolver');
         }
-        switch (dayIndex) {
-            case 0:
-                deleteFoodFromDay(user!.day1, mealId, foodName);
-                break;
-
-            case 1:
-                deleteFoodFromDay(user!.day2, mealId, foodName);
-                break;
-            case 2:
-                deleteFoodFromDay(user!.day3, mealId, foodName);
-                break;
-            case 3:
-                deleteFoodFromDay(user!.day4, mealId, foodName);
-                break;
-            case 4:
-                deleteFoodFromDay(user!.day5, mealId, foodName);
-                break;
-            case 5:
-                deleteFoodFromDay(user!.day6, mealId, foodName);
-                break;
-            case 6:
-                deleteFoodFromDay(user!.day7, mealId, foodName);
-                break;
-            default:
-                break;
+        if (dayIndex || mealId) {
+            switch (dayIndex) {
+                case 0:
+                    deleteFoodFromDay(user!.day1, mealId, foodName, true);
+                    break;
+                case 1:
+                    deleteFoodFromDay(user!.day2, mealId, foodName, true);
+                    break;
+                case 2:
+                    deleteFoodFromDay(user!.day3, mealId, foodName, true);
+                    break;
+                case 3:
+                    deleteFoodFromDay(user!.day4, mealId, foodName, true);
+                    break;
+                case 4:
+                    deleteFoodFromDay(user!.day5, mealId, foodName, true);
+                    break;
+                case 5:
+                    deleteFoodFromDay(user!.day6, mealId, foodName, true);
+                    break;
+                case 6:
+                    deleteFoodFromDay(user!.day7, mealId, foodName, true);
+                    break;
+                default:
+                    break;
+            }
+        } else {
+            // we are deleting fromfoodList
+            for (let i = 0; i < user!.foodList.length; i++) {
+                if (foodName === user!.foodList[i].name) {
+                    user!.foodList.splice(i, 1);
+                    break;
+                }
+            }
+            deleteFoodFromDay(user!.day1, mealId, foodName, false);
+            deleteFoodFromDay(user!.day2, mealId, foodName, false);
+            deleteFoodFromDay(user!.day3, mealId, foodName, false);
+            deleteFoodFromDay(user!.day4, mealId, foodName, false);
+            deleteFoodFromDay(user!.day5, mealId, foodName, false);
+            deleteFoodFromDay(user!.day6, mealId, foodName, false);
+            deleteFoodFromDay(user!.day7, mealId, foodName, false);
         }
-        // user!.days.forEach((day) => {
-        //     if (day.name === dayName) {
-        //         newMeal.index = day.meals.length
-        //         day.meals.push(newMeal);
-        //     }
-        // });
 
         await user!.save();
         return mealId;
