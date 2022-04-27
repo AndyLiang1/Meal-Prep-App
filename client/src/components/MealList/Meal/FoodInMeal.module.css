@@ -1,12 +1,12 @@
 .container {
-    height: 80%;
-    width: 30%;
+    height: 45%;
+    width: 175px;
 
     background-color: white;
 
     display: flex;
     justify-content: space-around;
-    align-items: center;
+    align-items: flex-start;
     text-align: center;
 
     /* display: grid;
@@ -16,17 +16,17 @@
     "name cals"
     " card_CRUD"
     ; */
-
-    margin-left: 10px;
+    margin-top: 5px;
+    margin-left: 10px; 
 }
 
 .food_name {
-    font-size: 20px;
+    height: 100%;
+    width: 100%;
+    font-size: 15px;
+    overflow-wrap: break-word;
 }
 
-.food_stats {
-    font-size: 12px;
-}
 /* 
 .name_container {
     height: 100%;
@@ -65,13 +65,18 @@
 }
 
 .btn_container {
-    height: 50%;
+    height: 30%;
     width: 100%;
 
     display: flex;
     justify-content: space-around;
     align-items: center;
     text-align: center;
+}
+
+.btn {
+    height: 100%;
+    width: 100%;
 }
 
 .right_container {
@@ -83,7 +88,7 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    text-align: center;
+    text-align: right;
 }
 
 .right_smaller_data_container {
@@ -93,6 +98,6 @@
     text-align: center;
 }
 
-.right_smaller_data_container div {
-    font-size: 1px;
+.food_stats {
+    font-size: 10px;
 }

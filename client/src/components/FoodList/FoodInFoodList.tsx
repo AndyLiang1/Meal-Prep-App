@@ -21,7 +21,7 @@ export function FoodInFoodList({ food }: IFoodInFoodListProps) {
             <div className={styles.container}>
                 <div className={styles.left_container}>
                     <div className={styles.title_container}>
-                        <div> {food.name}</div>
+                        <div title={food.name}>{food.name.length <= 20 ? food.name : food.name.substring(0, 18) + '...'}</div>
                     </div>
                     <div>Calories: {food.calories}</div>
                     <div>Given amount: {food.givenAmount}</div>
@@ -47,7 +47,7 @@ export function FoodInFoodList({ food }: IFoodInFoodListProps) {
                     <div>F: {food.fats}</div>
                 </div>
             </div>
-            {deleteModal ? <DeleteModal objectToDelete={'food'} setDeleteModal={setDeleteModal} foodName={food.name} fromWhere = {'foodList'}></DeleteModal> : null}
+            {deleteModal ? <DeleteModal objectToDelete={'food'} setDeleteModal={setDeleteModal} foodName={food.name} fromWhere={'foodList'}></DeleteModal> : null}
         </>
     );
 }

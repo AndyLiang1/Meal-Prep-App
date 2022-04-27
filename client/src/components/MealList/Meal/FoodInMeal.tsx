@@ -6,6 +6,7 @@ import { IRootState } from '../../../state/reducers';
 import { useDispatch, useSelector } from 'react-redux';
 import { useState } from 'react';
 import { setModalStatus } from '../../../state/action-creators';
+import { DeleteBtn, EditBtn } from '../../helpers/Icons';
 
 export interface IFoodInMealProps {
     food: Food;
@@ -21,11 +22,14 @@ export function FoodInMeal({ food, mealId }: IFoodInMealProps) {
         <div className={styles.container}>
             <div className={styles.left_container}>
                 <div className={styles.title_container}>
-                    <div className={styles.food_name}> {food.name}</div>
+                    <div className={styles.food_name}>
+                        <div title={food.name}>{food.name.length <= 33 ? food.name : food.name.substring(0, 30) + '...'}</div>
+                    </div>
                 </div>
                 <div className={styles.btn_container}>
-                    <button>Edit</button>
-                    <button
+                    <EditBtn className={styles.btn}>Edit</EditBtn>
+                    <DeleteBtn
+                        className={styles.btn}
                         onClick={() => {
                             if (!modalStatus) {
                                 console.log(modalStatus);
@@ -35,11 +39,11 @@ export function FoodInMeal({ food, mealId }: IFoodInMealProps) {
                         }}
                     >
                         Delete
-                    </button>
+                    </DeleteBtn>
                 </div>
             </div>
             <div className={styles.right_container}>
-                <div className={styles.food_stats}>Cals: {(food.calories * food.actualAmount) / food.givenAmount}</div>
+                <div className={styles.food_stats}>Cals: {((food.calories * food.actualAmount) / food.givenAmount).toFixed(0)}</div>
                 <div className={styles.right_smaller_data_container}></div>
                 <div className={styles.food_stats}>P: {((food.proteins * food.actualAmount) / food.givenAmount).toFixed(1)}</div>
                 <div className={styles.food_stats}>C: {((food.carbs * food.actualAmount) / food.givenAmount).toFixed(1)}</div>

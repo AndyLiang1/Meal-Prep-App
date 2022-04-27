@@ -106,17 +106,12 @@ export const createFood = async (parent: any, { input }: MutationCreateFoodArgs,
 };
 
 const deleteFoodFromDay = (day: Meal[], mealId: string, foodName: string, once: boolean) => {
-    console.log('New day');
     for (let i = 0; i < day.length; i++) {
-        console.log('New Meal');
         if (day[i].id === mealId || !once) {
             const mealWeWant = day[i];
             for (let j = 0; j < mealWeWant.foods.length; j++) {
-                console.log(mealWeWant.foods[j].name);
-
                 if (mealWeWant.foods[j].name === foodName) {
                     mealWeWant.foods.splice(j, 1);
-                    console.log('deleting');
                     if (once) {
                         break;
                     }

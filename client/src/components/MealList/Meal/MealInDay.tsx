@@ -5,6 +5,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { Food, Meal, DeleteMealDocument } from '../../../generated/graphql-client';
 import { setModalStatus } from '../../../state/action-creators';
 import { IRootState } from '../../../state/reducers';
+import { AddBtn, DeleteBtn } from '../../helpers/Icons';
 import { AddFoodForm } from '../FormsAndModals/AddFoodForm';
 import { DeleteModal } from '../FormsAndModals/DeleteModal';
 import { FoodInMeal } from './FoodInMeal';
@@ -29,7 +30,7 @@ export function MealInDay({ foods, mealId }: IMealInDayProps) {
                 })}
             </div>
             <div className={styles.btn_container}>
-                <button
+                <AddBtn
                     onClick={() => {
                         if (!modalStatus) {
                             dispatch(setModalStatus(true));
@@ -39,8 +40,8 @@ export function MealInDay({ foods, mealId }: IMealInDayProps) {
                     }}
                 >
                     Add food
-                </button>
-                <button
+                </AddBtn>
+                <DeleteBtn
                     onClick={() => {
                         if (!modalStatus) {
                             console.log(modalStatus);
@@ -50,7 +51,7 @@ export function MealInDay({ foods, mealId }: IMealInDayProps) {
                     }}
                 >
                     Delete Meal
-                </button>
+                </DeleteBtn>
             </div>
             {addFoodForm ? <AddFoodForm type="meal" setAddFoodForm={setAddFoodForm} mealId={mealId}></AddFoodForm> : null}
             {deleteModal ? <DeleteModal objectToDelete={'meal'} setDeleteModal={setDeleteModal} mealId={mealId} fromWhere={'mealList'}></DeleteModal> : null}
