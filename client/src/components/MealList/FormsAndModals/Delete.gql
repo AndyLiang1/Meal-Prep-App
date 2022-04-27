@@ -3,6 +3,6 @@ mutation deleteMeal($userId: ID!, $dayIndex: Int!, $mealId: ID!, $day1: Boolean!
 }
 
 
-mutation deleteFood($userId: ID!, $dayIndex: Int!, $mealId: ID!, $foodName: String!, $day1: Boolean!, $day2: Boolean!, $day3: Boolean!, $day4: Boolean!, $day5: Boolean!, $day6: Boolean!, $day7: Boolean!) {
+mutation deleteFood($userId: ID!, $dayIndex: Int, $mealId: ID, $foodName: String!, $day1: Boolean!, $day2: Boolean!, $day3: Boolean!, $day4: Boolean!, $day5: Boolean!, $day6: Boolean!, $day7: Boolean!) {
     deleteFood(userId: $userId, dayIndex: $dayIndex, mealId: $mealId, foodName: $foodName, day1: $day1, day2: $day2, day3: $day3, day4: $day4, day5: $day5, day6: $day6, day7: $day7)
 }

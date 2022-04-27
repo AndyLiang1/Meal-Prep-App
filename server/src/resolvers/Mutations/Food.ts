@@ -106,18 +106,25 @@ export const createFood = async (parent: any, { input }: MutationCreateFoodArgs,
 };
 
 const deleteFoodFromDay = (day: Meal[], mealId: string, foodName: string, once: boolean) => {
+    console.log('New day');
     for (let i = 0; i < day.length; i++) {
-        if (day[i].id === mealId) {
+        console.log('New Meal');
+        if (day[i].id === mealId || !once) {
             const mealWeWant = day[i];
             for (let j = 0; j < mealWeWant.foods.length; j++) {
+                console.log(mealWeWant.foods[j].name);
+
                 if (mealWeWant.foods[j].name === foodName) {
                     mealWeWant.foods.splice(j, 1);
+                    console.log('deleting');
                     if (once) {
                         break;
                     }
                 }
             }
-            break;
+            if (once) {
+                break;
+            }
         }
     }
 };
@@ -159,6 +166,7 @@ export const deleteFood = async (parent: any, args: any, context: any, info: any
             }
         } else {
             // we are deleting fromfoodList
+            console.log('here');
             for (let i = 0; i < user!.foodList.length; i++) {
                 if (foodName === user!.foodList[i].name) {
                     user!.foodList.splice(i, 1);
@@ -175,7 +183,7 @@ export const deleteFood = async (parent: any, args: any, context: any, info: any
         }
 
         await user!.save();
-        return mealId;
+        return foodName;
     } catch (error) {
         Logging.error(error);
     }

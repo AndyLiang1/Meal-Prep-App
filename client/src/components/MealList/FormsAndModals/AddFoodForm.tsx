@@ -6,15 +6,16 @@ import { useEffect } from 'react';
 import { useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import * as Yup from 'yup';
-import { CreateFoodFromFoodListDocument, CreateFoodFromMealDocument, CreateFoodInput, Food } from '../../../generated/graphql-client';
-import { setModalStatus } from '../../../state/action-creators';
+import { CreateFoodFromFoodListDocument, CreateFoodFromMealDocument, CreateFoodInput, Food, GetMealsDocument } from '../../../generated/graphql-client';
+import { addUserToStore, setModalStatus } from '../../../state/action-creators';
 import { IRootState } from '../../../state/reducers';
 import { UserInfoInterface } from '../../../state/reducers/UserData';
 import styles from './AddFoodForm.module.css';
 import { Ingredient } from './Ingredient';
 
 import { useWhatChanged, setUseWhatChange } from '@simbathesailor/use-what-changed';
-import { useMutation } from '@apollo/client';
+import { useLazyQuery, useMutation } from '@apollo/client';
+import { getUserMeals } from '../../helpers/GetMealsFunction';
 
 export interface IAddFoodFormProps {
     type: string;
@@ -48,6 +49,8 @@ export function AddFoodForm({ type, setAddFoodForm, mealId }: IAddFoodFormProps)
 
     const [createFoodFromMeal] = useMutation(CreateFoodFromMealDocument);
     const [createFoodFromFoodList] = useMutation(CreateFoodFromFoodListDocument);
+    const [getMeals] = useLazyQuery(GetMealsDocument);
+
 
     useEffect(() => {}, [user]);
     const initialValues: CreateFoodFromMealInput = {
@@ -158,15 +161,30 @@ export function AddFoodForm({ type, setAddFoodForm, mealId }: IAddFoodFormProps)
                 givenAmount,
                 actualAmount
             };
-            console.log('here');
+            
             const { data } = await createFoodFromMeal({
                 variables: {
                     input: createFoodFromMealArgs
                 }
             });
+
+
+            
             dispatch(setModalStatus(false));
             setAddFoodForm(false);
         }
+        const day = await getUserMeals(dayIndex, user, getMeals);
+
+        dispatch(
+            addUserToStore({
+                username: user.username,
+                id: user.id,
+                day,
+                loggedIn: true,
+                accessToken: localStorage.getItem('accessToken')!,
+                foodList: user.foodList
+            })
+        );
     };
 
     return (

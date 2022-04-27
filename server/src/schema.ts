@@ -71,7 +71,7 @@ const typeDefs = gql`
     input CreateFoodInput {
         userId: ID!
         dayIndex: Float
-        mealId: ID 
+        mealId: ID
         name: String!
         calories: Float!
         proteins: Float!
@@ -89,6 +89,7 @@ const typeDefs = gql`
         createFood(input: CreateFoodInput!): Food!
         createMeal(userId: ID!, dayIndex: Int!, day1: Boolean!, day2: Boolean!, day3: Boolean!, day4: Boolean!, day5: Boolean!, day6: Boolean!, day7: Boolean!): ID!
         deleteMeal(userId: ID!, dayIndex: Int!, mealId: ID!, day1: Boolean!, day2: Boolean!, day3: Boolean!, day4: Boolean!, day5: Boolean!, day6: Boolean!, day7: Boolean!): ID!
+
         deleteFood(userId: ID!, dayIndex: Int, mealId: ID, foodName: String!, day1: Boolean!, day2: Boolean!, day3: Boolean!, day4: Boolean!, day5: Boolean!, day6: Boolean!, day7: Boolean!): ID!
     }
 `;

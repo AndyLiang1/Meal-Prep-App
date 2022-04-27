@@ -1,7 +1,7 @@
 import { useLazyQuery, useMutation } from '@apollo/client';
 import * as React from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { DeleteFoodDocument, DeleteMealDocument, GetMealsDocument } from '../../../generated/graphql-client';
+import { DeleteFoodDocument, DeleteMealDocument, GetMealsDocument, MutationDeleteFoodArgs } from '../../../generated/graphql-client';
 import { addUserToStore, setModalStatus } from '../../../state/action-creators';
 import { IRootState } from '../../../state/reducers';
 import { getUserMeals } from '../../helpers/GetMealsFunction';
@@ -61,7 +61,22 @@ export function DeleteModal({ objectToDelete, setDeleteModal, mealId, foodName, 
                 });
             }
         } else if (fromWhere === 'foodList') {
-
+             const deleteFoodArgs: MutationDeleteFoodArgs = {
+                 userId: user.id,
+                 dayIndex: null,
+                 mealId: null,
+                 foodName: foodName!,
+                 day1: dayIndex === 0,
+                 day2: dayIndex === 1,
+                 day3: dayIndex === 2,
+                 day4: dayIndex === 3,
+                 day5: dayIndex === 4,
+                 day6: dayIndex === 5,
+                 day7: dayIndex === 6
+             };
+             await deleteFood({
+                 variables: deleteFoodArgs
+             });
         }
 
         const day = await getUserMeals(dayIndex, user, getMeals);
