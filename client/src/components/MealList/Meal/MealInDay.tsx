@@ -8,6 +8,7 @@ import { IRootState } from '../../../state/reducers';
 import { AddBtn, DeleteBtn } from '../../helpers/Icons';
 import { AddFoodForm } from '../FormsAndModals/AddFoodForm';
 import { DeleteModal } from '../FormsAndModals/DeleteModal';
+import { EditFoodForm } from '../FormsAndModals/EditFoodForm';
 import { FoodInMeal } from './FoodInMeal';
 import styles from './MealInDay.module.css';
 
@@ -19,7 +20,6 @@ export interface IMealInDayProps {
 export function MealInDay({ foods, mealId }: IMealInDayProps) {
     const [addFoodForm, setAddFoodForm] = useState<boolean>(false);
     const [deleteModal, setDeleteModal] = useState<boolean>(false);
-
     const { modalStatus } = useSelector((state: IRootState) => state);
     const dispatch = useDispatch();
     return (
@@ -31,6 +31,7 @@ export function MealInDay({ foods, mealId }: IMealInDayProps) {
             </div>
             <div className={styles.btn_container}>
                 <AddBtn
+                    className={styles.btn}
                     onClick={() => {
                         if (!modalStatus) {
                             dispatch(setModalStatus(true));
@@ -42,6 +43,7 @@ export function MealInDay({ foods, mealId }: IMealInDayProps) {
                     Add food
                 </AddBtn>
                 <DeleteBtn
+                    className={styles.btn}
                     onClick={() => {
                         if (!modalStatus) {
                             console.log(modalStatus);
@@ -55,6 +57,7 @@ export function MealInDay({ foods, mealId }: IMealInDayProps) {
             </div>
             {addFoodForm ? <AddFoodForm type="meal" setAddFoodForm={setAddFoodForm} mealId={mealId}></AddFoodForm> : null}
             {deleteModal ? <DeleteModal objectToDelete={'meal'} setDeleteModal={setDeleteModal} mealId={mealId} fromWhere={'mealList'}></DeleteModal> : null}
+         
         </div>
     );
 }

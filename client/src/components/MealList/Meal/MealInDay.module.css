@@ -19,7 +19,7 @@
 
 .foods_container {
     height: 100%;
-    width: 90%;
+    width: 95%;
     display: flex;
     flex-wrap: wrap;
     align-items: center;
@@ -28,15 +28,18 @@
 
 .btn_container {
     height: 100%;
-    width: 10%;
+    width: 5%;
 
     flex-direction: column;
     display: flex;
     justify-content: space-around;
     align-items: center;
     text-align: center;
+}
 
-
+.btn {
+    height: 50%;
+    width: 50%;
 }
 /* .headers_container {
     height: 100%;

@@ -7,6 +7,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useState } from 'react';
 import { setModalStatus } from '../../../state/action-creators';
 import { DeleteBtn, EditBtn } from '../../helpers/Icons';
+import { EditFoodForm } from '../FormsAndModals/EditFoodForm';
 
 export interface IFoodInMealProps {
     food: Food;
@@ -18,6 +19,7 @@ export function FoodInMeal({ food, mealId }: IFoodInMealProps) {
     const dispatch = useDispatch();
 
     const [deleteModal, setDeleteModal] = useState(false);
+    const [editForm, setEditForm] = useState(false);
     return (
         <div className={styles.container}>
             <div className={styles.left_container}>
@@ -27,13 +29,22 @@ export function FoodInMeal({ food, mealId }: IFoodInMealProps) {
                     </div>
                 </div>
                 <div className={styles.btn_container}>
-                    <EditBtn className={styles.btn}>Edit</EditBtn>
+                    <EditBtn
+                        className={styles.btn}
+                        onClick={() => {
+                            if (!modalStatus) {
+                                dispatch(setModalStatus(true));
+                                setEditForm(true);
+                            }
+                        }}
+                    >
+                        Edit
+                    </EditBtn>
                     <DeleteBtn
                         className={styles.btn}
                         onClick={() => {
                             if (!modalStatus) {
-                                console.log(modalStatus);
-                                dispatch(setModalStatus(!modalStatus));
+                                dispatch(setModalStatus(true));
                                 setDeleteModal(true);
                             }
                         }}
@@ -50,6 +61,7 @@ export function FoodInMeal({ food, mealId }: IFoodInMealProps) {
                 <div className={styles.food_stats}>F: {((food.fats * food.actualAmount) / food.givenAmount).toFixed(1)}</div>
             </div>
             {deleteModal ? <DeleteModal objectToDelete={'food'} setDeleteModal={setDeleteModal} mealId={mealId!} foodName={food.name} fromWhere={'mealList'}></DeleteModal> : null}
+            {editForm ? <EditFoodForm fromWhere={'mealList'} food={food} setEditForm = {setEditForm}></EditFoodForm> : null}
         </div>
     );
 }

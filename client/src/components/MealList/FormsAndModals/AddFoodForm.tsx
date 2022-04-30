@@ -1,6 +1,4 @@
-import { init } from '@graphql-codegen/cli';
 import { Formik, Form, Field, setIn } from 'formik';
-import { setMaxListeners } from 'process';
 import * as React from 'react';
 import { useEffect } from 'react';
 import { useState } from 'react';
@@ -97,7 +95,6 @@ export function AddFoodForm({ type, setAddFoodForm, mealId }: IAddFoodFormProps)
         // check what we are adding
         if (submittedData.existingFood !== '') {
             let createFoodFromMealArgs: CreateFoodInput;
-            console.log('her2e');
 
             user.foodList.forEach((food) => {
                 if (submittedData.existingFood === food.name) {

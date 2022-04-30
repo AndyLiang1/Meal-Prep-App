@@ -12,7 +12,11 @@ export function Ingredient({ ingredient, ingredients, setIngredients }: IIngredi
     const deleteIngredient = (ingredientToDeleteName: string) => {
         for (let i = 0; i < ingredients.length; i++) {
             if (ingredientToDeleteName === ingredients[i].name) {
-                ingredients.splice(i, 1);
+                // critical to do this instead of setting
+                // newIngredientsList = ingredients to trigger a re-render
+                const newIngredientsList = [...ingredients] 
+                newIngredientsList.splice(i, 1);
+                setIngredients(newIngredientsList)
             }
         }
     };

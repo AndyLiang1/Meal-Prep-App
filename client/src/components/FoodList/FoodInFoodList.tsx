@@ -5,6 +5,7 @@ import { Food } from '../../generated/graphql-client';
 import { setModalStatus } from '../../state/action-creators';
 import { IRootState } from '../../state/reducers';
 import { DeleteModal } from '../MealList/FormsAndModals/DeleteModal';
+import { EditFoodForm } from '../MealList/FormsAndModals/EditFoodForm';
 import styles from './FoodInFoodList.module.css';
 
 export interface IFoodInFoodListProps {
@@ -16,6 +17,7 @@ export function FoodInFoodList({ food }: IFoodInFoodListProps) {
     const dispatch = useDispatch();
 
     const [deleteModal, setDeleteModal] = useState(false);
+    const [editForm, setEditForm] = useState(false)
     return (
         <>
             <div className={styles.container}>
@@ -28,7 +30,17 @@ export function FoodInFoodList({ food }: IFoodInFoodListProps) {
                 </div>
                 <div className={styles.right_container}>
                     <div className={styles.btn_container}>
-                        <button>Edit</button>
+                        <button
+                            onClick={() => {
+                                if (!modalStatus) {
+                                    console.log(modalStatus);
+                                    dispatch(setModalStatus(!modalStatus));
+                                    setEditForm(true);
+                                }
+                            }}
+                        >
+                            Edit
+                        </button>
                         <button
                             onClick={() => {
                                 if (!modalStatus) {
@@ -48,6 +60,7 @@ export function FoodInFoodList({ food }: IFoodInFoodListProps) {
                 </div>
             </div>
             {deleteModal ? <DeleteModal objectToDelete={'food'} setDeleteModal={setDeleteModal} foodName={food.name} fromWhere={'foodList'}></DeleteModal> : null}
+            {editForm ? <EditFoodForm fromWhere={'foodList'} food={food} setEditForm={setEditForm}></EditFoodForm> : null}
         </>
     );
 }
