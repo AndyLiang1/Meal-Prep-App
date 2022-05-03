@@ -70,9 +70,9 @@ const typeDefs = gql`
     union LoginResult = LoginSuccess | LoginError
     input CreateFoodInput {
         userId: ID!
-        dayIndex: Float
+        dayIndex: Int
         mealId: ID
-        name: String!
+        foodName: String!
         calories: Float!
         proteins: Float!
         carbs: Float!
@@ -82,15 +82,77 @@ const typeDefs = gql`
         actualAmount: Float!
     }
 
+    input CreateMealInput {
+        userId: ID!
+        dayIndex: Int!
+        day1: Boolean!
+        day2: Boolean!
+        day3: Boolean!
+        day4: Boolean!
+        day5: Boolean!
+        day6: Boolean!
+        day7: Boolean!
+    }
+
+    input DeleteMealInput {
+        userId: ID!
+        dayIndex: Int!
+        mealId: ID!
+        day1: Boolean!
+        day2: Boolean!
+        day3: Boolean!
+        day4: Boolean!
+        day5: Boolean!
+        day6: Boolean!
+        day7: Boolean!
+    }
+
+    input DeleteFoodInput {
+        userId: ID!
+        dayIndex: Int
+        mealId: ID
+        foodName: String!
+        day1: Boolean!
+        day2: Boolean!
+        day3: Boolean!
+        day4: Boolean!
+        day5: Boolean!
+        day6: Boolean!
+        day7: Boolean!
+    }
+
+    input EditFoodInput {
+        userId: ID!
+        dayIndex: Int
+        mealId: ID
+        foodIndex: Int
+        foodName: String
+        newFoodName: String
+        newCalories: Float
+        newProteins: Float
+        newCarbs: Float
+        newFats: Float
+        newIngredientNames: [String!]
+        newGivenAmount: Float
+        newActualAmount: Float
+        day1: Boolean
+        day2: Boolean
+        day3: Boolean
+        day4: Boolean
+        day5: Boolean
+        day6: Boolean
+        day7: Boolean
+    }
+
     type Mutation {
         register(input: RegisterInput!): RegisterResult!
         login(email: String!, password: String!): LoginResult!
 
         createFood(input: CreateFoodInput!): Food!
-        createMeal(userId: ID!, dayIndex: Int!, day1: Boolean!, day2: Boolean!, day3: Boolean!, day4: Boolean!, day5: Boolean!, day6: Boolean!, day7: Boolean!): ID!
-        deleteMeal(userId: ID!, dayIndex: Int!, mealId: ID!, day1: Boolean!, day2: Boolean!, day3: Boolean!, day4: Boolean!, day5: Boolean!, day6: Boolean!, day7: Boolean!): ID!
-
-        deleteFood(userId: ID!, dayIndex: Int, mealId: ID, foodName: String!, day1: Boolean!, day2: Boolean!, day3: Boolean!, day4: Boolean!, day5: Boolean!, day6: Boolean!, day7: Boolean!): ID!
+        createMeal(input: CreateMealInput!): ID!
+        deleteMeal(input: DeleteMealInput!): ID!
+        deleteFood(input: DeleteFoodInput!): ID!
+        editFood(input: EditFoodInput!): String! 
     }
 `;
 

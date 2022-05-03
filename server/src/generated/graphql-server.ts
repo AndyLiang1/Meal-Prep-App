@@ -18,13 +18,75 @@ export type CreateFoodInput = {
   actualAmount: Scalars['Float'];
   calories: Scalars['Float'];
   carbs: Scalars['Float'];
-  dayIndex?: InputMaybe<Scalars['Float']>;
+  dayIndex?: InputMaybe<Scalars['Int']>;
   fats: Scalars['Float'];
+  foodName: Scalars['String'];
   givenAmount: Scalars['Float'];
   ingredientNames: Array<Scalars['String']>;
   mealId?: InputMaybe<Scalars['ID']>;
-  name: Scalars['String'];
   proteins: Scalars['Float'];
+  userId: Scalars['ID'];
+};
+
+export type CreateMealInput = {
+  day1: Scalars['Boolean'];
+  day2: Scalars['Boolean'];
+  day3: Scalars['Boolean'];
+  day4: Scalars['Boolean'];
+  day5: Scalars['Boolean'];
+  day6: Scalars['Boolean'];
+  day7: Scalars['Boolean'];
+  dayIndex: Scalars['Int'];
+  userId: Scalars['ID'];
+};
+
+export type DeleteFoodInput = {
+  day1: Scalars['Boolean'];
+  day2: Scalars['Boolean'];
+  day3: Scalars['Boolean'];
+  day4: Scalars['Boolean'];
+  day5: Scalars['Boolean'];
+  day6: Scalars['Boolean'];
+  day7: Scalars['Boolean'];
+  dayIndex?: InputMaybe<Scalars['Int']>;
+  foodName: Scalars['String'];
+  mealId?: InputMaybe<Scalars['ID']>;
+  userId: Scalars['ID'];
+};
+
+export type DeleteMealInput = {
+  day1: Scalars['Boolean'];
+  day2: Scalars['Boolean'];
+  day3: Scalars['Boolean'];
+  day4: Scalars['Boolean'];
+  day5: Scalars['Boolean'];
+  day6: Scalars['Boolean'];
+  day7: Scalars['Boolean'];
+  dayIndex: Scalars['Int'];
+  mealId: Scalars['ID'];
+  userId: Scalars['ID'];
+};
+
+export type EditFoodInput = {
+  day1?: InputMaybe<Scalars['Boolean']>;
+  day2?: InputMaybe<Scalars['Boolean']>;
+  day3?: InputMaybe<Scalars['Boolean']>;
+  day4?: InputMaybe<Scalars['Boolean']>;
+  day5?: InputMaybe<Scalars['Boolean']>;
+  day6?: InputMaybe<Scalars['Boolean']>;
+  day7?: InputMaybe<Scalars['Boolean']>;
+  dayIndex?: InputMaybe<Scalars['Int']>;
+  foodIndex?: InputMaybe<Scalars['Int']>;
+  foodName?: InputMaybe<Scalars['String']>;
+  mealId?: InputMaybe<Scalars['ID']>;
+  newActualAmount?: InputMaybe<Scalars['Float']>;
+  newCalories?: InputMaybe<Scalars['Float']>;
+  newCarbs?: InputMaybe<Scalars['Float']>;
+  newFats?: InputMaybe<Scalars['Float']>;
+  newFoodName?: InputMaybe<Scalars['String']>;
+  newGivenAmount?: InputMaybe<Scalars['Float']>;
+  newIngredientNames?: InputMaybe<Array<Scalars['String']>>;
+  newProteins?: InputMaybe<Scalars['Float']>;
   userId: Scalars['ID'];
 };
 
@@ -66,6 +128,7 @@ export type Mutation = {
   createMeal: Scalars['ID'];
   deleteFood: Scalars['ID'];
   deleteMeal: Scalars['ID'];
+  editFood: Scalars['String'];
   login: LoginResult;
   register: RegisterResult;
 };
@@ -77,44 +140,22 @@ export type MutationCreateFoodArgs = {
 
 
 export type MutationCreateMealArgs = {
-  day1: Scalars['Boolean'];
-  day2: Scalars['Boolean'];
-  day3: Scalars['Boolean'];
-  day4: Scalars['Boolean'];
-  day5: Scalars['Boolean'];
-  day6: Scalars['Boolean'];
-  day7: Scalars['Boolean'];
-  dayIndex: Scalars['Int'];
-  userId: Scalars['ID'];
+  input: CreateMealInput;
 };
 
 
 export type MutationDeleteFoodArgs = {
-  day1: Scalars['Boolean'];
-  day2: Scalars['Boolean'];
-  day3: Scalars['Boolean'];
-  day4: Scalars['Boolean'];
-  day5: Scalars['Boolean'];
-  day6: Scalars['Boolean'];
-  day7: Scalars['Boolean'];
-  dayIndex?: InputMaybe<Scalars['Int']>;
-  foodName: Scalars['String'];
-  mealId?: InputMaybe<Scalars['ID']>;
-  userId: Scalars['ID'];
+  input: DeleteFoodInput;
 };
 
 
 export type MutationDeleteMealArgs = {
-  day1: Scalars['Boolean'];
-  day2: Scalars['Boolean'];
-  day3: Scalars['Boolean'];
-  day4: Scalars['Boolean'];
-  day5: Scalars['Boolean'];
-  day6: Scalars['Boolean'];
-  day7: Scalars['Boolean'];
-  dayIndex: Scalars['Int'];
-  mealId: Scalars['ID'];
-  userId: Scalars['ID'];
+  input: DeleteMealInput;
+};
+
+
+export type MutationEditFoodArgs = {
+  input: EditFoodInput;
 };
 
 
@@ -259,6 +300,10 @@ export type DirectiveResolverFn<TResult = {}, TParent = {}, TContext = {}, TArgs
 export type ResolversTypes = {
   Boolean: ResolverTypeWrapper<Scalars['Boolean']>;
   CreateFoodInput: CreateFoodInput;
+  CreateMealInput: CreateMealInput;
+  DeleteFoodInput: DeleteFoodInput;
+  DeleteMealInput: DeleteMealInput;
+  EditFoodInput: EditFoodInput;
   Float: ResolverTypeWrapper<Scalars['Float']>;
   Food: ResolverTypeWrapper<Food>;
   ID: ResolverTypeWrapper<Scalars['ID']>;
@@ -281,6 +326,10 @@ export type ResolversTypes = {
 export type ResolversParentTypes = {
   Boolean: Scalars['Boolean'];
   CreateFoodInput: CreateFoodInput;
+  CreateMealInput: CreateMealInput;
+  DeleteFoodInput: DeleteFoodInput;
+  DeleteMealInput: DeleteMealInput;
+  EditFoodInput: EditFoodInput;
   Float: Scalars['Float'];
   Food: Food;
   ID: Scalars['ID'];
@@ -335,9 +384,10 @@ export type MealResolvers<ContextType = any, ParentType extends ResolversParentT
 
 export type MutationResolvers<ContextType = any, ParentType extends ResolversParentTypes['Mutation'] = ResolversParentTypes['Mutation']> = {
   createFood?: Resolver<ResolversTypes['Food'], ParentType, ContextType, RequireFields<MutationCreateFoodArgs, 'input'>>;
-  createMeal?: Resolver<ResolversTypes['ID'], ParentType, ContextType, RequireFields<MutationCreateMealArgs, 'day1' | 'day2' | 'day3' | 'day4' | 'day5' | 'day6' | 'day7' | 'dayIndex' | 'userId'>>;
-  deleteFood?: Resolver<ResolversTypes['ID'], ParentType, ContextType, RequireFields<MutationDeleteFoodArgs, 'day1' | 'day2' | 'day3' | 'day4' | 'day5' | 'day6' | 'day7' | 'foodName' | 'userId'>>;
-  deleteMeal?: Resolver<ResolversTypes['ID'], ParentType, ContextType, RequireFields<MutationDeleteMealArgs, 'day1' | 'day2' | 'day3' | 'day4' | 'day5' | 'day6' | 'day7' | 'dayIndex' | 'mealId' | 'userId'>>;
+  createMeal?: Resolver<ResolversTypes['ID'], ParentType, ContextType, RequireFields<MutationCreateMealArgs, 'input'>>;
+  deleteFood?: Resolver<ResolversTypes['ID'], ParentType, ContextType, RequireFields<MutationDeleteFoodArgs, 'input'>>;
+  deleteMeal?: Resolver<ResolversTypes['ID'], ParentType, ContextType, RequireFields<MutationDeleteMealArgs, 'input'>>;
+  editFood?: Resolver<ResolversTypes['String'], ParentType, ContextType, RequireFields<MutationEditFoodArgs, 'input'>>;
   login?: Resolver<ResolversTypes['LoginResult'], ParentType, ContextType, RequireFields<MutationLoginArgs, 'email' | 'password'>>;
   register?: Resolver<ResolversTypes['RegisterResult'], ParentType, ContextType, RequireFields<MutationRegisterArgs, 'input'>>;
 };
