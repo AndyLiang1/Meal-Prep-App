@@ -7,27 +7,27 @@ import styles from './StatTotal.module.css';
 export interface ITotalStatProps {}
 
 export function TotalStat(props: ITotalStatProps) {
-    const { user } = useSelector((state: IRootState) => state);
-    const { dayIndex } = useSelector((state: IRootState) => state.day);
-    const [totalCalories, setTotalCalories] = useState(0)
-    const [totalProteins, setTotalProteins] = useState(0)
-    const [totalCarbs, setTotalCarbs] = useState(0)
-    const [totalFats, setTotalFats] = useState(0)
+    const user = useSelector((state: IRootState) => state.user);
+    const dayIndex = useSelector((state: IRootState) => state.dayIndex);
+    const [totalCalories, setTotalCalories] = useState(0);
+    const [totalProteins, setTotalProteins] = useState(0);
+    const [totalCarbs, setTotalCarbs] = useState(0);
+    const [totalFats, setTotalFats] = useState(0);
 
     const calculateStatInDay = (day: Meal[]) => {
-        let totalCals = 0
-        let totalP = 0
-        let totalC = 0
-        let totalF = 0
+        let totalCals = 0;
+        let totalP = 0;
+        let totalC = 0;
+        let totalF = 0;
 
-        for(let i = 0; i < day.length; i++) {
-            const meal = day[i]
-            for(let j = 0; i < meal.foods.length; i++) {
-                const food = meal.foods[j]
-                    totalCals += food.calories
-                    totalP += food.proteins
-                    totalC += food.carbs
-                    totalF += food.fats
+        for (let i = 0; i < day.length; i++) {
+            const meal = day[i];
+            for (let j = 0; i < meal.foods.length; i++) {
+                const food = meal.foods[j];
+                totalCals += food.calories;
+                totalP += food.proteins;
+                totalC += food.carbs;
+                totalF += food.fats;
             }
         }
         setTotalCalories(totalCals);
@@ -65,7 +65,7 @@ export function TotalStat(props: ITotalStatProps) {
         }
     };
     useEffect(() => {
-        calculateStat()
+        calculateStat();
     }, [user]);
     return (
         <div>

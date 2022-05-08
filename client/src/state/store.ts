@@ -7,5 +7,5 @@ import thunk from 'redux-thunk'
 export const store = createStore(
     reducers, 
     {}, // default state 
-    applyMiddleware(thunk )
+    applyMiddleware(thunk)
 )

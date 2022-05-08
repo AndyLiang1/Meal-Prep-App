@@ -4,6 +4,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import { DeleteFoodDocument, DeleteMealDocument, GetMealsDocument, MutationDeleteFoodArgs } from '../../../generated/graphql-client';
 import { addUserToStore, setModalStatus } from '../../../state/action-creators';
 import { IRootState } from '../../../state/reducers';
+import { UserInfoInterface } from '../../../state/reducers/UserData';
 import { getUserMeals } from '../../helpers/GetMealsFunction';
 import styles from './DeleteModal.module.css';
 export interface IDeleteModalProps {
@@ -15,8 +16,8 @@ export interface IDeleteModalProps {
 }
 
 export function DeleteModal({ objectToDelete, setDeleteModal, mealId, foodName, fromWhere }: IDeleteModalProps) {
-    const { user } = useSelector((state: IRootState) => state);
-    const { dayIndex } = useSelector((state: IRootState) => state.day);
+    const user: UserInfoInterface = useSelector((state: IRootState) => state.user);
+    const dayIndex = useSelector((state: IRootState) => state.dayIndex);
     const { modalStatus } = useSelector((state: IRootState) => state);
     const dispatch = useDispatch();
 
@@ -65,24 +66,24 @@ export function DeleteModal({ objectToDelete, setDeleteModal, mealId, foodName, 
                 });
             }
         } else if (fromWhere === 'foodList') {
-             const deleteFoodInput = {
-                 userId: user.id,
-                 dayIndex: null,
-                 mealId: null,
-                 foodName: foodName!,
-                 day1: dayIndex === 0,
-                 day2: dayIndex === 1,
-                 day3: dayIndex === 2,
-                 day4: dayIndex === 3,
-                 day5: dayIndex === 4,
-                 day6: dayIndex === 5,
-                 day7: dayIndex === 6
-             };
-             await deleteFood({
-                 variables: {
-                     input: deleteFoodInput
-                 }
-             });
+            const deleteFoodInput = {
+                userId: user.id,
+                dayIndex: null,
+                mealId: null,
+                foodName: foodName!,
+                day1: dayIndex === 0,
+                day2: dayIndex === 1,
+                day3: dayIndex === 2,
+                day4: dayIndex === 3,
+                day5: dayIndex === 4,
+                day6: dayIndex === 5,
+                day7: dayIndex === 6
+            };
+            await deleteFood({
+                variables: {
+                    input: deleteFoodInput
+                }
+            });
         }
 
         const day = await getUserMeals(dayIndex, user, getMeals);

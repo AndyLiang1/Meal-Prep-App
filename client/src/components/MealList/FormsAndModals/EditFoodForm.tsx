@@ -37,8 +37,8 @@ export function EditFoodForm({ fromWhere, food, setEditForm, mealId, foodIndex }
     const dispatch = useDispatch();
     const [newIngredient, setNewIngredient] = useState<string>();
     const [ingredients, setIngredients] = useState<Food[]>(food.ingredients);
-    const { user }: { user: UserInfoInterface } = useSelector((state: IRootState) => state);
-    const { dayIndex } = useSelector((state: IRootState) => state.day);
+    const user: UserInfoInterface = useSelector((state: IRootState) => state.user);
+    const dayIndex = useSelector((state: IRootState) => state.dayIndex);
     const [editFoodFromMealList] = useMutation(EditFoodFromMealListDocument);
     const [editFoodFromFoodList] = useMutation(EditFoodFromFoodListDocument);
     const [getMeals] = useLazyQuery(GetMealsDocument);
@@ -60,7 +60,6 @@ export function EditFoodForm({ fromWhere, food, setEditForm, mealId, foodIndex }
         for (let i = 0; i < user.foodList!.length; i++) {
             if (newIngredient === user.foodList![i].name) {
                 const foodToAdd = user.foodList[i];
-                console.log(foodToAdd);
                 const newIngredientsList = [...ingredients];
                 newIngredientsList.push(foodToAdd);
                 setIngredients(newIngredientsList);
@@ -71,7 +70,6 @@ export function EditFoodForm({ fromWhere, food, setEditForm, mealId, foodIndex }
     }, [newIngredient]);
 
     const onSubmit = async (submittedData: any) => {
-        console.log(submittedData);
         if (fromWhere === 'mealList') {
             const editFoodFromMealArgs: EditFoodInput = {
                 userId: user.id,
@@ -104,13 +102,13 @@ export function EditFoodForm({ fromWhere, food, setEditForm, mealId, foodIndex }
                 newActualAmount: newGivenAmount
             };
 
-            const { data } = await editFoodFromMealList({
+            const { data } = await editFoodFromFoodList({
                 variables: {
                     input: editFoodFromMealArgs
                 }
             });
         }
-        refreshMealList()
+        refreshMealList();
     };
 
     const refreshMealList = async () => {

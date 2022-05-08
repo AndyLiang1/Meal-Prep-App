@@ -36,8 +36,8 @@ interface CreateFoodFromMealInput {
 
 export function AddFoodForm({ type, setAddFoodForm, mealId }: IAddFoodFormProps) {
     const { modalStatus } = useSelector((state: IRootState) => state);
-    const { user }: { user: UserInfoInterface } = useSelector((state: IRootState) => state);
-    const { dayIndex } = useSelector((state: IRootState) => state.day);
+    const user: UserInfoInterface = useSelector((state: IRootState) => state.user);
+    const dayIndex = useSelector((state: IRootState) => state.dayIndex);
     const [newIngredient, setNewIngredient] = useState<string>();
     const [foods, setFoods] = useState<Food[]>([]);
     const [ingredients, setIngredients] = useState<Food[]>([]);
@@ -48,7 +48,6 @@ export function AddFoodForm({ type, setAddFoodForm, mealId }: IAddFoodFormProps)
     const [createFoodFromMeal] = useMutation(CreateFoodFromMealDocument);
     const [createFoodFromFoodList] = useMutation(CreateFoodFromFoodListDocument);
     const [getMeals] = useLazyQuery(GetMealsDocument);
-
 
     useEffect(() => {}, [user]);
     const initialValues: CreateFoodFromMealInput = {
@@ -158,15 +157,13 @@ export function AddFoodForm({ type, setAddFoodForm, mealId }: IAddFoodFormProps)
                 givenAmount,
                 actualAmount
             };
-            
+
             const { data } = await createFoodFromMeal({
                 variables: {
                     input: createFoodFromMealArgs
                 }
             });
 
-
-            
             dispatch(setModalStatus(false));
             setAddFoodForm(false);
         }

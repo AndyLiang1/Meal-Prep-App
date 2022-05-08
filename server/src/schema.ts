@@ -85,13 +85,6 @@ const typeDefs = gql`
     input CreateMealInput {
         userId: ID!
         dayIndex: Int!
-        day1: Boolean!
-        day2: Boolean!
-        day3: Boolean!
-        day4: Boolean!
-        day5: Boolean!
-        day6: Boolean!
-        day7: Boolean!
     }
 
     input DeleteMealInput {

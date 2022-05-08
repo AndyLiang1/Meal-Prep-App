@@ -1,5 +1,4 @@
 // action creators are a fct that dispatches an action
-import {Day} from '../reducers/Day';
 import { defaultUserInfo } from '../reducers/UserData';
 import {UserInfoInterface} from '../reducers/UserData'
 // // login-action-creator returns a dispatch function ? 
@@ -31,11 +30,11 @@ export const addUserToStore = (user: UserInfoInterface) => {
     };
 };
 
-export const changeDay = (day: Day) => {
-    return (dispatch: (arg0: { type: string; payload: Day }) => void) => {
+export const changeDay = (dayIndex: number) => {
+    return (dispatch: (arg0: { type: string; payload: number }) => void) => {
         dispatch({
             type: 'changeDay',
-            payload: day
+            payload: dayIndex
         });
     };
 }
@@ -45,6 +44,14 @@ export const setModalStatus = (modalStatus: boolean) => {
         dispatch({
             type: 'setModalStatus',
             payload: modalStatus
+        });
+    }
+}
+
+const triggerUserDataRefresh = () => {
+    return (dispatch: (arg0: {type: string}) => void) => {
+        dispatch({
+            type: `refreshTrigger`,
         });
     }
 }

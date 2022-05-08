@@ -28,8 +28,6 @@ export const getUserMeals = async (dayIndex: number, user: any, getMeals: any) =
         // const user = data!.getMeals;
 
         if (userFromDb) {
-            const { username, id } = userFromDb!;
-
             let day: any = [];
             switch (dayIndex) {
                 case 0:

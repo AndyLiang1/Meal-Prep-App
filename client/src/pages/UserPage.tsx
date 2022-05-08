@@ -1,21 +1,24 @@
-import { gql, useQuery } from '@apollo/client';
+import { gql, useLazyQuery, useQuery } from '@apollo/client';
 import * as React from 'react';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { MealList } from '../components/MealList/Meal/MealList';
 import { Header } from '../components/Others/Header';
 import { addUserToStore, changeDay } from '../state/action-creators';
 import { IRootState } from '../state/reducers';
 import { GetMealsDocument, GetMealsQuery, Meal, User } from '../generated/graphql-client';
-import styles from './UserPage.module.css'
+import styles from './UserPage.module.css';
 import { FoodList } from '../components/FoodList/FoodList';
+import { getUserMeals } from '../components/helpers/GetMealsFunction';
+import { UserInfoInterface } from '../state/reducers/UserData';
 export interface IUserPageProps {}
 
 export function UserPage(props: IUserPageProps) {
     const userId: string = localStorage.getItem('id')!;
     // console.log(dayIndex);
-    const { dayIndex } = useSelector((state: IRootState) => state.day);
+    const dayIndex = useSelector((state: IRootState) => state.dayIndex);
     const dispatch = useDispatch();
+    // const { user }: { user: UserInfoInterface } = useSelector((state: IRootState) => state);
 
     const { loading, error, data } = useQuery(GetMealsDocument, {
         variables: {
@@ -30,6 +33,14 @@ export function UserPage(props: IUserPageProps) {
         }
     });
 
+    // useEffect(() => {
+    //     try {
+    //         // getMealAsync();
+    //     } catch (error) {
+    //         console.log(error);
+    //     }
+    // }, []);
+
     useEffect(() => {
         if (loading) {
         } else {
@@ -38,7 +49,7 @@ export function UserPage(props: IUserPageProps) {
 
             if (user) {
                 const { username, id } = user!;
-
+                console.log(dayIndex);
                 let day: any = [];
                 switch (dayIndex) {
                     case 0:
@@ -66,8 +77,8 @@ export function UserPage(props: IUserPageProps) {
                         day = user.day1;
                         break;
                 }
-                let foodList: any
-                foodList = user.foodList
+                let foodList: any;
+                foodList = user.foodList;
                 // add userData to store
                 // probably dont need this anymore due to the fact
                 // we dont need to pass around "days" from prev
@@ -88,7 +99,7 @@ export function UserPage(props: IUserPageProps) {
     return (
         <div>
             <Header></Header>
-            <div className = {styles.container}>
+            <div className={styles.container}>
                 <MealList></MealList>
                 <FoodList></FoodList>
             </div>

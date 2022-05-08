@@ -1,13 +1,6 @@
+const defaultDayIndex = 0
 
-export interface Day {
-    dayIndex: number
-}
-
-const defaultDay: Day = {
-    dayIndex: 0
-}
-
-const reducer = (state: Day | null = defaultDay, action: any) => {
+const reducer = (state: number = defaultDayIndex, action: any) => {
     switch (action.type) {
         case 'changeDay':
             return action.payload;

@@ -3,11 +3,11 @@ import Logging from '../../library/Logging';
 import UserModel from '../../models/User';
 import { createUID } from './Auth';
 
-export const createMeal = async (parent: any, args: any, context: any, info: any) => {
+export const createMeal = async (parent: any, {input}: any, context: any, info: any) => {
     Logging.info('Creating Meals');
     // get my user
     try {
-        const { userId, dayIndex } = args;
+        const { userId, dayIndex } = input;
         const user = await UserModel.findOne({ _id: userId });
         if (!user) {
             Logging.error('No user found from createMeal resolver');
@@ -19,7 +19,6 @@ export const createMeal = async (parent: any, args: any, context: any, info: any
             foods,
             id: createUID()
         };
-
         switch (dayIndex) {
             case 0:
                 user!.day1.push(newMeal);
@@ -59,11 +58,11 @@ export const createMeal = async (parent: any, args: any, context: any, info: any
     }
 };
 
-export const deleteMeal = async (parent: any, args: any, context: any, info: any) => {
+export const deleteMeal = async (parent: any, {input}: any, context: any, info: any) => {
     Logging.info('Deleting Meals');
     // get my user
     try {
-        const { userId, dayIndex, mealId } = args;
+        const { userId, dayIndex, mealId } = input;
         const user = await UserModel.findOne({ _id: userId });
         if (!user) {
             Logging.error('No user found from deleteMeal resolver');

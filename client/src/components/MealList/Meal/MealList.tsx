@@ -26,29 +26,81 @@ enum Days {
 
 export function MealList(Props: IMealListProps) {
     const dispatch = useDispatch();
-    const { dayIndex } = useSelector((state: IRootState) => state.day);
-    const { user } = useSelector((state: IRootState) => state);
+    const dayIndex = useSelector((state: IRootState) => state.dayIndex);
+    const user = useSelector((state: IRootState) => state.user);
     // const [dayIndex, setDayIndex] = useState<number>(0);
-
     // const dispatch = useDispatch()
+    // const [refetchUserDataTrigger, setRefetchUserDataTrigger] = useState(false);
 
     const [createMeal] = useMutation(CreateMealDocument);
     const [getMeals] = useLazyQuery(GetMealsDocument);
+    const getMealAsync = async () => {
+        const input = {
+            userId: user.id,
+            getUserId: user.id,
+            dayIndex,
+            day1: dayIndex === 0,
+            day2: dayIndex === 1,
+            day3: dayIndex === 2,
+            day4: dayIndex === 3,
+            day5: dayIndex === 4,
+            day6: dayIndex === 5,
+            day7: dayIndex === 6
+        };
+
+        const { data, loading } = await getMeals({
+            variables: input
+        });
+        if (data) {
+            const userFromDb = data!.getMeals;
+
+            if (userFromDb) {
+                let day: any = [];
+                switch (dayIndex) {
+                    case 0:
+                        day = userFromDb.day1;
+                        break;
+                    case 1:
+                        day = userFromDb.day2;
+                        break;
+                    case 2:
+                        day = userFromDb.day3;
+                        break;
+                    case 3:
+                        day = userFromDb.day4;
+                        break;
+                    case 4:
+                        day = userFromDb.day5;
+                        break;
+                    case 5:
+                        day = userFromDb.day6;
+                        break;
+                    case 6:
+                        day = userFromDb.day7;
+                        break;
+                    default:
+                        day = userFromDb.day1;
+                        break;
+                }
+                dispatch(
+                    addUserToStore({
+                        username: user.username,
+                        id: user.id,
+                        day,
+                        loggedIn: true,
+                        accessToken: localStorage.getItem('accessToken')!,
+                        foodList: user.foodList
+                    })
+                );
+            }
+        }
+    };
 
     const addMeal = async () => {
         try {
-            console.log(user.id);
-            console.log(dayIndex);
             const createMealInput = {
                 userId: user.id,
-                dayIndex,
-                day1: dayIndex === 0,
-                day2: dayIndex === 1,
-                day3: dayIndex === 2,
-                day4: dayIndex === 3,
-                day5: dayIndex === 4,
-                day6: dayIndex === 5,
-                day7: dayIndex === 6
+                dayIndex
             };
 
             await createMeal({
@@ -61,13 +113,14 @@ export function MealList(Props: IMealListProps) {
             dispatch(
                 addUserToStore({
                     username: user.username,
-                    id:user.id,
+                    id: user.id,
                     day,
                     loggedIn: true,
                     accessToken: localStorage.getItem('accessToken')!,
                     foodList: user.foodList
                 })
             );
+            // setRefetchUserDataTrigger(!refetchUserDataTrigger)
         } catch (error) {
             console.log(error);
         }
@@ -76,16 +129,16 @@ export function MealList(Props: IMealListProps) {
     const changeDayIndex = (direction: string) => {
         if (direction === 'forward') {
             if (dayIndex === 6) {
-                dispatch(changeDay({ dayIndex: 0 }));
+                dispatch(changeDay(0));
                 return;
             }
-            dispatch(changeDay({ dayIndex: dayIndex + 1 }));
+            dispatch(changeDay(dayIndex + 1));
         } else {
             if (dayIndex === 0) {
-                dispatch(changeDay({ dayIndex: 6 }));
+                dispatch(changeDay(6));
                 return;
             }
-            dispatch(changeDay({ dayIndex: dayIndex - 1 }));
+            dispatch(changeDay(dayIndex - 1));
         }
     };
     // useEffect(() => {
@@ -93,7 +146,6 @@ export function MealList(Props: IMealListProps) {
     //         setDay(user.days[dayIndex]);
     //     }
     // }, [dayIndex, user]);
-
     return (
         <div>
             {user.day ? (
@@ -110,7 +162,7 @@ export function MealList(Props: IMealListProps) {
                     })} */}
                     <div className={styles.mealList_container}>
                         {user.day.map((meal: Meal, index: number) => {
-                            return <MealInDay key = {index} foods={meal.foods} mealId={meal.id}></MealInDay>;
+                            return <MealInDay key={index} foods={meal.foods} mealId={meal.id}></MealInDay>;
                         })}
                         <button className={styles.addMealBtn} onClick={() => addMeal()}>
                             Add Meal
