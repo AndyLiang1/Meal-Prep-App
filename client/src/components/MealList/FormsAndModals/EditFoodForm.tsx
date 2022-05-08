@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { useEffect, useState } from 'react';
-import { EditFoodFromMealListDocument, EditFoodInput, Food, GetMealsDocument } from '../../../generated/graphql-client';
+import { EditFoodFromFoodListDocument, EditFoodFromMealListDocument, EditFoodInput, Food, GetMealsDocument } from '../../../generated/graphql-client';
 import styles from './EditFoodForm.module.css';
 import { Formik, Form, Field, useField } from 'formik';
 
@@ -37,20 +37,21 @@ export function EditFoodForm({ fromWhere, food, setEditForm, mealId, foodIndex }
     const dispatch = useDispatch();
     const [newIngredient, setNewIngredient] = useState<string>();
     const [ingredients, setIngredients] = useState<Food[]>(food.ingredients);
-    const [editFoodFromMealList] = useMutation(EditFoodFromMealListDocument);
     const { user }: { user: UserInfoInterface } = useSelector((state: IRootState) => state);
     const { dayIndex } = useSelector((state: IRootState) => state.day);
+    const [editFoodFromMealList] = useMutation(EditFoodFromMealListDocument);
+    const [editFoodFromFoodList] = useMutation(EditFoodFromFoodListDocument);
     const [getMeals] = useLazyQuery(GetMealsDocument);
 
     const initialValues = {
         newActualAmount: '',
-        name: food.name,
-        calories: food.calories,
-        proteins: food.proteins,
-        carbs: food.carbs,
-        fats: food.fats,
-        ingredients: [],
-        givenAmount: food.givenAmount
+        newFoodName: food.name,
+        newCalories: food.calories,
+        newProteins: food.proteins,
+        newCarbs: food.carbs,
+        newFats: food.fats,
+        newIngredient: {},
+        newGivenAmount: food.givenAmount
     };
 
     const validationSchema = Yup.object().shape({});
@@ -79,7 +80,29 @@ export function EditFoodForm({ fromWhere, food, setEditForm, mealId, foodIndex }
                 foodIndex,
                 newActualAmount: parseInt(submittedData.newActualAmount)
             };
-            console.log(editFoodFromMealArgs);
+
+            const { data } = await editFoodFromMealList({
+                variables: {
+                    input: editFoodFromMealArgs
+                }
+            });
+        } else if (fromWhere === 'foodList') {
+            const { newFoodName, newCalories, newProteins, newCarbs, newFats, newIngredient, newGivenAmount } = submittedData;
+            const newIngredientNames: string[] = [];
+            ingredients.forEach((ingredient) => newIngredientNames.push(ingredient.name));
+
+            const editFoodFromMealArgs: EditFoodInput = {
+                userId: user.id,
+                foodName: food.name,
+                newFoodName,
+                newCalories,
+                newProteins,
+                newCarbs,
+                newFats,
+                newIngredientNames,
+                newGivenAmount,
+                newActualAmount: newGivenAmount
+            };
 
             const { data } = await editFoodFromMealList({
                 variables: {
@@ -87,6 +110,10 @@ export function EditFoodForm({ fromWhere, food, setEditForm, mealId, foodIndex }
                 }
             });
         }
+        refreshMealList()
+    };
+
+    const refreshMealList = async () => {
         const day = await getUserMeals(dayIndex, user, getMeals);
 
         dispatch(
@@ -139,22 +166,22 @@ export function EditFoodForm({ fromWhere, food, setEditForm, mealId, foodIndex }
                             <div>Edit Food</div>
                             <div>Note: This will edit every instance of this food in your meal lists accross all 7 days.</div>
                             <div>Name</div>
-                            <Field className="add_field" name="name" type="text" />
+                            <Field className="add_field" name="newFoodName" type="text" />
                             <div>Calories</div>
-                            <Field className="add_field" name="calories" type="number" />
+                            <Field className="add_field" name="newCalories" type="number" />
                             <div>Proteins</div>
-                            <Field className="add_field" name="proteins" type="number" />
+                            <Field className="add_field" name="newProteins" type="number" />
                             <div>Carbs</div>
-                            <Field className="add_field" name="carbs" type="number" />
+                            <Field className="add_field" name="newCarbs" type="number" />
                             <div>Fats</div>
-                            <Field className="add_field" name="fats" type="number" />
+                            <Field className="add_field" name="newFats" type="number" />
                             <div>Given Amount</div>
-                            <Field className="add_field" name="givenAmount" type="number" />
+                            <Field className="add_field" name="newGivenAmount" type="number" />
                             <div>Actual Amount</div>
                             <div>Ingredients</div>
                             <Field
                                 className="add_field"
-                                name="ingredients"
+                                name="newIngredient"
                                 as="select"
                                 onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
                                     setNewIngredient(e.target.value);

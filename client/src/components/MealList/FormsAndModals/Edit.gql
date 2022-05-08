@@ -1,3 +1,9 @@
 mutation editFoodFromMealList($input: EditFoodInput!) {
     editFood(input: $input)
 }
+
+
+
+mutation editFoodFromFoodList($editFoodInput2: EditFoodInput!) {
+    editFood(input: $editFoodInput2)
+}
