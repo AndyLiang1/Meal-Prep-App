@@ -2,7 +2,7 @@
 
 const reducer = (state: boolean = false, action: any) => {
     switch (action.type) {
-        case `refreshTrigger`: 
+        case `refetchTrigger`: 
             return !state
         default: 
             return state;

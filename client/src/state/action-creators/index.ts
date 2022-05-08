@@ -48,10 +48,10 @@ export const setModalStatus = (modalStatus: boolean) => {
     }
 }
 
-const triggerUserDataRefresh = () => {
+const triggerRefetch = () => {
     return (dispatch: (arg0: {type: string}) => void) => {
         dispatch({
-            type: `refreshTrigger`,
+            type: `refetchTrigger`,
         });
     }
 }

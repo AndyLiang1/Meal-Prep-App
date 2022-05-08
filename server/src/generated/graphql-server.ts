@@ -29,13 +29,6 @@ export type CreateFoodInput = {
 };
 
 export type CreateMealInput = {
-  day1: Scalars['Boolean'];
-  day2: Scalars['Boolean'];
-  day3: Scalars['Boolean'];
-  day4: Scalars['Boolean'];
-  day5: Scalars['Boolean'];
-  day6: Scalars['Boolean'];
-  day7: Scalars['Boolean'];
   dayIndex: Scalars['Int'];
   userId: Scalars['ID'];
 };

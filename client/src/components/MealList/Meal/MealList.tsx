@@ -28,9 +28,10 @@ export function MealList(Props: IMealListProps) {
     const dispatch = useDispatch();
     const dayIndex = useSelector((state: IRootState) => state.dayIndex);
     const user = useSelector((state: IRootState) => state.user);
+    const refetchTrigger = useSelector((state: IRootState) => state.refetchTrigger);
     // const [dayIndex, setDayIndex] = useState<number>(0);
     // const dispatch = useDispatch()
-    // const [refetchUserDataTrigger, setRefetchUserDataTrigger] = useState(false);
+
 
     const [createMeal] = useMutation(CreateMealDocument);
     const [getMeals] = useLazyQuery(GetMealsDocument);

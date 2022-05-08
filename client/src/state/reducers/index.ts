@@ -2,12 +2,12 @@ import { combineReducers } from "redux"
 import userReducer from './UserData'
 import dayReducer from './DayIndex'
 import modalStatusReducer from './ModalStatus'
-import refreshTriggerReducer from './RefetchUserDataTrigger'
+import refetchTriggerReducer from './RefetchTrigger'
 const reducers = combineReducers({
     user: userReducer,
     dayIndex: dayReducer,
     modalStatus: modalStatusReducer,
-    refreshTrigger: refreshTriggerReducer
+    refetchTrigger: refetchTriggerReducer
 });
 export type IRootState = ReturnType<typeof reducers>;
 export default reducers;
