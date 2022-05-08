@@ -1,48 +1,67 @@
 import * as React from 'react';
 import { useEffect, useState } from 'react';
-import { Food } from '../../../generated/graphql-client';
+import { EditFoodFromMealListDocument, EditFoodInput, Food, GetMealsDocument } from '../../../generated/graphql-client';
 import styles from './EditFoodForm.module.css';
 import { Formik, Form, Field, useField } from 'formik';
 
 import * as Yup from 'yup';
 import { useDispatch, useSelector } from 'react-redux';
-import { setModalStatus } from '../../../state/action-creators';
+import { addUserToStore, setModalStatus } from '../../../state/action-creators';
 import { IRootState } from '../../../state/reducers';
 import { UserInfoInterface } from '../../../state/reducers/UserData';
 import { Ingredient } from './Ingredient';
+import { useLazyQuery, useMutation } from '@apollo/client';
+import { getUserMeals } from '../../helpers/GetMealsFunction';
 
 export interface IEditFoodFormProps {
     fromWhere: string;
     food: Food;
     setEditForm: React.Dispatch<React.SetStateAction<boolean>>;
+    mealId?: string;
+    foodIndex?: number;
 }
 
-export function EditFoodForm({ fromWhere, food, setEditForm }: IEditFoodFormProps) {
+export type EditFoodFormData = {
+    newActualAmount: number;
+    name: string;
+    calories: number;
+    proteins: number;
+    carbs: number;
+    fats: number;
+    ingredients: Food[];
+    givenAmount: number;
+};
+
+export function EditFoodForm({ fromWhere, food, setEditForm, mealId, foodIndex }: IEditFoodFormProps) {
     const [actualAmount, setActualAmount] = useState<number>(food.actualAmount);
     const dispatch = useDispatch();
     const [newIngredient, setNewIngredient] = useState<string>();
-    const [ingredients, setIngredients] = useState<Food[]>([]);
-
+    const [ingredients, setIngredients] = useState<Food[]>(food.ingredients);
+    const [editFoodFromMealList] = useMutation(EditFoodFromMealListDocument);
     const { user }: { user: UserInfoInterface } = useSelector((state: IRootState) => state);
+    const { dayIndex } = useSelector((state: IRootState) => state.day);
+    const [getMeals] = useLazyQuery(GetMealsDocument);
 
     const initialValues = {
-        newActualAmount: actualAmount
+        newActualAmount: '',
+        name: food.name,
+        calories: food.calories,
+        proteins: food.proteins,
+        carbs: food.carbs,
+        fats: food.fats,
+        ingredients: [],
+        givenAmount: food.givenAmount
     };
-
-    useEffect(() => {
-        console.log('herez');
-        console.log(ingredients);
-    }, [ingredients]);
 
     const validationSchema = Yup.object().shape({});
 
     useEffect(() => {
         for (let i = 0; i < user.foodList!.length; i++) {
             if (newIngredient === user.foodList![i].name) {
-                const foodToAdd = user.foodList![i];
-                const newIngredientsList = ingredients;
+                const foodToAdd = user.foodList[i];
+                console.log(foodToAdd);
+                const newIngredientsList = [...ingredients];
                 newIngredientsList.push(foodToAdd);
-                console.log('hereeeeeeee');
                 setIngredients(newIngredientsList);
             }
         }
@@ -50,11 +69,49 @@ export function EditFoodForm({ fromWhere, food, setEditForm }: IEditFoodFormProp
         setNewIngredient('');
     }, [newIngredient]);
 
-    const onSubmit = () => {};
+    const onSubmit = async (submittedData: any) => {
+        console.log(submittedData);
+        if (fromWhere === 'mealList') {
+            const editFoodFromMealArgs: EditFoodInput = {
+                userId: user.id,
+                dayIndex,
+                mealId,
+                foodIndex,
+                newActualAmount: parseInt(submittedData.newActualAmount)
+            };
+            console.log(editFoodFromMealArgs);
+
+            const { data } = await editFoodFromMealList({
+                variables: {
+                    input: editFoodFromMealArgs
+                }
+            });
+        }
+        const day = await getUserMeals(dayIndex, user, getMeals);
+
+        dispatch(
+            addUserToStore({
+                username: user.username,
+                id: user.id,
+                day,
+                loggedIn: true,
+                accessToken: localStorage.getItem('accessToken')!,
+                foodList: user.foodList
+            })
+        );
+    };
+
     return (
         <div className={styles.container}>
             <Formik initialValues={initialValues} validationSchema={validationSchema} onSubmit={onSubmit}>
-                <Form>
+                <Form
+                    onChange={(event: any) => {
+                        if (event.target.name === 'newActualAmount') {
+                            console.log(event.target.value === '');
+                            event.target.value !== '' ? setActualAmount(parseInt(event.target.value)) : setActualAmount(0);
+                        }
+                    }}
+                >
                     <button
                         onClick={() => {
                             dispatch(setModalStatus(false));
@@ -73,20 +130,14 @@ export function EditFoodForm({ fromWhere, food, setEditForm }: IEditFoodFormProp
                             <div className={styles.food_stats}>F: {((food.fats * actualAmount) / food.givenAmount).toFixed(1)}</div>
                             <div>GivenAmount: {food.givenAmount}</div>
                             <div>ActualAmount: {actualAmount}</div>
-                            <Field
-                                className="edit-field"
-                                name="newActualAmount"
-                                onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
-                                    event.target.value !== '' ? setActualAmount(parseInt(event.target.value)) : setActualAmount(0);
-                                }}
-                                value={actualAmount}
-                            ></Field>
+                            <Field className="edit-field" name="newActualAmount" type="text"></Field>
                             <button type="submit">Submit</button>
                         </div>
                     )}
                     {fromWhere === 'foodList' && (
                         <div>
                             <div>Edit Food</div>
+                            <div>Note: This will edit every instance of this food in your meal lists accross all 7 days.</div>
                             <div>Name</div>
                             <Field className="add_field" name="name" type="text" />
                             <div>Calories</div>
@@ -122,6 +173,7 @@ export function EditFoodForm({ fromWhere, food, setEditForm }: IEditFoodFormProp
                             {ingredients.map((food: Food, index: number) => {
                                 return <Ingredient key={index} ingredient={food} ingredients={ingredients} setIngredients={setIngredients}></Ingredient>;
                             })}
+                            <button type="submit">Submit</button>
                         </div>
                     )}
                 </Form>

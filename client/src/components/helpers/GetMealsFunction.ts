@@ -1,8 +1,8 @@
 import { useLazyQuery } from "@apollo/client";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { GetMealsDocument, GetMealsQuery, User } from "../../generated/graphql-client";
 import { addUserToStore } from "../../state/action-creators";
-
+import { IRootState } from "../../state/reducers";
 
 export const getUserMeals = async (dayIndex: number, user: any, getMeals: any) => {
 

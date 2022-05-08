@@ -215,9 +215,8 @@ export const editFood = async (parent: any, { input }: MutationEditFoodArgs, con
         const { userId, dayIndex, mealId, foodName, newActualAmount, foodIndex } = input;
         const user = await UserModel.findOne({ _id: userId });
         // from mealList
-        console.log(dayIndex, mealId, newActualAmount, foodName);
         if (mealId && newActualAmount) { // cannot check for dayIndex and foodIndex 
-            console.log('hereee')                             // since they might = 0 and falsify the if statement
+                             // since they might = 0 and falsify the if statement
             switch (dayIndex) {
                 case 0:
                     editFoodFromDay(user!.day1, mealId, foodIndex!, newActualAmount);
@@ -247,6 +246,7 @@ export const editFood = async (parent: any, { input }: MutationEditFoodArgs, con
             return 'Successful';
         } else {
             // if we are here, it means we edited from foodList
+            console.log('in foodTS')
             for (let i = 0; i < user!.foodList.length; i++) {
                 const { newFoodName, newCalories, newProteins, newCarbs, newFats, newGivenAmount, newIngredientNames } = input;
                 const newIngredients: Food[] = [];
@@ -270,6 +270,7 @@ export const editFood = async (parent: any, { input }: MutationEditFoodArgs, con
                         givenAmount: newGivenAmount!,
                         actualAmount: newGivenAmount!
                     };
+                    console.log(newFood)
                     user!.foodList[i] = newFood;
                     const userDays = [user!.day1, user!.day2, user!.day3, user!.day4, user!.day5, user!.day6, user!.day7];
 

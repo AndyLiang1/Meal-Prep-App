@@ -1,0 +1,3 @@
+mutation editFoodFromMealList($input: EditFoodInput!) {
+    editFood(input: $input)
+}

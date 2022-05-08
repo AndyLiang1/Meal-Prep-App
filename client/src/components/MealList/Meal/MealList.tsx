@@ -39,7 +39,7 @@ export function MealList(Props: IMealListProps) {
         try {
             console.log(user.id);
             console.log(dayIndex);
-            const input = {
+            const createMealInput = {
                 userId: user.id,
                 dayIndex,
                 day1: dayIndex === 0,
@@ -52,7 +52,9 @@ export function MealList(Props: IMealListProps) {
             };
 
             await createMeal({
-                variables: input
+                variables: {
+                    input: createMealInput
+                }
             });
             const day = await getUserMeals(dayIndex, user, getMeals);
 

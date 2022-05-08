@@ -27,7 +27,7 @@ export function DeleteModal({ objectToDelete, setDeleteModal, mealId, foodName, 
         console.log(objectToDelete);
         if (fromWhere === 'mealList') {
             if (objectToDelete === 'meal' && mealId) {
-                const deleteMealArgs = {
+                const deleteMealInput = {
                     userId: user.id,
                     dayIndex,
                     mealId,
@@ -40,10 +40,12 @@ export function DeleteModal({ objectToDelete, setDeleteModal, mealId, foodName, 
                     day7: dayIndex === 6
                 };
                 await deleteMeal({
-                    variables: deleteMealArgs
+                    variables: {
+                        input: deleteMealInput
+                    }
                 });
             } else if (objectToDelete === 'food' && mealId) {
-                const deleteFoodArgs = {
+                const deleteFoodInput = {
                     userId: user.id,
                     dayIndex,
                     mealId,
@@ -57,11 +59,13 @@ export function DeleteModal({ objectToDelete, setDeleteModal, mealId, foodName, 
                     day7: dayIndex === 6
                 };
                 await deleteFood({
-                    variables: deleteFoodArgs
+                    variables: {
+                        input: deleteFoodInput
+                    }
                 });
             }
         } else if (fromWhere === 'foodList') {
-             const deleteFoodArgs: MutationDeleteFoodArgs = {
+             const deleteFoodInput = {
                  userId: user.id,
                  dayIndex: null,
                  mealId: null,
@@ -75,7 +79,9 @@ export function DeleteModal({ objectToDelete, setDeleteModal, mealId, foodName, 
                  day7: dayIndex === 6
              };
              await deleteFood({
-                 variables: deleteFoodArgs
+                 variables: {
+                     input: deleteFoodInput
+                 }
              });
         }
 

@@ -12,9 +12,10 @@ import { EditFoodForm } from '../FormsAndModals/EditFoodForm';
 export interface IFoodInMealProps {
     food: Food;
     mealId?: string;
+    foodIndex: number
 }
 
-export function FoodInMeal({ food, mealId }: IFoodInMealProps) {
+export function FoodInMeal({ food, mealId, foodIndex }: IFoodInMealProps) {
     const { modalStatus } = useSelector((state: IRootState) => state);
     const dispatch = useDispatch();
 
@@ -61,7 +62,7 @@ export function FoodInMeal({ food, mealId }: IFoodInMealProps) {
                 <div className={styles.food_stats}>F: {((food.fats * food.actualAmount) / food.givenAmount).toFixed(1)}</div>
             </div>
             {deleteModal ? <DeleteModal objectToDelete={'food'} setDeleteModal={setDeleteModal} mealId={mealId!} foodName={food.name} fromWhere={'mealList'}></DeleteModal> : null}
-            {editForm ? <EditFoodForm fromWhere={'mealList'} food={food} setEditForm = {setEditForm}></EditFoodForm> : null}
+            {editForm ? <EditFoodForm fromWhere={'mealList'} food={food} setEditForm={setEditForm} mealId={mealId!} foodIndex={foodIndex}></EditFoodForm> : null}
         </div>
     );
 }

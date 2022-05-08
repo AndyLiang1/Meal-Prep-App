@@ -26,7 +26,7 @@ export function MealInDay({ foods, mealId }: IMealInDayProps) {
         <div className={styles.container}>
             <div className={styles.foods_container}>
                 {foods.map((food: any, index: number) => {
-                    return <FoodInMeal key={index} mealId={mealId} food={food}></FoodInMeal>;
+                    return <FoodInMeal key={index} mealId={mealId} food={food} foodIndex = {index}></FoodInMeal>;
                 })}
             </div>
             <div className={styles.btn_container}>

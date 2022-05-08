@@ -67,14 +67,15 @@ export type DeleteMealInput = {
   userId: Scalars['ID'];
 };
 
+export type EditFoodFromMealListInput = {
+  dayIndex: Scalars['Int'];
+  foodIndex: Scalars['Int'];
+  mealId: Scalars['ID'];
+  newActualAmount: Scalars['Int'];
+  userId: Scalars['ID'];
+};
+
 export type EditFoodInput = {
-  day1?: InputMaybe<Scalars['Boolean']>;
-  day2?: InputMaybe<Scalars['Boolean']>;
-  day3?: InputMaybe<Scalars['Boolean']>;
-  day4?: InputMaybe<Scalars['Boolean']>;
-  day5?: InputMaybe<Scalars['Boolean']>;
-  day6?: InputMaybe<Scalars['Boolean']>;
-  day7?: InputMaybe<Scalars['Boolean']>;
   dayIndex?: InputMaybe<Scalars['Int']>;
   foodIndex?: InputMaybe<Scalars['Int']>;
   foodName?: InputMaybe<Scalars['String']>;
@@ -303,6 +304,7 @@ export type ResolversTypes = {
   CreateMealInput: CreateMealInput;
   DeleteFoodInput: DeleteFoodInput;
   DeleteMealInput: DeleteMealInput;
+  EditFoodFromMealListInput: EditFoodFromMealListInput;
   EditFoodInput: EditFoodInput;
   Float: ResolverTypeWrapper<Scalars['Float']>;
   Food: ResolverTypeWrapper<Food>;
@@ -329,6 +331,7 @@ export type ResolversParentTypes = {
   CreateMealInput: CreateMealInput;
   DeleteFoodInput: DeleteFoodInput;
   DeleteMealInput: DeleteMealInput;
+  EditFoodFromMealListInput: EditFoodFromMealListInput;
   EditFoodInput: EditFoodInput;
   Float: Scalars['Float'];
   Food: Food;

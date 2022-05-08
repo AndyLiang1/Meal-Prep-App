@@ -120,13 +120,21 @@ const typeDefs = gql`
         day6: Boolean!
         day7: Boolean!
     }
-
+    input EditFoodFromMealListInput {
+        userId: ID!
+        dayIndex: Int!
+        mealId: ID!
+        foodIndex: Int!
+        newActualAmount: Int!
+    }
+    
     input EditFoodInput {
         userId: ID!
         dayIndex: Int
         mealId: ID
         foodIndex: Int
         foodName: String
+
         newFoodName: String
         newCalories: Float
         newProteins: Float
@@ -135,13 +143,6 @@ const typeDefs = gql`
         newIngredientNames: [String!]
         newGivenAmount: Float
         newActualAmount: Float
-        day1: Boolean
-        day2: Boolean
-        day3: Boolean
-        day4: Boolean
-        day5: Boolean
-        day6: Boolean
-        day7: Boolean
     }
 
     type Mutation {
@@ -152,7 +153,7 @@ const typeDefs = gql`
         createMeal(input: CreateMealInput!): ID!
         deleteMeal(input: DeleteMealInput!): ID!
         deleteFood(input: DeleteFoodInput!): ID!
-        editFood(input: EditFoodInput!): String! 
+        editFood(input: EditFoodInput!): String!
     }
 `;
 
