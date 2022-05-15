@@ -393,6 +393,7 @@ export function AddFoodForm({ type, setAddFoodForm, mealId }: IAddFoodFormProps)
                                                 ...food
                                             };
                                             setNewIngredient(ingredient);
+                                            setNewIngActualAmount(ingredient.givenAmount)
                                         }
                                     });
                                 }}
