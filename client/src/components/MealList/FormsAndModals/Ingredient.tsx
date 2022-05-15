@@ -23,7 +23,7 @@ export function Ingredient({ ingredient, ingredients, setIngredients }: IIngredi
     return (
         <div>
             <div>{ingredient.name}</div>
-            <button onClick={() => deleteIngredient(ingredient.name)}>X</button>
+            <button type = "button" onClick={() => deleteIngredient(ingredient.name)}>X</button>
         </div>
     );
 }

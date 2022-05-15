@@ -106,23 +106,33 @@ export function AddFoodForm({ type, setAddFoodForm, mealId }: IAddFoodFormProps)
             const newIngredientsList = [...ingredients];
             newIngredientsList.push(newIngredient);
             setIngredients(newIngredientsList);
+            setNewIngredient(undefined); // to hide the form
         }
     };
 
-    
+    const calcTotalStats = () => {
+        let cals = 0,
+            p = 0,
+            c = 0,
+            f = 0;
+        ingredients.forEach((ingredient) => {
+            const { calories, proteins, carbs, fats, givenAmount, actualAmount } = ingredient;
+
+            cals += parseInt(((calories * actualAmount) / givenAmount).toFixed(2));
+            p += parseInt(((proteins * actualAmount) / givenAmount).toFixed(2));
+            c += parseInt(((carbs * actualAmount) / givenAmount).toFixed(2));
+            f += parseInt(((fats * actualAmount) / givenAmount).toFixed(2));
+        });
+        setTotalStats({
+            calories: cals,
+            proteins: p,
+            carbs: c,
+            fats: f
+        });
+    };
 
     useEffect(() => {
-        if (newIngredient) {
-            const { calories, proteins, carbs, fats, givenAmount, actualAmount } = newIngredient!;
-            setTotalStats({
-                calories: totalStats.calories + parseInt(((calories * actualAmount) / givenAmount).toFixed(2)),
-                proteins: totalStats.proteins + parseInt(((proteins * actualAmount) / givenAmount).toFixed(2)),
-                carbs: totalStats.carbs + parseInt(((carbs * actualAmount) / givenAmount).toFixed(2)),
-                fats: totalStats.fats + parseInt(((fats * actualAmount) / givenAmount).toFixed(2))
-            });
-                        setNewIngredient(undefined);
-
-        }
+        calcTotalStats();
     }, [ingredients]);
 
     const onSubmit = async (submittedData: CreateFoodFromMealInput) => {
@@ -168,7 +178,7 @@ export function AddFoodForm({ type, setAddFoodForm, mealId }: IAddFoodFormProps)
         } else if (submittedData.name !== '') {
             // then we are not using exisitng food
             const { name, givenAmount, actualAmount } = submittedData;
-            const {calories, proteins, carbs, fats} = totalStats
+            const { calories, proteins, carbs, fats } = totalStats;
             let foodHasUniqueName = true;
             user.foodList.forEach((food) => {
                 if (name === food.name) {
@@ -231,6 +241,7 @@ export function AddFoodForm({ type, setAddFoodForm, mealId }: IAddFoodFormProps)
                             {type === 'meal' ? <div>Add food to meal</div> : <div>Add food to food list</div>}
 
                             <button
+                            type = "button"
                                 onClick={() => {
                                     dispatch(setModalStatus(false));
                                     setAddFoodForm(false);
