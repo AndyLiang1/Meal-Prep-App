@@ -34,27 +34,14 @@ export type CreateMealInput = {
 };
 
 export type DeleteFoodInput = {
-  day1: Scalars['Boolean'];
-  day2: Scalars['Boolean'];
-  day3: Scalars['Boolean'];
-  day4: Scalars['Boolean'];
-  day5: Scalars['Boolean'];
-  day6: Scalars['Boolean'];
-  day7: Scalars['Boolean'];
   dayIndex?: InputMaybe<Scalars['Int']>;
-  foodName: Scalars['String'];
+  foodIndex?: InputMaybe<Scalars['Int']>;
+  foodName?: InputMaybe<Scalars['String']>;
   mealId?: InputMaybe<Scalars['ID']>;
   userId: Scalars['ID'];
 };
 
 export type DeleteMealInput = {
-  day1: Scalars['Boolean'];
-  day2: Scalars['Boolean'];
-  day3: Scalars['Boolean'];
-  day4: Scalars['Boolean'];
-  day5: Scalars['Boolean'];
-  day6: Scalars['Boolean'];
-  day7: Scalars['Boolean'];
   dayIndex: Scalars['Int'];
   mealId: Scalars['ID'];
   userId: Scalars['ID'];
@@ -120,7 +107,7 @@ export type Mutation = {
   __typename?: 'Mutation';
   createFood: Food;
   createMeal: Scalars['ID'];
-  deleteFood: Scalars['ID'];
+  deleteFood: Scalars['String'];
   deleteMeal: Scalars['ID'];
   editFood: Scalars['String'];
   login: LoginResult;
@@ -381,7 +368,7 @@ export type MealResolvers<ContextType = any, ParentType extends ResolversParentT
 export type MutationResolvers<ContextType = any, ParentType extends ResolversParentTypes['Mutation'] = ResolversParentTypes['Mutation']> = {
   createFood?: Resolver<ResolversTypes['Food'], ParentType, ContextType, RequireFields<MutationCreateFoodArgs, 'input'>>;
   createMeal?: Resolver<ResolversTypes['ID'], ParentType, ContextType, RequireFields<MutationCreateMealArgs, 'input'>>;
-  deleteFood?: Resolver<ResolversTypes['ID'], ParentType, ContextType, RequireFields<MutationDeleteFoodArgs, 'input'>>;
+  deleteFood?: Resolver<ResolversTypes['String'], ParentType, ContextType, RequireFields<MutationDeleteFoodArgs, 'input'>>;
   deleteMeal?: Resolver<ResolversTypes['ID'], ParentType, ContextType, RequireFields<MutationDeleteMealArgs, 'input'>>;
   editFood?: Resolver<ResolversTypes['String'], ParentType, ContextType, RequireFields<MutationEditFoodArgs, 'input'>>;
   login?: Resolver<ResolversTypes['LoginResult'], ParentType, ContextType, RequireFields<MutationLoginArgs, 'email' | 'password'>>;

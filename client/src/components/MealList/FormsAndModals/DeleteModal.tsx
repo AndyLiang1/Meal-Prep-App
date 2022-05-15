@@ -12,10 +12,11 @@ export interface IDeleteModalProps {
     setDeleteModal: React.Dispatch<React.SetStateAction<boolean>>;
     mealId?: string;
     foodName?: string;
+    foodIndex?: number;
     fromWhere?: string;
 }
 
-export function DeleteModal({ objectToDelete, setDeleteModal, mealId, foodName, fromWhere }: IDeleteModalProps) {
+export function DeleteModal({ objectToDelete, setDeleteModal, mealId, foodName, foodIndex,fromWhere }: IDeleteModalProps) {
     const user: UserInfoInterface = useSelector((state: IRootState) => state.user);
     const dayIndex = useSelector((state: IRootState) => state.dayIndex);
     const { modalStatus } = useSelector((state: IRootState) => state);
@@ -25,20 +26,12 @@ export function DeleteModal({ objectToDelete, setDeleteModal, mealId, foodName, 
     const [getMeals] = useLazyQuery(GetMealsDocument);
     const [deleteFood] = useMutation(DeleteFoodDocument);
     const deleteUserObject = async () => {
-        console.log(objectToDelete);
         if (fromWhere === 'mealList') {
             if (objectToDelete === 'meal' && mealId) {
                 const deleteMealInput = {
                     userId: user.id,
                     dayIndex,
                     mealId,
-                    day1: dayIndex === 0,
-                    day2: dayIndex === 1,
-                    day3: dayIndex === 2,
-                    day4: dayIndex === 3,
-                    day5: dayIndex === 4,
-                    day6: dayIndex === 5,
-                    day7: dayIndex === 6
                 };
                 await deleteMeal({
                     variables: {
@@ -50,14 +43,7 @@ export function DeleteModal({ objectToDelete, setDeleteModal, mealId, foodName, 
                     userId: user.id,
                     dayIndex,
                     mealId,
-                    foodName: foodName!,
-                    day1: dayIndex === 0,
-                    day2: dayIndex === 1,
-                    day3: dayIndex === 2,
-                    day4: dayIndex === 3,
-                    day5: dayIndex === 4,
-                    day6: dayIndex === 5,
-                    day7: dayIndex === 6
+                    foodIndex
                 };
                 await deleteFood({
                     variables: {
@@ -68,16 +54,7 @@ export function DeleteModal({ objectToDelete, setDeleteModal, mealId, foodName, 
         } else if (fromWhere === 'foodList') {
             const deleteFoodInput = {
                 userId: user.id,
-                dayIndex: null,
-                mealId: null,
                 foodName: foodName!,
-                day1: dayIndex === 0,
-                day2: dayIndex === 1,
-                day3: dayIndex === 2,
-                day4: dayIndex === 3,
-                day5: dayIndex === 4,
-                day6: dayIndex === 5,
-                day7: dayIndex === 6
             };
             await deleteFood({
                 variables: {

@@ -91,27 +91,14 @@ const typeDefs = gql`
         userId: ID!
         dayIndex: Int!
         mealId: ID!
-        day1: Boolean!
-        day2: Boolean!
-        day3: Boolean!
-        day4: Boolean!
-        day5: Boolean!
-        day6: Boolean!
-        day7: Boolean!
     }
 
     input DeleteFoodInput {
         userId: ID!
         dayIndex: Int
         mealId: ID
-        foodName: String!
-        day1: Boolean!
-        day2: Boolean!
-        day3: Boolean!
-        day4: Boolean!
-        day5: Boolean!
-        day6: Boolean!
-        day7: Boolean!
+        foodName: String
+        foodIndex: Int
     }
     input EditFoodFromMealListInput {
         userId: ID!
@@ -145,7 +132,7 @@ const typeDefs = gql`
         createFood(input: CreateFoodInput!): Food!
         createMeal(input: CreateMealInput!): ID!
         deleteMeal(input: DeleteMealInput!): ID!
-        deleteFood(input: DeleteFoodInput!): ID!
+        deleteFood(input: DeleteFoodInput!): String!
         editFood(input: EditFoodInput!): String!
     }
 `;

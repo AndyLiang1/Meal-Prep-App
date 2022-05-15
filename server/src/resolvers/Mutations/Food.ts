@@ -104,23 +104,20 @@ export const createFood = async (parent: any, { input }: MutationCreateFoodArgs,
         Logging.error(error);
     }
 };
-
-const deleteFoodFromDay = (day: Meal[], mealId: string, foodName: string, once: boolean) => {
+const deleteFoodFromMealList = (day: Meal[], mealId: string, foodIndex: number) => {
     for (let i = 0; i < day.length; i++) {
-        if (day[i].id === mealId || !once) {
-            const mealWeWant = day[i];
-            for (let j = 0; j < mealWeWant.foods.length; j++) {
-                if (mealWeWant.foods[j].name === foodName) {
-                    mealWeWant.foods.splice(j, 1);
-                    if (once) {
-                        break;
-                    }
-                }
-            }
-            if (once) {
-                break;
-            }
+        const meal = day[i];
+        if (meal.id === mealId) {
+            meal.foods.splice(foodIndex, 1);
         }
+    }
+};
+
+const deleteFoodFromFoodList = (day: Meal[], foodName: string) => {
+    for (let i = 0; i < day.length; i++) {
+        const meal = day[i];
+        const filteredList = meal.foods.filter((food) => food.name !== foodName);
+        day[i].foods = filteredList;
     }
 };
 
@@ -128,66 +125,70 @@ export const deleteFood = async (parent: any, { input }: MutationDeleteFoodArgs,
     Logging.info('Deleting Food');
     // get my user
     try {
-        const { userId, dayIndex, mealId, foodName } = input;
+        const { userId, dayIndex, mealId, foodName, foodIndex } = input;
+
         const user = await UserModel.findOne({ _id: userId });
         if (!user) {
             Logging.error('No user found from deleteFood resolver');
         }
-        if (mealId) {
+        if (mealId && (foodIndex || foodIndex === 0)) {
             switch (dayIndex) {
                 case 0:
-                    deleteFoodFromDay(user!.day1, mealId, foodName, true);
+                    deleteFoodFromMealList(user!.day1, mealId, foodIndex);
                     break;
                 case 1:
-                    deleteFoodFromDay(user!.day2, mealId, foodName, true);
+                    deleteFoodFromMealList(user!.day2, mealId, foodIndex);
                     break;
                 case 2:
-                    deleteFoodFromDay(user!.day3, mealId, foodName, true);
+                    deleteFoodFromMealList(user!.day3, mealId, foodIndex);
                     break;
                 case 3:
-                    deleteFoodFromDay(user!.day4, mealId, foodName, true);
+                    deleteFoodFromMealList(user!.day4, mealId, foodIndex);
                     break;
                 case 4:
-                    deleteFoodFromDay(user!.day5, mealId, foodName, true);
+                    deleteFoodFromMealList(user!.day5, mealId, foodIndex);
                     break;
                 case 5:
-                    deleteFoodFromDay(user!.day6, mealId, foodName, true);
+                    deleteFoodFromMealList(user!.day6, mealId, foodIndex);
                     break;
                 case 6:
-                    deleteFoodFromDay(user!.day7, mealId, foodName, true);
+                    deleteFoodFromMealList(user!.day7, mealId, foodIndex);
                     break;
                 default:
                     break;
             }
         } else {
             // we are deleting fromfoodList
-            for (let i = 0; i < user!.foodList.length; i++) {
-                if (foodName === user!.foodList[i].name) {
-                    user!.foodList.splice(i, 1);
-                    break;
+
+            if (foodName) {
+                for (let i = 0; i < user!.foodList.length; i++) {
+                    if (foodName === user!.foodList[i].name) {
+                        user!.foodList.splice(i, 1);
+                        break;
+                    }
                 }
+                deleteFoodFromFoodList(user!.day1, foodName);
+                deleteFoodFromFoodList(user!.day2, foodName);
+                deleteFoodFromFoodList(user!.day3, foodName);
+                deleteFoodFromFoodList(user!.day4, foodName);
+                deleteFoodFromFoodList(user!.day5, foodName);
+                deleteFoodFromFoodList(user!.day6, foodName);
+                deleteFoodFromFoodList(user!.day7, foodName);
             }
-            deleteFoodFromDay(user!.day1, mealId!, foodName, false);
-            deleteFoodFromDay(user!.day2, mealId!, foodName, false);
-            deleteFoodFromDay(user!.day3, mealId!, foodName, false);
-            deleteFoodFromDay(user!.day4, mealId!, foodName, false);
-            deleteFoodFromDay(user!.day5, mealId!, foodName, false);
-            deleteFoodFromDay(user!.day6, mealId!, foodName, false);
-            deleteFoodFromDay(user!.day7, mealId!, foodName, false);
         }
 
         await user!.save();
-        return foodName;
+        return 'Successful';
     } catch (error) {
         Logging.error(error);
     }
 };
 
-const editFoodFromDay = (day: Meal[], mealId: string, foodIndex: number, newActualAmount: number ) => {
+const editFoodFromDay = (day: Meal[], mealId: string, foodIndex: number, newActualAmount: number) => {
     for (let i = 0; i < day.length; i++) {
         if (day[i].id === mealId) {
-            const mealWeWant = day[i];
-            mealWeWant.foods[foodIndex].actualAmount = newActualAmount;
+            const meal = day[i];
+            meal.foods[foodIndex].actualAmount = newActualAmount;
         }
     }
 };
@@ -215,8 +216,9 @@ export const editFood = async (parent: any, { input }: MutationEditFoodArgs, con
         const { userId, dayIndex, mealId, foodName, newActualAmount, foodIndex } = input;
         const user = await UserModel.findOne({ _id: userId });
         // from mealList
-        if (mealId && newActualAmount) { // cannot check for dayIndex and foodIndex 
-                             // since they might = 0 and falsify the if statement
+        if (mealId && newActualAmount) {
+            // cannot check for dayIndex and foodIndex
+            // since they might = 0 and falsify the if statement
             switch (dayIndex) {
                 case 0:
                     editFoodFromDay(user!.day1, mealId, foodIndex!, newActualAmount);
@@ -246,7 +248,7 @@ export const editFood = async (parent: any, { input }: MutationEditFoodArgs, con
             return 'Successful';
         } else {
             // if we are here, it means we edited from foodList
-            console.log('in foodTS')
+            console.log('in foodTS');
             for (let i = 0; i < user!.foodList.length; i++) {
                 const { newFoodName, newCalories, newProteins, newCarbs, newFats, newGivenAmount, newIngredientNames } = input;
                 const newIngredients: Food[] = [];
@@ -270,14 +272,14 @@ export const editFood = async (parent: any, { input }: MutationEditFoodArgs, con
                         givenAmount: newGivenAmount!,
                         actualAmount: newGivenAmount!
                     };
-                    console.log(newFood)
+                    console.log(newFood);
                     user!.foodList[i] = newFood;
                     const userDays = [user!.day1, user!.day2, user!.day3, user!.day4, user!.day5, user!.day6, user!.day7];
 
                     completelyEditFoodFromMeals(foodName, newFood, userDays);
                 }
                 user!.save();
-                return "Successful";
+                return 'Successful';
             }
         }
     } catch (error) {

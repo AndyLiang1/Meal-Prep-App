@@ -1,0 +1,7 @@
+.container {
+    background-color: violet;
+    display: flex;
+    justify-content: left;
+    align-items: center;
+    text-align: center;
+}

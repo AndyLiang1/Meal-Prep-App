@@ -4,7 +4,7 @@ import { Food } from '../../../generated/graphql-client';
 import { DeleteModal } from '../FormsAndModals/DeleteModal';
 import { IRootState } from '../../../state/reducers';
 import { useDispatch, useSelector } from 'react-redux';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { setModalStatus } from '../../../state/action-creators';
 import { DeleteBtn, EditBtn } from '../../helpers/Icons';
 import { EditFoodForm } from '../FormsAndModals/EditFoodForm';
@@ -12,7 +12,7 @@ import { EditFoodForm } from '../FormsAndModals/EditFoodForm';
 export interface IFoodInMealProps {
     food: Food;
     mealId?: string;
-    foodIndex: number
+    foodIndex: number;
 }
 
 export function FoodInMeal({ food, mealId, foodIndex }: IFoodInMealProps) {
@@ -21,6 +21,14 @@ export function FoodInMeal({ food, mealId, foodIndex }: IFoodInMealProps) {
 
     const [deleteModal, setDeleteModal] = useState(false);
     const [editForm, setEditForm] = useState(false);
+
+    let unMounted = false;
+
+    useEffect(() => {
+        return () => {
+            unMounted = true;
+        };
+    }, []);
     return (
         <div className={styles.container}>
             <div className={styles.left_container}>
@@ -44,9 +52,11 @@ export function FoodInMeal({ food, mealId, foodIndex }: IFoodInMealProps) {
                     <DeleteBtn
                         className={styles.btn}
                         onClick={() => {
-                            if (!modalStatus) {
-                                dispatch(setModalStatus(true));
-                                setDeleteModal(true);
+                            if (!unMounted) {
+                                if (!modalStatus) {
+                                    dispatch(setModalStatus(true));
+                                    setDeleteModal(true);
+                                }
                             }
                         }}
                     >
@@ -61,7 +71,9 @@ export function FoodInMeal({ food, mealId, foodIndex }: IFoodInMealProps) {
                 <div className={styles.food_stats}>C: {((food.carbs * food.actualAmount) / food.givenAmount).toFixed(1)}</div>
                 <div className={styles.food_stats}>F: {((food.fats * food.actualAmount) / food.givenAmount).toFixed(1)}</div>
             </div>
-            {deleteModal ? <DeleteModal objectToDelete={'food'} setDeleteModal={setDeleteModal} mealId={mealId!} foodName={food.name} fromWhere={'mealList'}></DeleteModal> : null}
+            {deleteModal ? (
+                <DeleteModal objectToDelete={'food'} setDeleteModal={setDeleteModal} mealId={mealId!} foodName={food.name} foodIndex={foodIndex} fromWhere={'mealList'}></DeleteModal>
+            ) : null}
             {editForm ? <EditFoodForm fromWhere={'mealList'} food={food} setEditForm={setEditForm} mealId={mealId!} foodIndex={foodIndex}></EditFoodForm> : null}
         </div>
     );

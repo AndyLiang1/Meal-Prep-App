@@ -13,6 +13,9 @@ import { Ingredient } from './Ingredient';
 import { useLazyQuery, useMutation } from '@apollo/client';
 import { getUserMeals } from '../../helpers/GetMealsFunction';
 
+import { AiOutlineDown, AiOutlineUp } from 'react-icons/ai';
+import { DropdownStats } from './DropdownStats';
+
 export interface IEditFoodFormProps {
     fromWhere: string;
     food: Food;
@@ -32,42 +35,73 @@ export type EditFoodFormData = {
     givenAmount: number;
 };
 
+type totalStats = {
+    calories: number;
+    proteins: number;
+    carbs: number;
+    fats: number;
+};
+
 export function EditFoodForm({ fromWhere, food, setEditForm, mealId, foodIndex }: IEditFoodFormProps) {
     const [actualAmount, setActualAmount] = useState<number>(food.actualAmount);
     const dispatch = useDispatch();
-    const [newIngredient, setNewIngredient] = useState<string>();
+    const [newIngredient, setNewIngredient] = useState<Food>();
     const [ingredients, setIngredients] = useState<Food[]>(food.ingredients);
     const user: UserInfoInterface = useSelector((state: IRootState) => state.user);
     const dayIndex = useSelector((state: IRootState) => state.dayIndex);
     const [editFoodFromMealList] = useMutation(EditFoodFromMealListDocument);
     const [editFoodFromFoodList] = useMutation(EditFoodFromFoodListDocument);
     const [getMeals] = useLazyQuery(GetMealsDocument);
+    const [totalStats, setTotalStats] = useState({ calories: 0, proteins: 0, carbs: 0, fats: 0 });
+    const [newIngActualAmount, setNewIngActualAmount] = useState(0);
+
+
+    const [showIngCals, setShowIngCals] = useState(false);
+    const [showIngP, setShowIngP] = useState(false);
+    const [showIngC, setShowIngC] = useState(false);
+    const [showIngF, setShowIngF] = useState(false);
 
     const initialValues = {
         newActualAmount: '',
         newFoodName: food.name,
-        newCalories: food.calories,
-        newProteins: food.proteins,
-        newCarbs: food.carbs,
-        newFats: food.fats,
+        newCalories: totalStats.calories ? totalStats.calories : food.calories,
+        newProteins: totalStats.proteins ? totalStats.proteins : food.proteins,
+        newCarbs: totalStats.carbs ? totalStats.carbs : food.carbs,
+        newFats: totalStats.fats ? totalStats.fats : food.fats,
         newIngredient: {},
         newGivenAmount: food.givenAmount
     };
 
     const validationSchema = Yup.object().shape({});
-
     useEffect(() => {
-        for (let i = 0; i < user.foodList!.length; i++) {
-            if (newIngredient === user.foodList![i].name) {
-                const foodToAdd = user.foodList[i];
-                const newIngredientsList = [...ingredients];
-                newIngredientsList.push(foodToAdd);
-                setIngredients(newIngredientsList);
-            }
+        let cals = 0,
+            p = 0,
+            c = 0,
+            f = 0;
+        ingredients.forEach((ingredient) => {
+            cals += ingredient.calories;
+            p += ingredient.proteins;
+            c += ingredient.carbs;
+            f += ingredient.fats;
+        });
+        setTotalStats({ calories: cals, proteins: p, carbs: c, fats: f });
+    }, [ingredients]);
+
+    const addToIngredientList = (newIngredientActualAmount: number) => {
+        if (newIngredient) {
+            newIngredient.actualAmount = newIngredientActualAmount;
+            const newIngredientsList = [...ingredients];
+            newIngredientsList.push(newIngredient);
+            setIngredients(newIngredientsList);
+            const { calories, proteins, carbs, fats, givenAmount, actualAmount } = newIngredient;
+            setTotalStats({
+                calories: totalStats.calories + parseInt(((calories * actualAmount) / givenAmount).toFixed(2)),
+                proteins: totalStats.proteins + parseInt(((proteins * actualAmount) / givenAmount).toFixed(2)),
+                carbs: totalStats.carbs + parseInt(((carbs * actualAmount) / givenAmount).toFixed(2)),
+                fats: totalStats.fats + parseInt(((fats * actualAmount) / givenAmount).toFixed(2))
+            });
         }
-        // This allows us to add the same ingredient twice,
-        setNewIngredient('');
-    }, [newIngredient]);
+    };
 
     const onSubmit = async (submittedData: any) => {
         if (fromWhere === 'mealList') {
@@ -165,26 +199,80 @@ export function EditFoodForm({ fromWhere, food, setEditForm, mealId, foodIndex }
                             <div>Note: This will edit every instance of this food in your meal lists accross all 7 days.</div>
                             <div>Name</div>
                             <Field className="add_field" name="newFoodName" type="text" />
+
                             <div>Calories</div>
                             <Field className="add_field" name="newCalories" type="number" />
+                            {!showIngCals ? (
+                                <AiOutlineDown
+                                    onClick={() => {
+                                        setShowIngCals(true);
+                                    }}
+                                ></AiOutlineDown>
+                            ) : (
+                                <AiOutlineUp onClick={() => setShowIngCals(false)} />
+                            )}
+                            {showIngCals && <DropdownStats statName={'calories'} ingredients={ingredients}></DropdownStats>}
+
                             <div>Proteins</div>
                             <Field className="add_field" name="newProteins" type="number" />
+                            {!showIngP ? (
+                                <AiOutlineDown
+                                    onClick={() => {
+                                        setShowIngP(true);
+                                    }}
+                                ></AiOutlineDown>
+                            ) : (
+                                <AiOutlineUp onClick={() => setShowIngP(false)} />
+                            )}
+                            {showIngP && <DropdownStats statName={'proteins'} ingredients={ingredients}></DropdownStats>}
+
                             <div>Carbs</div>
                             <Field className="add_field" name="newCarbs" type="number" />
+                            {!showIngC ? (
+                                <AiOutlineDown
+                                    onClick={() => {
+                                        setShowIngC(true);
+                                    }}
+                                ></AiOutlineDown>
+                            ) : (
+                                <AiOutlineUp onClick={() => setShowIngC(false)} />
+                            )}
+                            {showIngC && <DropdownStats statName={'carbs'} ingredients={ingredients} />}
+
                             <div>Fats</div>
                             <Field className="add_field" name="newFats" type="number" />
+                            {!showIngF ? (
+                                <AiOutlineDown
+                                    onClick={() => {
+                                        setShowIngF(true);
+                                    }}
+                                ></AiOutlineDown>
+                            ) : (
+                                <AiOutlineUp onClick={() => setShowIngF(false)} />
+                            )}
+                            {showIngF && <DropdownStats statName={'fats'} ingredients={ingredients}></DropdownStats>}
+
                             <div>Given Amount</div>
                             <Field className="add_field" name="newGivenAmount" type="number" />
+
                             <div>Actual Amount</div>
                             <div>Ingredients</div>
                             <Field
                                 className="add_field"
-                                name="newIngredient"
+                                name="ingredients"
                                 as="select"
                                 onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-                                    setNewIngredient(e.target.value);
+                                    const newIngName = e.target.value;
+                                    user.foodList.forEach((food) => {
+                                        if (food.name === newIngName) {
+                                            let ingredient = {
+                                                ...food
+                                            };
+                                            setNewIngredient(ingredient);
+                                        }
+                                    });
                                 }}
-                                value={newIngredient}
+                                value={newIngredient ? newIngredient.name : '--'}
                             >
                                 <option value=""></option>
                                 {user.foodList.map((food: Food, index: number) => {
@@ -195,6 +283,21 @@ export function EditFoodForm({ fromWhere, food, setEditForm, mealId, foodIndex }
                                     );
                                 })}
                             </Field>
+                            {newIngredient && (
+                                <div className={styles.potentialNewIng}>
+                                    <div>
+                                        {newIngredient.name} | Given Amount: {newIngredient.givenAmount}
+                                    </div>
+                                    <div> Actual Amount</div>
+                                    <Field
+                                        className={styles.newIngActualAmount}
+                                        type="number"
+                                        onChange={(e: React.ChangeEvent<HTMLInputElement>) => setNewIngActualAmount(parseInt(e.target.value))}
+                                        value={newIngActualAmount}
+                                    ></Field>
+                                    <button onClick={() => addToIngredientList(newIngActualAmount)}>Add</button>
+                                </div>
+                            )}
                             {ingredients.map((food: Food, index: number) => {
                                 return <Ingredient key={index} ingredient={food} ingredients={ingredients} setIngredients={setIngredients}></Ingredient>;
                             })}

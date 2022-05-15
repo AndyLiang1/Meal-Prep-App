@@ -32,7 +32,6 @@ export function MealList(Props: IMealListProps) {
     // const [dayIndex, setDayIndex] = useState<number>(0);
     // const dispatch = useDispatch()
 
-
     const [createMeal] = useMutation(CreateMealDocument);
     const [getMeals] = useLazyQuery(GetMealsDocument);
     const getMealAsync = async () => {
