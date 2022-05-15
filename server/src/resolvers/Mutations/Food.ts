@@ -253,14 +253,16 @@ export const editFood = async (parent: any, { input }: MutationEditFoodArgs, con
                 const { newFoodName, newCalories, newProteins, newCarbs, newFats, newGivenAmount, newIngredientNames } = input;
                 const newIngredients: Food[] = [];
                 newIngredientNames!.forEach((name) => {
-                    for (let i = 0; i < user!.foodList.length; i++) {
-                        if (name === user!.foodList[i].name) {
-                            newIngredients.push(user!.foodList[i]);
+                    for (let j = 0; j < user!.foodList.length; j++) {
+                        if (name === user!.foodList[j].name) {
+                            newIngredients.push(user!.foodList[j]);
                             break;
                         }
                     }
                 });
+                console.log(user!.foodList.length);
 
+                console.log(foodName + 'vs' + user!.foodList[i].name)
                 if (foodName === user!.foodList[i].name) {
                     const newFood: Food = {
                         name: newFoodName!,
@@ -272,15 +274,16 @@ export const editFood = async (parent: any, { input }: MutationEditFoodArgs, con
                         givenAmount: newGivenAmount!,
                         actualAmount: newGivenAmount!
                     };
+
                     console.log(newFood);
                     user!.foodList[i] = newFood;
                     const userDays = [user!.day1, user!.day2, user!.day3, user!.day4, user!.day5, user!.day6, user!.day7];
 
                     completelyEditFoodFromMeals(foodName, newFood, userDays);
-                }
-                user!.save();
-                return 'Successful';
+                } 
             }
+            user!.save();
+            return 'Successful';
         }
     } catch (error) {
         Logging.error(error);
