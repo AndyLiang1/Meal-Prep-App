@@ -35,7 +35,6 @@ export function MealInDay({ foods, mealId }: IMealInDayProps) {
                     onClick={() => {
                         if (!modalStatus) {
                             dispatch(setModalStatus(true));
-                            console.log(modalStatus);
                             setAddFoodForm(true);
                         }
                     }}
@@ -46,7 +45,6 @@ export function MealInDay({ foods, mealId }: IMealInDayProps) {
                     className={styles.btn}
                     onClick={() => {
                         if (!modalStatus) {
-                            console.log(modalStatus);
                             dispatch(setModalStatus(true));
                             setDeleteModal(true);
                         }

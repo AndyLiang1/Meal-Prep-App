@@ -1,10 +1,10 @@
 import Logging from '../../library/Logging';
-import UserModel, { IUserModel } from '../../models/User';
+import UserModel, { IUserDocument } from '../../models/User';
 
 import { Food, Meal, MutationCreateFoodArgs, MutationDeleteFoodArgs, MutationEditFoodArgs, User } from '../../generated/graphql-server';
 
 const addFoodToMealAndFoodList = (
-    user: IUserModel & {
+    user: IUserDocument & {
         _id: any;
     },
     day: Meal[],
@@ -248,7 +248,6 @@ export const editFood = async (parent: any, { input }: MutationEditFoodArgs, con
             return 'Successful';
         } else {
             // if we are here, it means we edited from foodList
-            console.log('in foodTS');
             for (let i = 0; i < user!.foodList.length; i++) {
                 const { newFoodName, newCalories, newProteins, newCarbs, newFats, newGivenAmount, newIngredientNames } = input;
                 const newIngredients: Food[] = [];
@@ -260,9 +259,6 @@ export const editFood = async (parent: any, { input }: MutationEditFoodArgs, con
                         }
                     }
                 });
-                console.log(user!.foodList.length);
-
-                console.log(foodName + 'vs' + user!.foodList[i].name)
                 if (foodName === user!.foodList[i].name) {
                     const newFood: Food = {
                         name: newFoodName!,
@@ -274,13 +270,11 @@ export const editFood = async (parent: any, { input }: MutationEditFoodArgs, con
                         givenAmount: newGivenAmount!,
                         actualAmount: newGivenAmount!
                     };
-
-                    console.log(newFood);
                     user!.foodList[i] = newFood;
                     const userDays = [user!.day1, user!.day2, user!.day3, user!.day4, user!.day5, user!.day6, user!.day7];
 
                     completelyEditFoodFromMeals(foodName, newFood, userDays);
-                } 
+                }
             }
             user!.save();
             return 'Successful';

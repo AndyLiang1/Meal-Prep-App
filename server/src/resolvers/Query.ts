@@ -23,7 +23,7 @@ const Query = {
         try {
             const { id }: { id: string } = args;
             const user = await User.findOne({ _id: id });
-            console.log(user)
+            console.log(user);
             return user!.foodList;
         } catch (error) {
             Logging.error(error);

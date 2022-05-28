@@ -32,7 +32,7 @@ const typeDefs = gql`
         fats: Float!
         ingredients: [Food!]!
         givenAmount: Float!
-        actualAmount: Float!
+        actualAmount: Float
     }
 
     type Query {
@@ -107,7 +107,7 @@ const typeDefs = gql`
         foodIndex: Int!
         newActualAmount: Int!
     }
-    
+
     input EditFoodInput {
         userId: ID!
         dayIndex: Int

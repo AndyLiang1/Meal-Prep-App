@@ -16,6 +16,7 @@ import { useLazyQuery, useMutation } from '@apollo/client';
 import { getUserMeals } from '../../helpers/GetMealsFunction';
 import { AiOutlineDown, AiOutlineUp } from 'react-icons/ai';
 import { DropdownStats } from './DropdownStats';
+import { create } from 'yup/lib/Reference';
 
 export interface IAddFoodFormProps {
     type: string;
@@ -63,7 +64,6 @@ export function AddFoodForm({ type, setAddFoodForm, mealId }: IAddFoodFormProps)
         fats: 0
     });
 
-    useEffect(() => {}, [user]);
     const initialValues: CreateFoodFromMealInput = {
         existingFood: '',
         existingFoodActualAmount: 0,
@@ -117,7 +117,6 @@ export function AddFoodForm({ type, setAddFoodForm, mealId }: IAddFoodFormProps)
             f = 0;
         ingredients.forEach((ingredient) => {
             const { calories, proteins, carbs, fats, givenAmount, actualAmount } = ingredient;
-
             cals += parseInt(((calories * actualAmount) / givenAmount).toFixed(2));
             p += parseInt(((proteins * actualAmount) / givenAmount).toFixed(2));
             c += parseInt(((carbs * actualAmount) / givenAmount).toFixed(2));
@@ -136,12 +135,11 @@ export function AddFoodForm({ type, setAddFoodForm, mealId }: IAddFoodFormProps)
     }, [ingredients]);
 
     const onSubmit = async (submittedData: CreateFoodFromMealInput) => {
-        console.log('in here ');
         if (submittedData.existingFood !== '' && submittedData.name !== '') {
             setErrorMsg('Please only use one of the options to add a food to this meal. Either add an existing food, or create a new food with a unique name.');
             return;
         }
-        // check what we are adding
+        
         if (submittedData.existingFood !== '') {
             let createFoodFromMealArgs: CreateFoodInput;
 
@@ -152,6 +150,8 @@ export function AddFoodForm({ type, setAddFoodForm, mealId }: IAddFoodFormProps)
                     food.ingredients.forEach((ingredient) => {
                         ingredientNames.push(ingredient.name);
                     });
+
+                    // const existingFoodActualAmount = (submittedData.existingFoodActualAmount);
                     createFoodFromMealArgs = {
                         userId: user.id,
                         dayIndex,
@@ -219,7 +219,6 @@ export function AddFoodForm({ type, setAddFoodForm, mealId }: IAddFoodFormProps)
             setAddFoodForm(false);
         }
         const day = await getUserMeals(dayIndex, user, getMeals);
-
         dispatch(
             addUserToStore({
                 username: user.username,
@@ -241,7 +240,7 @@ export function AddFoodForm({ type, setAddFoodForm, mealId }: IAddFoodFormProps)
                             {type === 'meal' ? <div>Add food to meal</div> : <div>Add food to food list</div>}
 
                             <button
-                            type = "button"
+                                type="button"
                                 onClick={() => {
                                     dispatch(setModalStatus(false));
                                     setAddFoodForm(false);
@@ -264,7 +263,7 @@ export function AddFoodForm({ type, setAddFoodForm, mealId }: IAddFoodFormProps)
                                 })}
                             </Field>
                             <div>Actual Amount</div>
-                            <Field className="add_field" name="existingFoodActualAmount"></Field>
+                            <Field className="add_field" type = "number" name="existingFoodActualAmount"></Field>
                         </div>
                         <div className={styles.create_new_food_container}>
                             <div>Name</div>
@@ -283,6 +282,7 @@ export function AddFoodForm({ type, setAddFoodForm, mealId }: IAddFoodFormProps)
                                                 calories: parseInt(e.target.value)
                                             })
                                         }
+                                        value={totalStats.calories}
                                     />
 
                                     <div>Proteins</div>
@@ -296,6 +296,7 @@ export function AddFoodForm({ type, setAddFoodForm, mealId }: IAddFoodFormProps)
                                                 proteins: parseInt(e.target.value)
                                             })
                                         }
+                                        value={totalStats.proteins}
                                     />
 
                                     <div>Carbs</div>
@@ -309,6 +310,7 @@ export function AddFoodForm({ type, setAddFoodForm, mealId }: IAddFoodFormProps)
                                                 carbs: parseInt(e.target.value)
                                             })
                                         }
+                                        value={totalStats.carbs}
                                     />
 
                                     <div>Fats</div>
@@ -322,6 +324,7 @@ export function AddFoodForm({ type, setAddFoodForm, mealId }: IAddFoodFormProps)
                                                 fats: parseInt(e.target.value)
                                             })
                                         }
+                                        value={totalStats.fats}
                                     />
                                 </div>
                             ) : (
@@ -393,7 +396,7 @@ export function AddFoodForm({ type, setAddFoodForm, mealId }: IAddFoodFormProps)
                                                 ...food
                                             };
                                             setNewIngredient(ingredient);
-                                            setNewIngActualAmount(ingredient.givenAmount)
+                                            setNewIngActualAmount(ingredient.givenAmount);
                                         }
                                     });
                                 }}

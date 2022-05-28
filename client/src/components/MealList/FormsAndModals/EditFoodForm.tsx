@@ -35,13 +35,6 @@ export type EditFoodFormData = {
     givenAmount: number;
 };
 
-type totalStats = {
-    calories: number;
-    proteins: number;
-    carbs: number;
-    fats: number;
-};
-
 export function EditFoodForm({ fromWhere, food, setEditForm, mealId, foodIndex }: IEditFoodFormProps) {
     const [actualAmount, setActualAmount] = useState<number>(food.actualAmount);
     const dispatch = useDispatch();
@@ -52,9 +45,8 @@ export function EditFoodForm({ fromWhere, food, setEditForm, mealId, foodIndex }
     const [editFoodFromMealList] = useMutation(EditFoodFromMealListDocument);
     const [editFoodFromFoodList] = useMutation(EditFoodFromFoodListDocument);
     const [getMeals] = useLazyQuery(GetMealsDocument);
-    const [totalStats, setTotalStats] = useState({ calories: 0, proteins: 0, carbs: 0, fats: 0 });
+    const [totalStats, setTotalStats] = useState({ calories: food.calories, proteins: food.proteins, carbs: food.carbs, fats: food.carbs });
     const [newIngActualAmount, setNewIngActualAmount] = useState(0);
-
 
     const [showIngCals, setShowIngCals] = useState(false);
     const [showIngP, setShowIngP] = useState(false);
@@ -74,18 +66,34 @@ export function EditFoodForm({ fromWhere, food, setEditForm, mealId, foodIndex }
 
     const validationSchema = Yup.object().shape({});
     useEffect(() => {
+        calcTotalStats();
+    }, [ingredients]);
+
+    const calcTotalStats = () => {
         let cals = 0,
             p = 0,
             c = 0,
             f = 0;
         ingredients.forEach((ingredient) => {
-            cals += ingredient.calories;
-            p += ingredient.proteins;
-            c += ingredient.carbs;
-            f += ingredient.fats;
+            const { calories, proteins, carbs, fats, givenAmount, actualAmount } = ingredient;
+            cals += parseInt(((calories * actualAmount) / givenAmount).toFixed(2));
+            p += parseInt(((proteins * actualAmount) / givenAmount).toFixed(2));
+            c += parseInt(((carbs * actualAmount) / givenAmount).toFixed(2));
+            f += parseInt(((fats * actualAmount) / givenAmount).toFixed(2));
         });
-        setTotalStats({ calories: cals, proteins: p, carbs: c, fats: f });
-    }, [ingredients]);
+        if (ingredients.length) {
+            // we need this if because sometimes, 
+            // we accidentally reset total stats to 0 when the useEffect
+            // with ingredients as its "caller array" is triggered
+            // AFTER setting the values for our form 
+            setTotalStats({
+                calories: cals,
+                proteins: p,
+                carbs: c,
+                fats: f
+            });
+        }
+    };
 
     const addToIngredientList = (newIngredientActualAmount: number) => {
         if (newIngredient) {
@@ -93,13 +101,7 @@ export function EditFoodForm({ fromWhere, food, setEditForm, mealId, foodIndex }
             const newIngredientsList = [...ingredients];
             newIngredientsList.push(newIngredient);
             setIngredients(newIngredientsList);
-            const { calories, proteins, carbs, fats, givenAmount, actualAmount } = newIngredient;
-            setTotalStats({
-                calories: totalStats.calories + parseInt(((calories * actualAmount) / givenAmount).toFixed(2)),
-                proteins: totalStats.proteins + parseInt(((proteins * actualAmount) / givenAmount).toFixed(2)),
-                carbs: totalStats.carbs + parseInt(((carbs * actualAmount) / givenAmount).toFixed(2)),
-                fats: totalStats.fats + parseInt(((fats * actualAmount) / givenAmount).toFixed(2))
-            });
+            setNewIngredient(undefined); // to hide the form
         }
     };
 
@@ -119,7 +121,7 @@ export function EditFoodForm({ fromWhere, food, setEditForm, mealId, foodIndex }
                 }
             });
         } else if (fromWhere === 'foodList') {
-            const { newFoodName, newCalories, newProteins, newCarbs, newFats, newIngredient, newGivenAmount } = submittedData;
+            const { newFoodName, newIngredient, newGivenAmount } = submittedData;
             const newIngredientNames: string[] = [];
             ingredients.forEach((ingredient) => newIngredientNames.push(ingredient.name));
 
@@ -127,27 +129,29 @@ export function EditFoodForm({ fromWhere, food, setEditForm, mealId, foodIndex }
                 userId: user.id,
                 foodName: food.name,
                 newFoodName,
-                newCalories,
-                newProteins,
-                newCarbs,
-                newFats,
+                newCalories: totalStats.calories,
+                newProteins: totalStats.proteins,
+                newCarbs: totalStats.carbs,
+                newFats: totalStats.fats,
                 newIngredientNames,
                 newGivenAmount,
                 newActualAmount: newGivenAmount
             };
-
             const { data } = await editFoodFromFoodList({
                 variables: {
                     input: editFoodFromMealArgs
                 }
             });
         }
-        refreshMealList();
+
+        dispatch(setModalStatus(false));
+        setEditForm(false);
+
+        await refreshMealList();
     };
 
     const refreshMealList = async () => {
         const day = await getUserMeals(dayIndex, user, getMeals);
-
         dispatch(
             addUserToStore({
                 username: user.username,
@@ -166,7 +170,6 @@ export function EditFoodForm({ fromWhere, food, setEditForm, mealId, foodIndex }
                 <Form
                     onChange={(event: any) => {
                         if (event.target.name === 'newActualAmount') {
-                            console.log(event.target.value === '');
                             event.target.value !== '' ? setActualAmount(parseInt(event.target.value)) : setActualAmount(0);
                         }
                     }}
@@ -196,66 +199,121 @@ export function EditFoodForm({ fromWhere, food, setEditForm, mealId, foodIndex }
                     {fromWhere === 'foodList' && (
                         <div>
                             <div>Edit Food</div>
-                            <div>Note: This will edit every instance of this food in your meal lists accross all 7 days.</div>
+                            <div>Note: This will edit every instance of this food in your meal lists across all 7 days.</div>
                             <div>Name</div>
                             <Field className="add_field" name="newFoodName" type="text" />
 
-                            <div>Calories</div>
-                            <Field className="add_field" name="newCalories" type="number" />
-                            {!showIngCals ? (
-                                <AiOutlineDown
-                                    onClick={() => {
-                                        setShowIngCals(true);
-                                    }}
-                                ></AiOutlineDown>
-                            ) : (
-                                <AiOutlineUp onClick={() => setShowIngCals(false)} />
-                            )}
-                            {showIngCals && <DropdownStats statName={'calories'} ingredients={ingredients}></DropdownStats>}
+                            {!ingredients.length ? (
+                                <div>
+                                    <div>Calories</div>
+                                    <Field
+                                        className="add_field"
+                                        name="newCalories"
+                                        type="number"
+                                        onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                                            setTotalStats({
+                                                ...totalStats,
+                                                calories: parseInt(e.target.value)
+                                            })
+                                        }
+                                        value={totalStats.calories}
+                                    />
 
-                            <div>Proteins</div>
-                            <Field className="add_field" name="newProteins" type="number" />
-                            {!showIngP ? (
-                                <AiOutlineDown
-                                    onClick={() => {
-                                        setShowIngP(true);
-                                    }}
-                                ></AiOutlineDown>
-                            ) : (
-                                <AiOutlineUp onClick={() => setShowIngP(false)} />
-                            )}
-                            {showIngP && <DropdownStats statName={'proteins'} ingredients={ingredients}></DropdownStats>}
+                                    <div>Proteins</div>
+                                    <Field
+                                        className="add_field"
+                                        name="newProteins"
+                                        type="number"
+                                        onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                                            setTotalStats({
+                                                ...totalStats,
+                                                proteins: parseInt(e.target.value)
+                                            })
+                                        }
+                                        value={totalStats.proteins}
+                                    />
 
-                            <div>Carbs</div>
-                            <Field className="add_field" name="newCarbs" type="number" />
-                            {!showIngC ? (
-                                <AiOutlineDown
-                                    onClick={() => {
-                                        setShowIngC(true);
-                                    }}
-                                ></AiOutlineDown>
-                            ) : (
-                                <AiOutlineUp onClick={() => setShowIngC(false)} />
-                            )}
-                            {showIngC && <DropdownStats statName={'carbs'} ingredients={ingredients} />}
+                                    <div>Carbs</div>
+                                    <Field
+                                        className="add_field"
+                                        name="newCarbs"
+                                        type="number"
+                                        onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                                            setTotalStats({
+                                                ...totalStats,
+                                                carbs: parseInt(e.target.value)
+                                            })
+                                        }
+                                        value={totalStats.carbs}
+                                    />
 
-                            <div>Fats</div>
-                            <Field className="add_field" name="newFats" type="number" />
-                            {!showIngF ? (
-                                <AiOutlineDown
-                                    onClick={() => {
-                                        setShowIngF(true);
-                                    }}
-                                ></AiOutlineDown>
+                                    <div>Fats</div>
+                                    <Field
+                                        className="add_field"
+                                        name="newFats"
+                                        type="number"
+                                        onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                                            setTotalStats({
+                                                ...totalStats,
+                                                fats: parseInt(e.target.value)
+                                            })
+                                        }
+                                        value={totalStats.fats}
+                                    />
+                                </div>
                             ) : (
-                                <AiOutlineUp onClick={() => setShowIngF(false)} />
-                            )}
-                            {showIngF && <DropdownStats statName={'fats'} ingredients={ingredients}></DropdownStats>}
+                                <div>
+                                    <div>Calories: {totalStats.calories}</div>
+                                    {!showIngCals ? (
+                                        <AiOutlineDown
+                                            onClick={() => {
+                                                setShowIngCals(true);
+                                            }}
+                                        ></AiOutlineDown>
+                                    ) : (
+                                        <AiOutlineUp onClick={() => setShowIngCals(false)} />
+                                    )}
+                                    {showIngCals && <DropdownStats statName={'calories'} ingredients={ingredients}></DropdownStats>}
 
+                                    <div>Proteins: {totalStats.proteins}</div>
+                                    {!showIngP ? (
+                                        <AiOutlineDown
+                                            onClick={() => {
+                                                setShowIngP(true);
+                                            }}
+                                        ></AiOutlineDown>
+                                    ) : (
+                                        <AiOutlineUp onClick={() => setShowIngP(false)} />
+                                    )}
+                                    {showIngP && <DropdownStats statName={'proteins'} ingredients={ingredients}></DropdownStats>}
+
+                                    <div>Carbs: {totalStats.carbs}</div>
+                                    {!showIngC ? (
+                                        <AiOutlineDown
+                                            onClick={() => {
+                                                setShowIngC(true);
+                                            }}
+                                        ></AiOutlineDown>
+                                    ) : (
+                                        <AiOutlineUp onClick={() => setShowIngC(false)} />
+                                    )}
+                                    {showIngC && <DropdownStats statName={'carbs'} ingredients={ingredients} />}
+
+                                    <div>Fats: {totalStats.fats}</div>
+                                    {!showIngF ? (
+                                        <AiOutlineDown
+                                            onClick={() => {
+                                                setShowIngF(true);
+                                            }}
+                                        ></AiOutlineDown>
+                                    ) : (
+                                        <AiOutlineUp onClick={() => setShowIngF(false)} />
+                                    )}
+                                    {showIngF && <DropdownStats statName={'fats'} ingredients={ingredients}></DropdownStats>}
+                                </div>
+                            )}
                             <div>Given Amount</div>
                             <Field className="add_field" name="newGivenAmount" type="number" />
-
-                            <div>Actual Amount</div>
                             <div>Ingredients</div>
                             <Field
                                 className="add_field"
@@ -269,6 +327,7 @@ export function EditFoodForm({ fromWhere, food, setEditForm, mealId, foodIndex }
                                                 ...food
                                             };
                                             setNewIngredient(ingredient);
+                                            setNewIngActualAmount(ingredient.givenAmount);
                                         }
                                     });
                                 }}
@@ -298,6 +357,7 @@ export function EditFoodForm({ fromWhere, food, setEditForm, mealId, foodIndex }
                                     <button onClick={() => addToIngredientList(newIngActualAmount)}>Add</button>
                                 </div>
                             )}
+
                             {ingredients.map((food: Food, index: number) => {
                                 return <Ingredient key={index} ingredient={food} ingredients={ingredients} setIngredients={setIngredients}></Ingredient>;
                             })}

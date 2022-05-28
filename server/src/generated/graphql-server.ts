@@ -73,7 +73,7 @@ export type EditFoodInput = {
 
 export type Food = {
   __typename?: 'Food';
-  actualAmount: Scalars['Float'];
+  actualAmount?: Maybe<Scalars['Float']>;
   calories: Scalars['Float'];
   carbs: Scalars['Float'];
   fats: Scalars['Float'];
@@ -81,6 +81,12 @@ export type Food = {
   ingredients: Array<Food>;
   name: Scalars['String'];
   proteins: Scalars['Float'];
+};
+
+export type FoodFragment = {
+  __typename?: 'FoodFragment';
+  actualAmount: Scalars['Float'];
+  name: Scalars['String'];
 };
 
 export type LoginError = {
@@ -288,6 +294,7 @@ export type ResolversTypes = {
   EditFoodInput: EditFoodInput;
   Float: ResolverTypeWrapper<Scalars['Float']>;
   Food: ResolverTypeWrapper<Food>;
+  FoodFragment: ResolverTypeWrapper<FoodFragment>;
   ID: ResolverTypeWrapper<Scalars['ID']>;
   Int: ResolverTypeWrapper<Scalars['Int']>;
   LoginError: ResolverTypeWrapper<LoginError>;
@@ -315,6 +322,7 @@ export type ResolversParentTypes = {
   EditFoodInput: EditFoodInput;
   Float: Scalars['Float'];
   Food: Food;
+  FoodFragment: FoodFragment;
   ID: Scalars['ID'];
   Int: Scalars['Int'];
   LoginError: LoginError;
@@ -332,7 +340,7 @@ export type ResolversParentTypes = {
 };
 
 export type FoodResolvers<ContextType = any, ParentType extends ResolversParentTypes['Food'] = ResolversParentTypes['Food']> = {
-  actualAmount?: Resolver<ResolversTypes['Float'], ParentType, ContextType>;
+  actualAmount?: Resolver<Maybe<ResolversTypes['Float']>, ParentType, ContextType>;
   calories?: Resolver<ResolversTypes['Float'], ParentType, ContextType>;
   carbs?: Resolver<ResolversTypes['Float'], ParentType, ContextType>;
   fats?: Resolver<ResolversTypes['Float'], ParentType, ContextType>;
@@ -340,6 +348,12 @@ export type FoodResolvers<ContextType = any, ParentType extends ResolversParentT
   ingredients?: Resolver<Array<ResolversTypes['Food']>, ParentType, ContextType>;
   name?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   proteins?: Resolver<ResolversTypes['Float'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type FoodFragmentResolvers<ContextType = any, ParentType extends ResolversParentTypes['FoodFragment'] = ResolversParentTypes['FoodFragment']> = {
+  actualAmount?: Resolver<ResolversTypes['Float'], ParentType, ContextType>;
+  name?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
@@ -415,6 +429,7 @@ export type UserResolvers<ContextType = any, ParentType extends ResolversParentT
 
 export type Resolvers<ContextType = any> = {
   Food?: FoodResolvers<ContextType>;
+  FoodFragment?: FoodFragmentResolvers<ContextType>;
   LoginError?: LoginErrorResolvers<ContextType>;
   LoginResult?: LoginResultResolvers<ContextType>;
   LoginSuccess?: LoginSuccessResolvers<ContextType>;

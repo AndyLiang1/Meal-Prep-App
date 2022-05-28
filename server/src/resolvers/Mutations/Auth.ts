@@ -5,7 +5,7 @@ import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 import { config } from '../../config/config';
 
-import {  Food, Meal, MutationLoginArgs, MutationRegisterArgs, User } from '../../generated/graphql-server';
+import { Food, Meal, MutationLoginArgs, MutationRegisterArgs, User } from '../../generated/graphql-server';
 
 enum Days {
     MONDAY,
@@ -28,53 +28,64 @@ export const register = async (parent: any, { input }: MutationRegisterArgs, con
     }
 
     const hashedPass: string = await bcrypt.hash(password, 10);
-    // let days: Day[] = [];
+    const ing1: Food = {
+        name: 'ing1',
+        calories: 400,
+        proteins: 10,
+        fats: 2,
+        carbs: 10,
+        ingredients: [],
+        givenAmount: 500,
+        actualAmount: 100
+    };
+    const ing2: Food = {
+        name: 'ing2',
+        calories: 400,
+        proteins: 10,
+        fats: 2,
+        carbs: 10,
+        ingredients: [],
+        givenAmount: 500,
+        actualAmount: 100
+    };
+    const ing3: Food = {
+        name: 'ing3',
+        calories: 400,
+        proteins: 10,
+        fats: 2,
+        carbs: 10,
+        ingredients: [],
+        givenAmount: 500,
+        actualAmount: 100
+    };
     const food: Food = {
         name: 'food',
         calories: 300,
         proteins: 30,
         fats: 2,
         carbs: 15,
-        ingredients: [],
+        ingredients: Array(15).fill(ing1),
         givenAmount: 300,
         actualAmount: 100
     };
     const food2: Food = {
         name: 'food2',
-        calories: 300,
-        proteins: 30,
+        calories: 400,
+        proteins: 10,
         fats: 2,
-        carbs: 15,
-        ingredients: [],
-        givenAmount: 300,
+        carbs: 10,
+        ingredients: Array(15).fill(ing2),
+        givenAmount: 500,
         actualAmount: 100
     };
+
     const meal: Meal = {
-            name: "Meal",
-            id: createUID(),
-            index: 0,
-            foods: [food, food, food, food]
-        };
-    // for (let i: number = 0; i < 7; i++) {
-    //     const food: Food = {
-    //         name: 'food',
-    //         calories: 300,
-    //         proteins: 30,
-    //         fats: 2,
-    //         carbs: 15,
-    //         ingredients: []
-    //     };
-    //     const foods: Food[] = [food, food, food, food];
-    //     const meal: Meal = {
-    //         index: 0,
-    //         foods
-    //     };
-    //     const day: Day = {
-    //         name: Days[i],
-    //         meals: [meal, meal, meal, meal, meal]
-    //     };
-    //     days.push(day);
-    // }
+        name: 'Meal',
+        id: createUID(),
+        index: 0,
+        foods: [food, food2, food, food2]
+    };
+
     const day1 = [meal, meal, meal, meal, meal];
     const day2 = [meal, meal, meal, meal, meal];
     const day3 = [meal, meal, meal, meal, meal];
@@ -82,7 +93,7 @@ export const register = async (parent: any, { input }: MutationRegisterArgs, con
     const day5 = [meal, meal, meal, meal, meal];
     const day6 = [meal, meal, meal, meal, meal];
     const day7 = [meal, meal, meal, meal, meal];
-    const foodList: Food[] = [food, food2];
+    const foodList: Food[] = Array(30).fill(food2);
     const user = new UserModel({
         _id: new mongoose.Types.ObjectId(),
         username,
@@ -116,12 +127,12 @@ export const register = async (parent: any, { input }: MutationRegisterArgs, con
                 email,
                 password,
                 accessToken,
-                day1, 
-                day2, 
-                day3, 
-                day4, 
-                day5, 
-                day6,  
+                day1,
+                day2,
+                day3,
+                day4,
+                day5,
+                day6,
                 day7,
                 foodList
             }

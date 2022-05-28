@@ -16,7 +16,7 @@ export interface IUser {
     foodList: Food[];
 }
 
-export interface IUserModel extends IUser, Document {}
+export interface IUserDocument extends IUser, Document {}
 
 const UserSchema: Schema = new Schema(
     {
@@ -177,4 +177,4 @@ const UserSchema: Schema = new Schema(
     }
 );
 
-export default mongoose.model<IUserModel>('User', UserSchema);
+export default mongoose.model<IUserDocument>('User', UserSchema);

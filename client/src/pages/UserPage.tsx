@@ -49,7 +49,6 @@ export function UserPage(props: IUserPageProps) {
 
             if (user) {
                 const { username, id } = user!;
-                console.log(dayIndex);
                 let day: any = [];
                 switch (dayIndex) {
                     case 0:
