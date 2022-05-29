@@ -3,7 +3,8 @@ import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 import { Food, Meal } from '../generated/graphql-server';
 import { createUID } from '../resolvers/Mutations/Auth';
-import { config } from '../config/config'
+import { config } from '../config/config';
+import validate from './validate';
 
 enum DayNames {
     MONDAY,
@@ -15,7 +16,9 @@ enum DayNames {
     SUNDAY
 }
 export class UserService {
-    constructor(private UserDao: UserDao) {}
+    constructor(private UserDao: UserDao) {
+        
+    }
 
     public async get(userId: string) {
         return this.UserDao.get(userId);
@@ -29,10 +32,15 @@ export class UserService {
             },
             config.server.JWT_SECRET
         );
-        return accessToken
+        return accessToken;
     }
 
-    public async register(email: string, username: string, password: string) {
+    public async register(username: string, email: string, password: string) {
+        const valErr = validate.register(email)
+        if(valErr) {
+            return { message: 'Invalid email'}
+        }
+
         const userWithSameEmail = await this.UserDao.getEmail(email);
         if (userWithSameEmail) {
             return { message: 'User already exists in our database' };
@@ -76,7 +84,7 @@ export class UserService {
             proteins: 30,
             fats: 2,
             carbs: 15,
-            ingredients: Array(15).fill(ing1),
+            ingredients: Array(1).fill(ing1),
             givenAmount: 300,
             actualAmount: 100
         };
@@ -86,16 +94,22 @@ export class UserService {
             proteins: 10,
             fats: 2,
             carbs: 10,
-            ingredients: Array(15).fill(ing2),
+            ingredients: Array(1).fill(ing2),
             givenAmount: 500,
             actualAmount: 100
         };
 
+        // const meal: Meal = {
+        //     name: 'Meal',
+        //     id: createUID(),
+        //     index: 0,
+        //     foods: [food, food2, food, food2]
+        // };
         const meal: Meal = {
             name: 'Meal',
             id: createUID(),
             index: 0,
-            foods: [food, food2, food, food2]
+            foods: []
         };
 
         const day1 = [meal, meal, meal, meal, meal];
@@ -105,7 +119,8 @@ export class UserService {
         const day5 = [meal, meal, meal, meal, meal];
         const day6 = [meal, meal, meal, meal, meal];
         const day7 = [meal, meal, meal, meal, meal];
-        const foodList: Food[] = Array(30).fill(food2);
+        // const foodList: Food[] = Array(1).fill(food2);
+        const foodList: Food[] = [];
         const user = {
             username,
             email,
@@ -120,25 +135,24 @@ export class UserService {
             foodList
         };
 
-        const newUser = await this.UserDao.create(user)
-            let accessToken: string = '';
+        const newUser = await this.UserDao.create(user);
+        let accessToken: string = '';
 
-        if(newUser) {
-            accessToken = this.createAccessToken(newUser._id, newUser.username)
+        if (newUser) {
+            accessToken = this.createAccessToken(newUser._id, newUser.username);
         }
 
         const ret = {
             user: {
                 id: newUser._id,
+                accessToken,
                 ...user
             }
         };
         return ret;
-
-
     }
 
-    public async login (email: string, password: string) {
+    public async login(email: string, password: string) {
         const userWithSameEmail = await this.UserDao.getEmail(email);
         if (!userWithSameEmail) {
             return { message: 'No user has registered with that email' };
@@ -149,7 +163,7 @@ export class UserService {
             if (!match) {
                 return { message: 'Wrong username and password combination' };
             } else {
-                const accessToken = this.createAccessToken(userWithSameEmail._id, userWithSameEmail.username)
+                const accessToken = this.createAccessToken(userWithSameEmail._id, userWithSameEmail.username);
                 const days: DayNames[] = [];
 
                 const ret = {

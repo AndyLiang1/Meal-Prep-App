@@ -2,18 +2,17 @@ import { MealListFoodDao } from '../daos/MealListFoodDao';
 import { FoodListDao } from '../daos/FoodListDao';
 import { Food } from '../generated/graphql-server';
 import { IUserDocument } from '../models/User';
-import MealListFoodService from './MealListFoodService';
+import {MealListFoodService} from './MealListFoodService';
 
 export class FoodListService {
-    constructor(private FoodListDao: FoodListDao, private MealListFoodDao: MealListFoodDao) {
-    }
+    constructor(private FoodListDao: FoodListDao, private MealListFoodService: MealListFoodService) {}
 
     public async create(user: IUserDocument, food: Food) {
         return this.FoodListDao.create(user, food);
     }
 
     public async get(user: IUserDocument) {
-        return this.FoodListDao.get(user)
+        return this.FoodListDao.get(user);
     }
 
     private editFoodHasIng(user: IUserDocument, newFoodName: string, newIngNames: string[], newIngActualAmounts: number[], newGivenAmount: number): Food {

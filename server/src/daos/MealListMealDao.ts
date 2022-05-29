@@ -70,7 +70,7 @@ export class MealListMealDao {
                 day.splice(i, 1);
             }
             break
-        });
+        };
     }
     
     public async delete(user: IUserDocument, dayIndex: number, mealId: string) {

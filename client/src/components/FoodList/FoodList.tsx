@@ -13,6 +13,7 @@ export function FoodList(props: IFoodListProps) {
     const { user } = useSelector((state: IRootState) => state);
     useEffect(() => {
         // console.log(user);
+        
     });
     console.log(user.foodList.length)
     return (

@@ -69,7 +69,7 @@ const typeDefs = gql`
 
     union LoginResult = LoginSuccess | LoginError
     input CreateFoodInput {
-        userId: ID!
+        acessToken: String!
         dayIndex: Int
         mealId: ID
         foodName: String!
@@ -83,25 +83,25 @@ const typeDefs = gql`
     }
 
     input CreateMealInput {
-        userId: ID!
+        accessToken: String!
         dayIndex: Int!
     }
 
     input DeleteMealInput {
-        userId: ID!
+        accessToken: String!
         dayIndex: Int!
         mealId: ID!
     }
 
     input DeleteFoodInput {
-        userId: ID!
+        accessToken: String!
         dayIndex: Int
         mealId: ID
         foodName: String
         foodIndex: Int
     }
     input EditFoodFromMealListInput {
-        userId: ID!
+        accessToken: ID!
         dayIndex: Int!
         mealId: ID!
         foodIndex: Int!
@@ -109,7 +109,7 @@ const typeDefs = gql`
     }
 
     input EditFoodInput {
-        userId: ID!
+        accessToken: String!
         dayIndex: Int
         mealId: ID
         foodIndex: Int
