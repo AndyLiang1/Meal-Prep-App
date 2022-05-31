@@ -31,7 +31,8 @@ const addFoodToMealAndFoodList = (
 export const createFood = async (parent: any, { input }: MutationCreateFoodArgs, context: any, info: any) => {
     // find out where we are coming from
     try {
-        const { userId, dayIndex, mealId, foodName, calories, proteins, carbs, fats, ingredientNames, givenAmount, actualAmount } = input;
+        const userId = '';
+        const { dayIndex, mealId, foodName, calories, proteins, carbs, fats, ingredientNames, givenAmount, actualAmount } = input;
         const user = await UserModel.findOne({ _id: userId });
         if (!user) {
             Logging.error('No user found from createFood resolver');
@@ -125,8 +126,8 @@ export const deleteFood = async (parent: any, { input }: MutationDeleteFoodArgs,
     Logging.info('Deleting Food');
     // get my user
     try {
-        const { userId, dayIndex, mealId, foodName, foodIndex } = input;
-
+        const { dayIndex, mealId, foodName, foodIndex } = input;
+        const userId = '';
         const user = await UserModel.findOne({ _id: userId });
         if (!user) {
             Logging.error('No user found from deleteFood resolver');
@@ -213,7 +214,8 @@ export const editFood = async (parent: any, { input }: MutationEditFoodArgs, con
     Logging.info('Edit food');
 
     try {
-        const { userId, dayIndex, mealId, foodName, newActualAmount, foodIndex } = input;
+        const userId = '';
+        const { dayIndex, mealId, foodName, newActualAmount, foodIndex } = input;
         const user = await UserModel.findOne({ _id: userId });
         // from mealList
         if (mealId && newActualAmount) {

@@ -35,11 +35,17 @@ const typeDefs = gql`
         actualAmount: Float
     }
 
+    type GetFoodListResponse {
+        ok: Boolean!
+        result: [Food!]
+        message: String
+    }
+
     type Query {
         # health check
         boop: String!
         clearDb: String
-        getFoodList(id: ID!): [Food!]!
+        getFoodList: GetFoodListResponse
         getMeals(id: ID!, day1: Boolean!, day2: Boolean!, day3: Boolean!, day4: Boolean!, day5: Boolean!, day6: Boolean!, day7: Boolean!): User!
     }
 
@@ -55,6 +61,18 @@ const typeDefs = gql`
 
     type RegisterError {
         message: String!
+    }
+
+    type CreateFoodListResponse {
+        ok: Boolean!
+        result: Food
+        message: String
+    }
+
+    type EditFoodListResponse {
+        ok: Boolean!
+        result: Food
+        message: String
     }
 
     union RegisterResult = RegisterSuccess | RegisterError
@@ -80,6 +98,30 @@ const typeDefs = gql`
         ingredientNames: [String!]!
         givenAmount: Float!
         actualAmount: Float!
+    }
+
+    input CreateFoodListInput {
+        name: String!
+        calories: Float
+        proteins: Float
+        carbs: Float
+        fats: Float
+
+        ingredientNames: [String!]!
+        ingredientActualAmounts: [Float!]!
+        givenAmount: Float!
+    }
+
+    input EditFoodListInput {
+        oldFoodName: String!
+        newFoodName: String!
+        newCalories: Float
+        newProteins: Float
+        newCarbs: Float
+        newFats: Float
+        newIngNames: [String!]!
+        newIngActualAmounts: [Float!]!
+        newGivenAmount: Float!
     }
 
     input CreateMealInput {
@@ -128,6 +170,9 @@ const typeDefs = gql`
     type Mutation {
         register(input: RegisterInput!): RegisterResult!
         login(email: String!, password: String!): LoginResult!
+
+        createFoodList(input: CreateFoodListInput!): CreateFoodListResponse!
+        editFoodList(input: EditFoodListInput!): EditFoodListResponse
 
         createFood(input: CreateFoodInput!): Food!
         createMeal(input: CreateMealInput!): ID!

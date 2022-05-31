@@ -16,9 +16,7 @@ enum DayNames {
     SUNDAY
 }
 export class UserService {
-    constructor(private UserDao: UserDao) {
-        
-    }
+    constructor(private UserDao: UserDao) {}
 
     public async get(userId: string) {
         return this.UserDao.get(userId);
@@ -36,9 +34,9 @@ export class UserService {
     }
 
     public async register(username: string, email: string, password: string) {
-        const valErr = validate.register(email)
-        if(valErr) {
-            return { message: 'Invalid email'}
+        const valErr = validate.register(email);
+        if (valErr) {
+            return { message: 'Invalid email' };
         }
 
         const userWithSameEmail = await this.UserDao.getEmail(email);
@@ -47,7 +45,7 @@ export class UserService {
         }
 
         const hashedPass: string = await bcrypt.hash(password, 10);
-
+        let yay = false;
         const ing1: Food = {
             name: 'ing1',
             calories: 400,
@@ -60,7 +58,7 @@ export class UserService {
         };
         const ing2: Food = {
             name: 'ing2',
-            calories: 400,
+            calories: 500,
             proteins: 10,
             fats: 2,
             carbs: 10,
@@ -70,7 +68,7 @@ export class UserService {
         };
         const ing3: Food = {
             name: 'ing3',
-            calories: 400,
+            calories: 600,
             proteins: 10,
             fats: 2,
             carbs: 10,
@@ -78,13 +76,13 @@ export class UserService {
             givenAmount: 500,
             actualAmount: 100
         };
-        const food: Food = {
+        const food1: Food = {
             name: 'food',
             calories: 300,
             proteins: 30,
             fats: 2,
             carbs: 15,
-            ingredients: Array(1).fill(ing1),
+            ingredients: Array(20).fill(ing1),
             givenAmount: 300,
             actualAmount: 100
         };
@@ -94,23 +92,26 @@ export class UserService {
             proteins: 10,
             fats: 2,
             carbs: 10,
-            ingredients: Array(1).fill(ing2),
+            ingredients: Array(20).fill(ing2),
             givenAmount: 500,
             actualAmount: 100
         };
-
-        // const meal: Meal = {
-        //     name: 'Meal',
-        //     id: createUID(),
-        //     index: 0,
-        //     foods: [food, food2, food, food2]
-        // };
-        const meal: Meal = {
-            name: 'Meal',
-            id: createUID(),
-            index: 0,
-            foods: []
-        };
+        let meal: any;
+        if (yay) {
+            meal = {
+                name: 'Meal',
+                id: createUID(),
+                index: 0,
+                foods: [food1, food2, food1, food2, food1]
+            };
+        } else {
+            meal = {
+                name: 'Meal',
+                id: createUID(),
+                index: 0,
+                foods: []
+            };
+        }
 
         const day1 = [meal, meal, meal, meal, meal];
         const day2 = [meal, meal, meal, meal, meal];
@@ -119,8 +120,12 @@ export class UserService {
         const day5 = [meal, meal, meal, meal, meal];
         const day6 = [meal, meal, meal, meal, meal];
         const day7 = [meal, meal, meal, meal, meal];
-        // const foodList: Food[] = Array(1).fill(food2);
-        const foodList: Food[] = [];
+
+        let foodList: Food[] = [];
+        if (yay) {
+            foodList = Array(300).fill(food2);
+        }
+
         const user = {
             username,
             email,

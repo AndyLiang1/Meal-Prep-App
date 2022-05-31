@@ -2,8 +2,7 @@ import { Food } from '../generated/graphql-server';
 import UserModel, { IUserDocument } from '../models/User';
 
 export class FoodListDao {
-    constructor() {
-    }
+    constructor() {}
 
     public async create(user: IUserDocument, food: Food) {
         user.foodList.push(food);
@@ -15,11 +14,10 @@ export class FoodListDao {
         return user.foodList;
     }
 
-    public async edit(user: IUserDocument, oldFoodName: string, newFood: Food) {
-        let editedFood: Food | null = null;
+    public async edit(user: IUserDocument, oldFoodName: string, editedFood: Food) {
         for (let [i, food] of user.foodList.entries()) {
             if (oldFoodName === food.name) {
-                user.foodList[i] = newFood;
+                user.foodList[i] = editedFood;
                 break;
             }
         }

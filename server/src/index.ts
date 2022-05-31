@@ -1,29 +1,30 @@
-import express, { Request, Response, NextFunction } from 'express'
-import mongoose from 'mongoose'
-import { config } from './config/config'
-import Logging from './library/Logging'
-import {applyMiddleware} from 'graphql-middleware'
-import {ApolloServer, gql} from 'apollo-server'
-import typeDefs from './schema'
-import Query from './resolvers/Query'
-import Mutation from './resolvers/Mutation'
-import {RegisterResult, LoginResult } from './resolvers/AuthResult'
-import {makeExecutableSchema} from '@graphql-tools/schema'
-
+import express, { Request, Response, NextFunction } from 'express';
+import mongoose from 'mongoose';
+import { config } from './config/config';
+import Logging from './library/Logging';
+import { applyMiddleware } from 'graphql-middleware';
+import { ApolloServer, gql } from 'apollo-server';
+import typeDefs from './schema';
+import Query from './resolvers/Query';
+import Mutation from './resolvers/Mutation';
+import { RegisterResult, LoginResult } from './resolvers/AuthResult';
+import { makeExecutableSchema } from '@graphql-tools/schema';
+import jwt from 'jsonwebtoken';
+import authMiddleware from './middleware/AuthMiddleware';
+import loggingMiddleware from './middleware/LoggingMiddleware';
 /** First try to connect to mongo */
-mongoose.connect(config.mongo.url)
-.then(() => {
-    Logging.info('Connected to Meal Prep App db')
-    startServer()
-})
-.catch((error) => {
-    Logging.error('Unable to connect to Meal Prep App db:' )
-    Logging.error(error)
-})
+mongoose
+    .connect(config.mongo.url)
+    .then(() => {
+        Logging.info('Connected to Meal Prep App db');
+        startServer();
+    })
+    .catch((error) => {
+        Logging.error('Unable to connect to Meal Prep App db:');
+        Logging.error(error);
+    });
 
-
-
-const startServer = ():void => {
+const startServer = (): void => {
     // app.use(express.urlencoded({extended: true}))
     // app.use(express.json())
 
@@ -38,31 +39,35 @@ const startServer = ():void => {
         Query,
         Mutation,
         RegisterResult,
-        LoginResult,
+        LoginResult
     };
 
+    const schema = makeExecutableSchema({
+        typeDefs,
+        resolvers
+    });
+
     if (config.server.env === 'dev') {
-        const schema = makeExecutableSchema({
-            typeDefs, 
-            resolvers
-        })
-        const loggingMiddleware = async(resolve: any, root: any, args: any, context: any, info: any) => {
-            const result = await resolve(root, args, context, info)
-            // Logging.info(`Successfully hit endpoint. Request type: ${info.path.typename} | Request name: ${info.path.key} `);
-            return result
-        }
-        const schemaWithMiddleware = applyMiddleware(schema, loggingMiddleware)
-        app = new ApolloServer({schema: schemaWithMiddleware});
-    } else {
+        const schemaWithMiddleware = applyMiddleware(schema, loggingMiddleware, authMiddleware);
         app = new ApolloServer({
-            typeDefs,
-            resolvers
+            schema: schemaWithMiddleware,
+            context: ({ req }) => {
+                const authorization = req.headers.authorization || '';
+                return { authorization };
+            }
+        });
+    } else {
+        const schemaWithMiddleware = applyMiddleware(schema, authMiddleware);
+        app = new ApolloServer({
+            schema: schemaWithMiddleware,
+            context: ({ req }) => {
+                const authorization = req.headers.authorization || '';
+                return { authorization };
+            }
         });
     }
-    
 
-    app.listen().then(({url}) => {
+    app.listen().then(({ url }) => {
         Logging.info(`Server is up at ${url}`);
-    })
-
-} 
+    });
+};
