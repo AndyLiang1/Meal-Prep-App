@@ -34,9 +34,9 @@ export class UserService {
     }
 
     public async register(username: string, email: string, password: string) {
-        const valErr = validate.register(email);
+        const valErr = validate.register(username, email, password);
         if (valErr) {
-            return { message: 'Invalid email' };
+            return { message: 'Invalid email or form is not complete'};
         }
 
         const userWithSameEmail = await this.UserDao.getEmail(email);
@@ -158,6 +158,12 @@ export class UserService {
     }
 
     public async login(email: string, password: string) {
+
+        const valErr = validate.login(email, password);
+        if (valErr) {
+            return { message: 'Invalid email or form is not complete'};
+        }
+        
         const userWithSameEmail = await this.UserDao.getEmail(email);
         if (!userWithSameEmail) {
             return { message: 'No user has registered with that email' };

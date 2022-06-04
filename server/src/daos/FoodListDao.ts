@@ -31,5 +31,6 @@ export class FoodListDao {
             return food.name !== foodNameToDelete;
         });
         await user.save();
+        return foodNameToDelete
     }
 }

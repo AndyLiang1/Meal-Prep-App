@@ -75,6 +75,12 @@ const typeDefs = gql`
         message: String
     }
 
+    type DeleteFoodListResponse {
+        ok: Boolean!
+        result: String
+        message: String
+    }
+
     union RegisterResult = RegisterSuccess | RegisterError
 
     type LoginSuccess {
@@ -173,6 +179,7 @@ const typeDefs = gql`
 
         createFoodList(input: CreateFoodListInput!): CreateFoodListResponse!
         editFoodList(input: EditFoodListInput!): EditFoodListResponse
+        deleteFoodList(oldFoodNameToDelete: String!): DeleteFoodListResponse
 
         createFood(input: CreateFoodInput!): Food!
         createMeal(input: CreateMealInput!): ID!

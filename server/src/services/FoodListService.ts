@@ -3,6 +3,7 @@ import { FoodListDao } from '../daos/FoodListDao';
 import { CreateFoodListResponse, Food } from '../generated/graphql-server';
 import { IUserDocument } from '../models/User';
 import { MealListFoodService } from './MealListFoodService';
+import validator from './validate';
 
 export class FoodListService {
     constructor(private FoodListDao: FoodListDao, private MealListFoodService: MealListFoodService) {}
@@ -17,19 +18,23 @@ export class FoodListService {
             newIngC = 0,
             newIngF = 0;
         let ingredientsArr: Food[] = [];
+        console.log(newIngNames);
         newIngNames.forEach((ingName, i) => {
-            user.foodList.every((food) => {
+            console.log('dealin with ', ingName);
+            user.foodList.forEach((food) => {
+                console.log(ingName + ' vs ', food.name);
                 if (ingName === food.name) {
+                    console.log(newIngActualAmounts[i] / food.givenAmount);
                     newIngCals = food.calories * (newIngActualAmounts[i] / food.givenAmount);
                     newIngP = food.proteins * (newIngActualAmounts[i] / food.givenAmount);
-                    newIngC += food.carbs * (newIngActualAmounts[i] / food.givenAmount);
-                    newIngF += food.fats * (newIngActualAmounts[i] / food.givenAmount);
+                    newIngC = food.carbs * (newIngActualAmounts[i] / food.givenAmount);
+                    newIngF = food.fats * (newIngActualAmounts[i] / food.givenAmount);
                     ingredientsArr.push({
                         name: food.name,
-                        calories: newIngCals,
-                        proteins: newIngP,
-                        carbs: newIngC,
-                        fats: newIngF,
+                        calories: food.calories,
+                        proteins: food.proteins,
+                        carbs: food.carbs,
+                        fats: food.fats,
                         ingredients: [],
                         givenAmount: food.givenAmount,
                         actualAmount: newIngActualAmounts[i]
@@ -64,6 +69,10 @@ export class FoodListService {
         givenAmount: number
     ) {
         try {
+            if (!validator.createFoodList)
+                return {
+                    ok: false
+                };
             if (newIngNames.length !== newIngActualAmounts.length) {
                 return {
                     ok: false,
@@ -72,7 +81,7 @@ export class FoodListService {
             }
             let newFood: Food | null = null;
 
-            if (typeof calories === 'number' && typeof proteins === 'number' && typeof carbs === 'number' && typeof fats === 'number') {
+            if (typeof calories === 'number' && typeof proteins === 'number' && typeof carbs === 'number' && typeof fats === 'number' && newIngNames.length === 0) {
                 newFood = {
                     name,
                     calories,
@@ -137,7 +146,7 @@ export class FoodListService {
         // ingredients
         let editedFood: Food | null = null;
 
-        if (typeof newCalories === 'number' && typeof newProteins === 'number' && typeof newCarbs === 'number' && typeof newFats === 'number') {
+        if (typeof newCalories === 'number' && typeof newProteins === 'number' && typeof newCarbs === 'number' && typeof newFats === 'number' && newIngNames.length === 0) {
             editedFood = {
                 name: newFoodName,
                 calories: newCalories,
@@ -155,10 +164,15 @@ export class FoodListService {
         return {
             ok: true,
             result: editedFood
-        }
+        };
     }
 
     public async delete(user: IUserDocument, foodNameToDelete: string) {
-        await this.FoodListDao.delete(user, foodNameToDelete);
+        const deletedFoodName = await this.FoodListDao.delete(user, foodNameToDelete);
+        console.log(deletedFoodName);
+        return {
+            ok: true,
+            result: deletedFoodName
+        };
     }
 }
