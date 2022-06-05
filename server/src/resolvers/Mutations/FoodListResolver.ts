@@ -22,7 +22,6 @@ export const editFoodList = async (parent: any, { user, input }: { user: IUserDo
 
 
 export const deleteFoodList = async (parent: any, { user, oldFoodNameToDelete }: { user: IUserDocument; oldFoodNameToDelete: string }, context: any, info: any) => {
-    console.log(oldFoodNameToDelete);
     const deleteFoodListResponse = await services.foodListService.delete(user, oldFoodNameToDelete);
     return deleteFoodListResponse;
 };

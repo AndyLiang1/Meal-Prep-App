@@ -4,58 +4,10 @@ import { CreateFoodListResponse, Food } from '../generated/graphql-server';
 import { IUserDocument } from '../models/User';
 import { MealListFoodService } from './MealListFoodService';
 import validator from './validate';
+import { createFoodWithIng } from './helpers';
 
 export class FoodListService {
-    constructor(private FoodListDao: FoodListDao, private MealListFoodService: MealListFoodService) {}
-
-    private createFoodWithIng(user: IUserDocument, newFoodName: string, newIngNames: string[], newIngActualAmounts: number[], newGivenAmount: number): Food {
-        let cals = 0,
-            p = 0,
-            c = 0,
-            f = 0,
-            newIngCals = 0,
-            newIngP = 0,
-            newIngC = 0,
-            newIngF = 0;
-        let ingredientsArr: Food[] = [];
-        console.log(newIngNames);
-        newIngNames.forEach((ingName, i) => {
-            console.log('dealin with ', ingName);
-            user.foodList.forEach((food) => {
-                console.log(ingName + ' vs ', food.name);
-                if (ingName === food.name) {
-                    console.log(newIngActualAmounts[i] / food.givenAmount);
-                    newIngCals = food.calories * (newIngActualAmounts[i] / food.givenAmount);
-                    newIngP = food.proteins * (newIngActualAmounts[i] / food.givenAmount);
-                    newIngC = food.carbs * (newIngActualAmounts[i] / food.givenAmount);
-                    newIngF = food.fats * (newIngActualAmounts[i] / food.givenAmount);
-                    ingredientsArr.push({
-                        name: food.name,
-                        calories: food.calories,
-                        proteins: food.proteins,
-                        carbs: food.carbs,
-                        fats: food.fats,
-                        ingredients: [],
-                        givenAmount: food.givenAmount,
-                        actualAmount: newIngActualAmounts[i]
-                    });
-                    cals += newIngCals;
-                    p += newIngP;
-                    c += newIngC;
-                    f += newIngF;
-                }
-            });
-        });
-        return {
-            name: newFoodName,
-            calories: cals,
-            proteins: p,
-            carbs: c,
-            fats: f,
-            ingredients: ingredientsArr,
-            givenAmount: newGivenAmount
-        };
-    }
+    constructor(private FoodListDao: FoodListDao) {}
 
     public async create(
         user: IUserDocument,
@@ -69,10 +21,14 @@ export class FoodListService {
         givenAmount: number
     ) {
         try {
-            if (!validator.createFoodList)
+            const inputIsValid = validator.createFoodList(user, name, calories, proteins, carbs, fats, newIngNames, newIngActualAmounts, givenAmount);
+            if (!inputIsValid.ok && inputIsValid.message) {
                 return {
-                    ok: false
+                    ok: false,
+                    message: inputIsValid.message
                 };
+            }
+
             if (newIngNames.length !== newIngActualAmounts.length) {
                 return {
                     ok: false,
@@ -92,7 +48,7 @@ export class FoodListService {
                     givenAmount
                 };
             } else {
-                newFood = this.createFoodWithIng(user, name, newIngNames, newIngActualAmounts, givenAmount);
+                newFood = createFoodWithIng(user, name, newIngNames, newIngActualAmounts, givenAmount);
             }
 
             const newlyCreatedFood = await this.FoodListDao.create(user, newFood);
@@ -122,6 +78,14 @@ export class FoodListService {
                 message: err
             };
         }
+    }
+
+    public async getByName(user: IUserDocument, name: string) {
+        const retFood = await this.FoodListDao.getByName(user, name);
+        return {
+            ok: true,
+            result: retFood
+        };
     }
 
     public async edit(
@@ -157,7 +121,7 @@ export class FoodListService {
                 givenAmount: newGivenAmount
             };
         } else {
-            editedFood = this.createFoodWithIng(user, newFoodName, newIngNames, newIngActualAmounts, newGivenAmount);
+            editedFood = createFoodWithIng(user, newFoodName, newIngNames, newIngActualAmounts, newGivenAmount);
         }
 
         editedFood = await this.FoodListDao.edit(user, oldFoodName, editedFood);
@@ -169,7 +133,6 @@ export class FoodListService {
 
     public async delete(user: IUserDocument, foodNameToDelete: string) {
         const deletedFoodName = await this.FoodListDao.delete(user, foodNameToDelete);
-        console.log(deletedFoodName);
         return {
             ok: true,
             result: deletedFoodName

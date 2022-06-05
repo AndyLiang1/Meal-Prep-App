@@ -20,7 +20,7 @@ const mealListMealDao = new MealListMealDao()
 const mealListMealService = new MealListMealService(mealListMealDao);
 
 const foodListDao = new FoodListDao()
-const foodListService = new FoodListService(foodListDao, mealListFoodService); 
+const foodListService = new FoodListService(foodListDao); 
 
 
 

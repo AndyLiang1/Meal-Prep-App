@@ -81,6 +81,12 @@ const typeDefs = gql`
         message: String
     }
 
+    type CreateMealListFoodResponse {
+        ok: Boolean!
+        result: Food
+        message: String
+    }
+
     union RegisterResult = RegisterSuccess | RegisterError
 
     type LoginSuccess {
@@ -128,6 +134,23 @@ const typeDefs = gql`
         newIngNames: [String!]!
         newIngActualAmounts: [Float!]!
         newGivenAmount: Float!
+    }
+
+    input CreateMealListFoodInput {
+        existingFoodName: String
+
+        name: String
+        calories: Float
+        proteins: Float
+        carbs: Float
+        fats: Float
+        ingredientNames: [String!]!,
+        ingredientActualAmounts: [Float!]!,
+        givenAmount: Float,
+
+        actualAmount: Float!,
+        dayIndex: Float!,
+        mealId: String!
     }
 
     input CreateMealInput {
@@ -180,6 +203,8 @@ const typeDefs = gql`
         createFoodList(input: CreateFoodListInput!): CreateFoodListResponse!
         editFoodList(input: EditFoodListInput!): EditFoodListResponse
         deleteFoodList(oldFoodNameToDelete: String!): DeleteFoodListResponse
+
+        createMealListFood(input: CreateMealListFoodInput!): CreateMealListFoodResponse
 
         createFood(input: CreateFoodInput!): Food!
         createMeal(input: CreateMealInput!): ID!

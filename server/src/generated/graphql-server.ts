@@ -51,12 +51,41 @@ export type CreateMealInput = {
   dayIndex: Scalars['Int'];
 };
 
+export type CreateMealListFoodInput = {
+  actualAmount: Scalars['Float'];
+  calories?: InputMaybe<Scalars['Float']>;
+  carbs?: InputMaybe<Scalars['Float']>;
+  dayIndex: Scalars['Float'];
+  existingFoodName?: InputMaybe<Scalars['String']>;
+  fats?: InputMaybe<Scalars['Float']>;
+  givenAmount?: InputMaybe<Scalars['Float']>;
+  ingredientActualAmounts: Array<Scalars['Float']>;
+  ingredientNames: Array<Scalars['String']>;
+  mealId: Scalars['String'];
+  name?: InputMaybe<Scalars['String']>;
+  proteins?: InputMaybe<Scalars['Float']>;
+};
+
+export type CreateMealListFoodResponse = {
+  __typename?: 'CreateMealListFoodResponse';
+  message?: Maybe<Scalars['String']>;
+  ok: Scalars['Boolean'];
+  result?: Maybe<Food>;
+};
+
 export type DeleteFoodInput = {
   accessToken: Scalars['String'];
   dayIndex?: InputMaybe<Scalars['Int']>;
   foodIndex?: InputMaybe<Scalars['Int']>;
   foodName?: InputMaybe<Scalars['String']>;
   mealId?: InputMaybe<Scalars['ID']>;
+};
+
+export type DeleteFoodListResponse = {
+  __typename?: 'DeleteFoodListResponse';
+  message?: Maybe<Scalars['String']>;
+  ok: Scalars['Boolean'];
+  result?: Maybe<Scalars['String']>;
 };
 
 export type DeleteMealInput = {
@@ -152,7 +181,9 @@ export type Mutation = {
   createFood: Food;
   createFoodList: CreateFoodListResponse;
   createMeal: Scalars['ID'];
+  createMealListFood?: Maybe<CreateMealListFoodResponse>;
   deleteFood: Scalars['String'];
+  deleteFoodList?: Maybe<DeleteFoodListResponse>;
   deleteMeal: Scalars['ID'];
   editFood: Scalars['String'];
   editFoodList?: Maybe<EditFoodListResponse>;
@@ -176,8 +207,18 @@ export type MutationCreateMealArgs = {
 };
 
 
+export type MutationCreateMealListFoodArgs = {
+  input: CreateMealListFoodInput;
+};
+
+
 export type MutationDeleteFoodArgs = {
   input: DeleteFoodInput;
+};
+
+
+export type MutationDeleteFoodListArgs = {
+  oldFoodNameToDelete: Scalars['String'];
 };
 
 
@@ -335,7 +376,10 @@ export type ResolversTypes = {
   CreateFoodListInput: CreateFoodListInput;
   CreateFoodListResponse: ResolverTypeWrapper<CreateFoodListResponse>;
   CreateMealInput: CreateMealInput;
+  CreateMealListFoodInput: CreateMealListFoodInput;
+  CreateMealListFoodResponse: ResolverTypeWrapper<CreateMealListFoodResponse>;
   DeleteFoodInput: DeleteFoodInput;
+  DeleteFoodListResponse: ResolverTypeWrapper<DeleteFoodListResponse>;
   DeleteMealInput: DeleteMealInput;
   EditFoodFromMealListInput: EditFoodFromMealListInput;
   EditFoodInput: EditFoodInput;
@@ -367,7 +411,10 @@ export type ResolversParentTypes = {
   CreateFoodListInput: CreateFoodListInput;
   CreateFoodListResponse: CreateFoodListResponse;
   CreateMealInput: CreateMealInput;
+  CreateMealListFoodInput: CreateMealListFoodInput;
+  CreateMealListFoodResponse: CreateMealListFoodResponse;
   DeleteFoodInput: DeleteFoodInput;
+  DeleteFoodListResponse: DeleteFoodListResponse;
   DeleteMealInput: DeleteMealInput;
   EditFoodFromMealListInput: EditFoodFromMealListInput;
   EditFoodInput: EditFoodInput;
@@ -396,6 +443,20 @@ export type CreateFoodListResponseResolvers<ContextType = any, ParentType extend
   message?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   ok?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
   result?: Resolver<Maybe<ResolversTypes['Food']>, ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type CreateMealListFoodResponseResolvers<ContextType = any, ParentType extends ResolversParentTypes['CreateMealListFoodResponse'] = ResolversParentTypes['CreateMealListFoodResponse']> = {
+  message?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  ok?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
+  result?: Resolver<Maybe<ResolversTypes['Food']>, ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type DeleteFoodListResponseResolvers<ContextType = any, ParentType extends ResolversParentTypes['DeleteFoodListResponse'] = ResolversParentTypes['DeleteFoodListResponse']> = {
+  message?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  ok?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
+  result?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
@@ -451,7 +512,9 @@ export type MutationResolvers<ContextType = any, ParentType extends ResolversPar
   createFood?: Resolver<ResolversTypes['Food'], ParentType, ContextType, RequireFields<MutationCreateFoodArgs, 'input'>>;
   createFoodList?: Resolver<ResolversTypes['CreateFoodListResponse'], ParentType, ContextType, RequireFields<MutationCreateFoodListArgs, 'input'>>;
   createMeal?: Resolver<ResolversTypes['ID'], ParentType, ContextType, RequireFields<MutationCreateMealArgs, 'input'>>;
+  createMealListFood?: Resolver<Maybe<ResolversTypes['CreateMealListFoodResponse']>, ParentType, ContextType, RequireFields<MutationCreateMealListFoodArgs, 'input'>>;
   deleteFood?: Resolver<ResolversTypes['String'], ParentType, ContextType, RequireFields<MutationDeleteFoodArgs, 'input'>>;
+  deleteFoodList?: Resolver<Maybe<ResolversTypes['DeleteFoodListResponse']>, ParentType, ContextType, RequireFields<MutationDeleteFoodListArgs, 'oldFoodNameToDelete'>>;
   deleteMeal?: Resolver<ResolversTypes['ID'], ParentType, ContextType, RequireFields<MutationDeleteMealArgs, 'input'>>;
   editFood?: Resolver<ResolversTypes['String'], ParentType, ContextType, RequireFields<MutationEditFoodArgs, 'input'>>;
   editFoodList?: Resolver<Maybe<ResolversTypes['EditFoodListResponse']>, ParentType, ContextType, RequireFields<MutationEditFoodListArgs, 'input'>>;
@@ -499,6 +562,8 @@ export type UserResolvers<ContextType = any, ParentType extends ResolversParentT
 
 export type Resolvers<ContextType = any> = {
   CreateFoodListResponse?: CreateFoodListResponseResolvers<ContextType>;
+  CreateMealListFoodResponse?: CreateMealListFoodResponseResolvers<ContextType>;
+  DeleteFoodListResponse?: DeleteFoodListResponseResolvers<ContextType>;
   EditFoodListResponse?: EditFoodListResponseResolvers<ContextType>;
   Food?: FoodResolvers<ContextType>;
   GetFoodListResponse?: GetFoodListResponseResolvers<ContextType>;

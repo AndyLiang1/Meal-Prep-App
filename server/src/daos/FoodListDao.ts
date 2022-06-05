@@ -14,6 +14,14 @@ export class FoodListDao {
         return user.foodList;
     }
 
+    public async getByName(user: IUserDocument, name: string) {
+        for(let food of user.foodList) {
+            if(food.name === name) {
+                return food
+            }
+        }
+    }
+
     public async edit(user: IUserDocument, oldFoodName: string, editedFood: Food) {
         for (let [i, food] of user.foodList.entries()) {
             if (oldFoodName === food.name) {
