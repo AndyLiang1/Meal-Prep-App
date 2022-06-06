@@ -17,11 +17,11 @@ const checkAuth = async (resolve: any, parent: any, args: any, context: any, inf
         const decoded = jwt.verify(accessToken, config.server.JWT_SECRET);
         if (typeof decoded != 'string' && decoded.id) {
             const user = await services.userService.get(decoded.id);
-            if(!user) {
+            if (!user) {
                 return {
                     ok: false,
                     message: 'No user found with that id'
-                }
+                };
             }
             const argsWithUser = { user, ...args };
             const result = await resolve(parent, argsWithUser, context, info);
@@ -38,7 +38,8 @@ const checkAuth = async (resolve: any, parent: any, args: any, context: any, inf
 const authMiddleware = {
     Query: {
         getFoodList: checkAuth,
-        getMeals: checkAuth
+        getMeals: checkAuth,
+        getMealListMeal: checkAuth
     },
 
     Mutation: {
@@ -52,8 +53,7 @@ const authMiddleware = {
         editFoodList: checkAuth,
         deleteFoodList: checkAuth,
 
-        createMealListFood: checkAuth,
-
+        createMealListFood: checkAuth
     }
 };
 

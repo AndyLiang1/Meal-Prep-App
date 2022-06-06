@@ -20,7 +20,7 @@ const typeDefs = gql`
     type Meal {
         name: String!
         index: Int!
-        id: ID!
+        id: ID
         foods: [Food!]!
     }
 
@@ -47,6 +47,7 @@ const typeDefs = gql`
         clearDb: String
         getFoodList: GetFoodListResponse
         getMeals(id: ID!, day1: Boolean!, day2: Boolean!, day3: Boolean!, day4: Boolean!, day5: Boolean!, day6: Boolean!, day7: Boolean!): User!
+        getMealListMeal(dayIndex: Float!): GetMealListMealResponse
     }
 
     input RegisterInput {
@@ -84,6 +85,12 @@ const typeDefs = gql`
     type CreateMealListFoodResponse {
         ok: Boolean!
         result: Food
+        message: String
+    }
+
+    type GetMealListMealResponse {
+        ok: Boolean!
+        result: [Meal!]
         message: String
     }
 
@@ -144,12 +151,12 @@ const typeDefs = gql`
         proteins: Float
         carbs: Float
         fats: Float
-        ingredientNames: [String!]!,
-        ingredientActualAmounts: [Float!]!,
-        givenAmount: Float,
+        ingredientNames: [String!]!
+        ingredientActualAmounts: [Float!]!
+        givenAmount: Float
 
-        actualAmount: Float!,
-        dayIndex: Float!,
+        actualAmount: Float!
+        dayIndex: Float!
         mealId: String!
     }
 

@@ -100,14 +100,14 @@ export class UserService {
         if (yay) {
             meal = {
                 name: 'Meal',
-                id: createUID(),
+                // id: createUID(),
                 index: 0,
                 foods: [food1, food2, food1, food2, food1]
             };
         } else {
             meal = {
                 name: 'Meal',
-                id: createUID(),
+                id: 'e',
                 index: 0,
                 foods: []
             };
@@ -151,7 +151,17 @@ export class UserService {
             user: {
                 id: newUser._id,
                 accessToken,
-                ...user
+                username: newUser.username,
+                email: newUser.email,
+                password: newUser.password,
+                day1: newUser.day1, 
+                day2: newUser.day2,
+                day3: newUser.day3,
+                day4: newUser.day4, 
+                day5: newUser.day5, 
+                day6: newUser.day6,
+                day7: newUser.day7,
+                foodList: newUser.foodList
             }
         };
         return ret;

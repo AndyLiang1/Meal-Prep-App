@@ -10,8 +10,11 @@ export class MealListMealService {
     }
 
     public async get(user: IUserDocument, dayIndex: number) {
-        const meals = this.MealListMealDao.get(user, dayIndex);
-        return meals;
+        const meals = await this.MealListMealDao.get(user, dayIndex);
+        return {
+            ok: true,
+            response: meals
+        };
     }
 
     public async delete(user: IUserDocument, dayIndex: number, mealId: string) {

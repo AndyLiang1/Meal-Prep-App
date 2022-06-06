@@ -1,6 +1,6 @@
 import { MealListFoodDao } from '../daos/MealListFoodDao';
 import { FoodListDao } from '../daos/FoodListDao';
-import { CreateFoodListResponse, Food } from '../generated/graphql-server';
+import { CreateFoodListResponse, Food, Meal } from '../generated/graphql-server';
 import { IUserDocument } from '../models/User';
 import { MealListFoodService } from './MealListFoodService';
 import validator from './validate';
@@ -68,9 +68,10 @@ export class FoodListService {
     public async get(user: IUserDocument) {
         try {
             const foodList = await this.FoodListDao.get(user);
+            const sortedFoodList = foodList.sort((food1, food2) => food1.name > food2.name ? 1 : -1)
             return {
                 ok: true,
-                result: foodList
+                result: sortedFoodList
             };
         } catch (err) {
             return {

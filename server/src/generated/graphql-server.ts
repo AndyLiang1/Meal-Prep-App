@@ -153,7 +153,14 @@ export type GetFoodListResponse = {
   __typename?: 'GetFoodListResponse';
   message?: Maybe<Scalars['String']>;
   ok: Scalars['Boolean'];
-  result?: Maybe<Array<Food>>;
+  result?: Maybe<Array<Meal>>;
+};
+
+export type GetMealListMealResponse = {
+  __typename?: 'GetMealListMealResponse';
+  message?: Maybe<Scalars['String']>;
+  ok: Scalars['Boolean'];
+  result?: Maybe<Array<Maybe<Array<Food>>>>;
 };
 
 export type LoginError = {
@@ -252,7 +259,13 @@ export type Query = {
   boop: Scalars['String'];
   clearDb?: Maybe<Scalars['String']>;
   getFoodList?: Maybe<GetFoodListResponse>;
+  getMealListMeal?: Maybe<GetMealListMealResponse>;
   getMeals: User;
+};
+
+
+export type QueryGetMealListMealArgs = {
+  dayIndex: Scalars['Float'];
 };
 
 
@@ -388,6 +401,7 @@ export type ResolversTypes = {
   Float: ResolverTypeWrapper<Scalars['Float']>;
   Food: ResolverTypeWrapper<Food>;
   GetFoodListResponse: ResolverTypeWrapper<GetFoodListResponse>;
+  GetMealListMealResponse: ResolverTypeWrapper<GetMealListMealResponse>;
   ID: ResolverTypeWrapper<Scalars['ID']>;
   Int: ResolverTypeWrapper<Scalars['Int']>;
   LoginError: ResolverTypeWrapper<LoginError>;
@@ -423,6 +437,7 @@ export type ResolversParentTypes = {
   Float: Scalars['Float'];
   Food: Food;
   GetFoodListResponse: GetFoodListResponse;
+  GetMealListMealResponse: GetMealListMealResponse;
   ID: Scalars['ID'];
   Int: Scalars['Int'];
   LoginError: LoginError;
@@ -482,7 +497,14 @@ export type FoodResolvers<ContextType = any, ParentType extends ResolversParentT
 export type GetFoodListResponseResolvers<ContextType = any, ParentType extends ResolversParentTypes['GetFoodListResponse'] = ResolversParentTypes['GetFoodListResponse']> = {
   message?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   ok?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
-  result?: Resolver<Maybe<Array<ResolversTypes['Food']>>, ParentType, ContextType>;
+  result?: Resolver<Maybe<Array<ResolversTypes['Meal']>>, ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type GetMealListMealResponseResolvers<ContextType = any, ParentType extends ResolversParentTypes['GetMealListMealResponse'] = ResolversParentTypes['GetMealListMealResponse']> = {
+  message?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  ok?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
+  result?: Resolver<Maybe<Array<Maybe<Array<ResolversTypes['Food']>>>>, ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
@@ -526,6 +548,7 @@ export type QueryResolvers<ContextType = any, ParentType extends ResolversParent
   boop?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   clearDb?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   getFoodList?: Resolver<Maybe<ResolversTypes['GetFoodListResponse']>, ParentType, ContextType>;
+  getMealListMeal?: Resolver<Maybe<ResolversTypes['GetMealListMealResponse']>, ParentType, ContextType, RequireFields<QueryGetMealListMealArgs, 'dayIndex'>>;
   getMeals?: Resolver<ResolversTypes['User'], ParentType, ContextType, RequireFields<QueryGetMealsArgs, 'day1' | 'day2' | 'day3' | 'day4' | 'day5' | 'day6' | 'day7' | 'id'>>;
 };
 
@@ -567,6 +590,7 @@ export type Resolvers<ContextType = any> = {
   EditFoodListResponse?: EditFoodListResponseResolvers<ContextType>;
   Food?: FoodResolvers<ContextType>;
   GetFoodListResponse?: GetFoodListResponseResolvers<ContextType>;
+  GetMealListMealResponse?: GetMealListMealResponseResolvers<ContextType>;
   LoginError?: LoginErrorResolvers<ContextType>;
   LoginResult?: LoginResultResolvers<ContextType>;
   LoginSuccess?: LoginSuccessResolvers<ContextType>;
