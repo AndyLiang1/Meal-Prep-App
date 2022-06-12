@@ -159,6 +159,49 @@ const typeDefs = gql`
         dayIndex: Float!
         mealId: String!
     }
+    enum createType {
+        EXISTING
+        NEW_NO_ING
+        NEW_YES_ING
+    }
+    input CreateMealListFoodInputReal {
+        createType: createType!
+        inputExisting: CreateMealListFoodInput_Existing
+        inputNewNoIng: CreateMealListFoodInput_NewNoIng
+        inputNewYesIng: CreateMealListFoodInput_NewYesIng
+    }
+
+    input CreateMealListFoodInput_Existing {
+        existingFoodName: String!
+        actualAmount: Float!
+
+        dayIndex: Float!
+        mealId: String!
+    }
+
+    input CreateMealListFoodInput_NewNoIng {
+        name: String!
+        calories: Float!
+        proteins: Float!
+        carbs: Float!
+        fats: Float!
+        givenAmount: Float!
+        actualAmount: Float!
+        dayIndex: Float!
+
+        mealId: String!
+    }
+
+    input CreateMealListFoodInput_NewYesIng {
+        name: String!
+        ingredientNames: [String!]!
+        ingredientActualAmounts: [Float!]!
+        givenAmount: Float!
+        actualAmount: Float!
+
+        dayIndex: Float!
+        mealId: String!
+    }
 
     input CreateMealInput {
         accessToken: String!
@@ -211,7 +254,7 @@ const typeDefs = gql`
         editFoodList(input: EditFoodListInput!): EditFoodListResponse
         deleteFoodList(oldFoodNameToDelete: String!): DeleteFoodListResponse
 
-        createMealListFood(input: CreateMealListFoodInput!): CreateMealListFoodResponse
+        createMealListFood(input: CreateMealListFoodInputReal): CreateMealListFoodResponse
 
         createFood(input: CreateFoodInput!): Food!
         createMeal(input: CreateMealInput!): ID!

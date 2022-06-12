@@ -1,5 +1,5 @@
 import Joi from 'joi';
-import { Meal } from '../generated/graphql-server';
+import { CreateMealListFoodInput_Existing, CreateMealListFoodInput_NewYesIng, CreateMealListFoodInput_NewNoIng, Meal } from '../generated/graphql-server';
 import { IUserDocument } from '../models/User';
 import { foodStatsWillBeBasedOnIngredients } from './helpers';
 
@@ -12,6 +12,9 @@ const errorMessage = {
         givenAmount: 'Please ensure givenAmount field is greater than 0. '
     },
 
+    existingNameValid: {
+        invalidExistingName: 'This food name is invalid. '
+    },
     uniqueFoodNameAndIngCheck: {
         uniqueFoodName: 'Cannot create a food if it already exists in foodList. ',
         ingOfItself: 'A food cannot be an ingredient of itself. ',
@@ -50,7 +53,7 @@ const login = (email: string, password: string) => {
     return error;
 };
 
-const statsCheck = (calories: number, proteins: number, carbs: number, fats: number) => {
+const valStats = (calories: number, proteins: number, carbs: number, fats: number) => {
     if (calories <= 0) {
         return errorMessage.statsCheck.calories;
     }
@@ -66,7 +69,7 @@ const statsCheck = (calories: number, proteins: number, carbs: number, fats: num
     return true;
 };
 
-const uniqueFoodNameAndIngCheck = (user: IUserDocument, ingNames: string[], thisFoodName: string) => {
+const valUniqueFoodNameAndIng = (user: IUserDocument, ingNames: string[], thisFoodName: string) => {
     for (let foodName of ingNames) {
         // no infinite cycle of food being its own ing
         if (thisFoodName === foodName) {
@@ -90,7 +93,7 @@ const uniqueFoodNameAndIngCheck = (user: IUserDocument, ingNames: string[], this
     return true;
 };
 
-const ingActualAmountsValid = (ingActualAmounts: number[]) => {
+const valIngActualAmounts = (ingActualAmounts: number[]) => {
     for (let actualAmount of ingActualAmounts) {
         if (actualAmount <= 0) {
             return errorMessage.actualAmountsValid.invalidActualAmount;
@@ -98,7 +101,7 @@ const ingActualAmountsValid = (ingActualAmounts: number[]) => {
     }
 };
 
-const givenAmountValid = (givenAmount: number) => {
+const valGivenAmount = (givenAmount: number) => {
     if (givenAmount <= 0) {
         return errorMessage.givenAmountValid.invalidGivenAmount;
     }
@@ -117,11 +120,11 @@ const createFoodList = (
 ) => {
     let statsOk: string | boolean = true;
     if (foodStatsWillBeBasedOnIngredients(calories, proteins, carbs, fats, newIngNames)) {
-        statsOk = statsCheck(calories!, proteins!, carbs!, fats!);
+        statsOk = valStats(calories!, proteins!, carbs!, fats!);
     }
-    let nameAndIngOk = uniqueFoodNameAndIngCheck(user, newIngNames, name);
-    let newIngActualAmountOk = ingActualAmountsValid(newIngActualAmounts);
-    let givenAmountOk = givenAmountValid(givenAmount);
+    let nameAndIngOk = valUniqueFoodNameAndIng(user, newIngNames, name);
+    let newIngActualAmountOk = valIngActualAmounts(newIngActualAmounts);
+    let givenAmountOk = valGivenAmount(givenAmount);
 
     if (typeof statsOk === 'string') {
         return {
@@ -157,36 +160,33 @@ const actualAmountAndDayIndexValid = (actualAmount: number, dayIndex: number) =>
     if (dayIndex < 0 || dayIndex > 6) {
         return errorMessage.actualAmountAndDayIndexValid.invalidDayIndex;
     }
+    return '';
 };
 
-const createMealListFood = (
-    user: IUserDocument,
-    existingFoodName: string | null | undefined,
-
-    name: string | null | undefined,
-    calories: number | null | undefined,
-    proteins: number | null | undefined,
-    carbs: number | null | undefined,
-    fats: number | null | undefined,
-    newIngNames: string[],
-    newIngActualAmounts: number[],
-
-    givenAmount: number | null | undefined,
-    actualAmount: number,
-    dayIndex: number,
-    mealId: string
-) => {
-    if (existingFoodName) {
-        actualAmount > 0 ? { ok: true } : { ok: false, message: errorMessage.actualAmountsValid.invalidActualAmount };
+const createMealListFood_Existing = (input: CreateMealListFoodInput_Existing) => {
+    if (input.existingFoodName === '') {
+        return {
+            ok: false,
+            message: errorMessage.existingNameValid.invalidExistingName
+        };
     }
-    let statsOk: string | boolean = true;
-    if (foodStatsWillBeBasedOnIngredients(calories, proteins, carbs, fats, newIngNames)) {
-        statsOk = statsCheck(calories!, proteins!, carbs!, fats!);
+    let actualAmountAndDayIndexOk = actualAmountAndDayIndexValid(input.actualAmount, input.dayIndex);
+    if (actualAmountAndDayIndexOk !== '') {
+        return {
+            ok: false,
+            message: errorMessage.actualAmountsValid.invalidActualAmount
+        };
     }
-    let nameAndIngOk = uniqueFoodNameAndIngCheck(user, newIngNames, name!);
-    let newIngActualAmountOk = ingActualAmountsValid(newIngActualAmounts);
-    let givenAmountOk = givenAmountValid(givenAmount!);
+    return { ok: true };
+};
+
+const createMealListFood_NewNoIng = (user: IUserDocument, input: CreateMealListFoodInput_NewNoIng) => {
+    const { name, calories, proteins, carbs, fats, givenAmount, actualAmount, dayIndex } = input;
+    let statsOk = valStats(calories, proteins, carbs, fats);
+    let nameAndIngOk = valUniqueFoodNameAndIng(user, [], name!);
+    let givenAmountOk = valGivenAmount(givenAmount!);
     let actualAmountAndDayIndexOk = actualAmountAndDayIndexValid(actualAmount, dayIndex);
+
     if (typeof statsOk === 'string') {
         return {
             ok: false,
@@ -196,11 +196,6 @@ const createMealListFood = (
         return {
             ok: false,
             message: nameAndIngOk
-        };
-    } else if (typeof newIngActualAmountOk === 'string') {
-        return {
-            ok: false,
-            message: newIngActualAmountOk
         };
     } else if (typeof givenAmountOk === 'string') {
         return {
@@ -217,13 +212,125 @@ const createMealListFood = (
     return {
         ok: true
     };
-};
+};;
+
+const createMealListFood_NewYesIng = (user: IUserDocument, input: CreateMealListFoodInput_NewYesIng) => {
+    const {name, ingredientNames, ingredientActualAmounts, givenAmount, actualAmount, dayIndex} = input
+    if(ingredientNames.length !== ingredientActualAmounts.length) {
+        return {
+            ok: false, 
+            message: 'Ingredient names array and ingredient actual amounts array has a different number of elements. '
+        }
+    }
+    let nameAndIngOk = valUniqueFoodNameAndIng(user, ingredientNames, name!);
+    let ingActualAmountsOk = valIngActualAmounts(ingredientActualAmounts)
+    let givenAmountOk = valGivenAmount(givenAmount!);
+    let actualAmountAndDayIndexOk = actualAmountAndDayIndexValid(actualAmount, dayIndex);
+    if (typeof nameAndIngOk === 'string') {
+        return {
+            ok: false,
+            message: nameAndIngOk
+        };
+    } else if (typeof givenAmountOk === 'string') {
+        return {
+            ok: false,
+            message: givenAmountOk
+        };
+    } else if (typeof ingActualAmountsOk === 'string') {
+        return {
+            ok: false,
+            message: ingActualAmountsOk
+        }
+    } else if (typeof actualAmountAndDayIndexOk === 'string') {
+        return {
+            ok: false,
+            message: actualAmountAndDayIndexOk
+        };
+    }
+
+    return {
+        ok: true
+    };
+
+
+}
+// const createMealListFood = (
+//     user: IUserDocument,
+//     // existingFoodName: string | null | undefined,
+
+//     // name: string | null | undefined,
+//     // calories: number | null | undefined,
+//     // proteins: number | null | undefined,
+//     // carbs: number | null | undefined,
+//     // fats: number | null | undefined,
+//     // newIngNames: string[],
+//     // newIngActualAmounts: number[],
+
+//     // givenAmount: number | null | undefined,
+//     // actualAmount: number,
+//     // dayIndex: number,
+//     // mealId: string
+//     input: CreateMealListFoodInput_Existing | CreateMealListFoodInput_NewNoIng | CreateMealListFoodInput_NewIng,
+//     typeOfCreate: string
+// ) => {
+//         let actualAmountAndDayIndexOk = actualAmountAndDayIndexValid(input.actualAmount, input.dayIndex);
+
+//     switch (typeOfCreate) {
+//         case 'Existing':
+
+//             // return actualAmountAndDayIndexOk.ok ? { ok: true } : { ok: false, message: errorMessage.actualAmountsValid.invalidActualAmount };
+//         case 'NewNoIng':
+
+//         case 'NewYesIng':
+//     }
+
+//     // let statsOk: string | boolean = true;
+//     // if (foodStatsWillBeBasedOnIngredients(calories, proteins, carbs, fats, newIngNames)) {
+//     //     statsOk = statsCheck(calories!, proteins!, carbs!, fats!);
+//     // }
+//     // let nameAndIngOk = uniqueFoodNameAndIngCheck(user, newIngNames, name!);
+//     // let newIngActualAmountOk = valIngActualAmounts(newIngActualAmounts);
+//     // let givenAmountOk = valGivenAmount(givenAmount!);
+//     // if (typeof statsOk === 'string') {
+//     //     return {
+//     //         ok: false,
+//     //         message: statsOk
+//     //     };
+//     // } else if (typeof nameAndIngOk === 'string') {
+//     //     return {
+//     //         ok: false,
+//     //         message: nameAndIngOk
+//     //     };
+//     // } else if (typeof newIngActualAmountOk === 'string') {
+//     //     return {
+//     //         ok: false,
+//     //         message: newIngActualAmountOk
+//     //     };
+//     // } else if (typeof givenAmountOk === 'string') {
+//     //     return {
+//     //         ok: false,
+//     //         message: givenAmountOk
+//     //     };
+//     // } else if (typeof actualAmountAndDayIndexOk === 'string') {
+//     //     return {
+//     //         ok: false,
+//     //         message: actualAmountAndDayIndexOk
+//     //     };
+//     // }
+
+//     // return {
+//     //     ok: true
+//     // };
+// };
 
 const validator = {
     register,
     login,
     createFoodList,
-    createMealListFood
+    // createMealListFood
+    createMealListFood_Existing,
+    createMealListFood_NewNoIng,
+    createMealListFood_NewYesIng
 };
 
 export default validator;

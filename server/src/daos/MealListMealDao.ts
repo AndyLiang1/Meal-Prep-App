@@ -44,7 +44,6 @@ export class MealListMealDao {
     }
 
     public async get(user: IUserDocument, dayIndex: number) {
-        console.log(user)
         switch (dayIndex) {
             case 0:
                 return user.day1;

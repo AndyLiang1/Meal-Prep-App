@@ -210,7 +210,7 @@ const completelyEditFoodFromMeals = (oldFoodName: string, newFood: Food, days: M
     }
 };
 
-export const editFood = async (parent: any, { input }: MutationEditFoodArgs, context: any, info: any) => {
+export const editFood = async (parent: any, { input }: any, context: any, info: any) => {
     Logging.info('Edit food');
 
     try {
@@ -253,7 +253,7 @@ export const editFood = async (parent: any, { input }: MutationEditFoodArgs, con
             for (let i = 0; i < user!.foodList.length; i++) {
                 const { newFoodName, newCalories, newProteins, newCarbs, newFats, newGivenAmount, newIngredientNames } = input;
                 const newIngredients: Food[] = [];
-                newIngredientNames!.forEach((name) => {
+                newIngredientNames!.forEach((name: any) => {
                     for (let j = 0; j < user!.foodList.length; j++) {
                         if (name === user!.foodList[j].name) {
                             newIngredients.push(user!.foodList[j]);
