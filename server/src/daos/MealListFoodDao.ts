@@ -45,42 +45,75 @@ export class MealListFoodDao {
         return food;
     }
 
-    private async editFoodHelper(day: Meal[], mealId: string, foodIndex: number, newActualAmount: number) {
+    private async getFoodHelper(day: Meal[], mealId: string, foodIndex: number) {
         for (let meal of day) {
             if (mealId === meal.id) {
-                meal.foods[foodIndex].actualAmount = newActualAmount;
+                return meal.foods[foodIndex];
             }
             break;
         }
     }
 
-    public async edit(user: IUserDocument, dayIndex: number, mealId: string, foodIndex: number, newActualAmount: number) {
+    public async get(user: IUserDocument, dayIndex: number, mealId: string, foodIndex: number) {
         switch (dayIndex) {
             case 0:
-                this.editFoodHelper(user.day1, mealId, foodIndex, newActualAmount);
+                return this.getFoodHelper(user.day1, mealId, foodIndex);
+            case 1:
+                return this.getFoodHelper(user.day2, mealId, foodIndex);
+            case 2:
+                return this.getFoodHelper(user.day3, mealId, foodIndex);
+            case 3:
+                return this.getFoodHelper(user.day4, mealId, foodIndex);
+            case 4:
+                return this.getFoodHelper(user.day5, mealId, foodIndex);
+            case 5:
+                return this.getFoodHelper(user.day6, mealId, foodIndex);
+            case 6:
+                return this.getFoodHelper(user.day7, mealId, foodIndex);
+            default:
+                break;
+        }
+    }
+
+    private async editFoodHelper(day: Meal[], mealId: string, foodIndex: number, newFood: Food) {
+        for (let meal of day) {
+            if (mealId === meal.id) {
+                meal.foods[foodIndex] = {
+                    ...newFood
+                };
+            }
+            break;
+        }
+    }
+
+    public async edit(user: IUserDocument, dayIndex: number, mealId: string, foodIndex: number, newFood: Food) {
+        switch (dayIndex) {
+            case 0:
+                this.editFoodHelper(user.day1, mealId, foodIndex, newFood);
                 break;
             case 1:
-                this.editFoodHelper(user.day2, mealId, foodIndex, newActualAmount);
+                this.editFoodHelper(user.day2, mealId, foodIndex, newFood);
                 break;
             case 2:
-                this.editFoodHelper(user.day3, mealId, foodIndex, newActualAmount);
+                this.editFoodHelper(user.day3, mealId, foodIndex, newFood);
                 break;
             case 3:
-                this.editFoodHelper(user.day4, mealId, foodIndex, newActualAmount);
+                this.editFoodHelper(user.day4, mealId, foodIndex, newFood);
                 break;
             case 4:
-                this.editFoodHelper(user.day5, mealId, foodIndex, newActualAmount);
+                this.editFoodHelper(user.day5, mealId, foodIndex, newFood);
                 break;
             case 5:
-                this.editFoodHelper(user.day6, mealId, foodIndex, newActualAmount);
+                this.editFoodHelper(user.day6, mealId, foodIndex, newFood);
                 break;
             case 6:
-                this.editFoodHelper(user.day7, mealId, foodIndex, newActualAmount);
+                this.editFoodHelper(user.day7, mealId, foodIndex, newFood);
                 break;
             default:
                 break;
         }
         await user.save();
+        return newFood
     }
     private async deleteFoodHelper(day: Meal[], mealId: string, foodIndex: number) {
         for (let meal of day) {

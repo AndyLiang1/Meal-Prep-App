@@ -1,5 +1,14 @@
 import { MealListFoodDao } from '../daos/MealListFoodDao';
-import { CreateMealListFoodInput_Existing, CreateMealListFoodInput_NewYesIng, CreateMealListFoodInput_NewNoIng, Food, Meal } from '../generated/graphql-server';
+import {
+    CreateMealListFoodInput_Existing,
+    CreateMealListFoodInput_NewYesIng,
+    CreateMealListFoodInput_NewNoIng,
+    Food,
+    Meal,
+    EditMealListFoodInput_NewYesIng,
+    EditMealListFoodInput_ActualAmount,
+    EditMealListFoodInput_NewNoIng
+} from '../generated/graphql-server';
 import { IUserDocument } from '../models/User';
 import { createFoodWithIng } from './helpers';
 import services from './services';
@@ -61,7 +70,7 @@ export class MealListFoodService {
 
             case 'NEW_NO_ING':
                 const { inputNewNoIng }: { inputNewNoIng: CreateMealListFoodInput_NewNoIng } = input;
-                inputIsValid = validator.createMealListFood_NewNoIng(user, inputNewNoIng);
+                inputIsValid = validator.createOrEditMealListFood_NewNoIng(user, inputNewNoIng);
 
                 if (!inputIsValid.ok && inputIsValid.message) {
                     return {
@@ -95,7 +104,7 @@ export class MealListFoodService {
                 break;
             case 'NEW_YES_ING':
                 const { inputNewYesIng }: { inputNewYesIng: CreateMealListFoodInput_NewYesIng } = input;
-                inputIsValid = validator.createMealListFood_NewYesIng(user, inputNewYesIng);
+                inputIsValid = validator.createOrEditMealListFood_NewYesIng(user, inputNewYesIng);
                 if (!inputIsValid.ok && inputIsValid.message) {
                     return {
                         ok: false,
@@ -178,20 +187,122 @@ export class MealListFoodService {
         //     }
         // }
         if (typeof dayIndex === 'number' && typeof mealId === 'string') {
-            const newlyCreatedFood = this.MealListFoodDao.create(user, newFoodForMeal!, dayIndex, mealId);
+            const newlyCreatedFood = await this.MealListFoodDao.create(user, newFoodForMeal!, dayIndex, mealId);
             return {
                 ok: true,
                 result: newlyCreatedFood
             };
-        } 
-        return {
-             ok: false,
-             message: 'Failed in MealListFoodService'
         }
+        return {
+            ok: false,
+            message: 'Failed in MealListFoodService'
+        };
     }
 
-    public async edit(user: IUserDocument, dayIndex: number, mealId: string, foodIndex: number, newActualAmount: number) {
-        return this.MealListFoodDao.edit(user, dayIndex, mealId, foodIndex, newActualAmount);
+    public async edit(user: IUserDocument, input: any) {
+        const { editType } = input;
+        let inputIsValid;
+        let newFoodForEdit: any = null;
+        let dayIndex;
+        let mealId;
+        let foodIndex;
+
+        switch (editType) {
+            case 'ACTUAL_AMOUNT':
+                const { inputActualAmount }: { inputActualAmount: EditMealListFoodInput_ActualAmount } = input;
+                inputIsValid = validator.editMealListFood_ActualAmount(input);
+                if (!inputIsValid.ok && inputIsValid.message) {
+                    return {
+                        ok: false,
+                        message: inputIsValid.message
+                    };
+                }
+                dayIndex = inputActualAmount.dayIndex;
+                mealId = inputActualAmount.mealId;
+                foodIndex = inputActualAmount.foodIndex;
+                const currentFood = await this.MealListFoodDao.get(user, dayIndex, mealId, foodIndex);
+                newFoodForEdit = {
+                    ...currentFood,
+                    actualAmount: inputActualAmount.newActualAmount
+                };
+            case 'NEW_NO_ING':
+                const { inputNewNoIng }: { inputNewNoIng: EditMealListFoodInput_NewNoIng } = input;
+                inputIsValid = validator.createOrEditMealListFood_NewNoIng(user, inputNewNoIng);
+                if (!inputIsValid.ok && inputIsValid.message) {
+                    return {
+                        ok: false,
+                        message: inputIsValid.message
+                    };
+                }
+                dayIndex = inputNewNoIng.dayIndex;
+                mealId = inputNewNoIng.mealId;
+                foodIndex = inputNewNoIng.foodIndex;
+                await services.foodListService.create(
+                    user,
+                    inputNewNoIng.name,
+                    inputNewNoIng.calories,
+                    inputNewNoIng.proteins,
+                    inputNewNoIng.carbs,
+                    inputNewNoIng.fats,
+                    [],
+                    [],
+                    inputNewNoIng.givenAmount
+                );
+                newFoodForEdit = {
+                    name: inputNewNoIng.name,
+                    calories: inputNewNoIng.calories,
+                    proteins: inputNewNoIng.proteins,
+                    carbs: inputNewNoIng.carbs,
+                    fats: inputNewNoIng.fats,
+                    givenAmount: inputNewNoIng.givenAmount,
+                    actualAmount: inputNewNoIng.actualAmount
+                };
+                break;
+            case 'NEW_YES_ING':
+                const { inputNewYesIng }: { inputNewYesIng: EditMealListFoodInput_NewYesIng } = input;
+                inputIsValid = validator.createOrEditMealListFood_NewYesIng(user, inputNewYesIng);
+                if (!inputIsValid.ok && inputIsValid.message) {
+                    return {
+                        ok: false,
+                        message: inputIsValid.message
+                    };
+                }
+                dayIndex = inputNewYesIng.dayIndex;
+                mealId = inputNewYesIng.mealId;
+                foodIndex = inputNewYesIng.foodIndex;
+                newFoodForEdit = createFoodWithIng(user, inputNewYesIng.name, inputNewYesIng.ingredientNames, inputNewYesIng.ingredientActualAmounts, inputNewYesIng.givenAmount);
+                await services.foodListService.create(
+                    user,
+                    newFoodForEdit.name,
+                    newFoodForEdit.calories,
+                    newFoodForEdit.proteins,
+                    newFoodForEdit.carbs,
+                    newFoodForEdit.fats,
+                    newFoodForEdit.ingredientAmounts,
+                    newFoodForEdit.ingredientActualAmounts,
+                    newFoodForEdit.givenAmount
+                );
+                newFoodForEdit = {
+                    ...newFoodForEdit,
+                    actualAmount: inputNewYesIng.actualAmount
+                };
+                break;
+            default:
+                break;
+        }
+        if (typeof dayIndex === 'number' && typeof mealId === 'string' && typeof foodIndex === 'number') {
+            const newlyEditedFood = await this.MealListFoodDao.edit(user, dayIndex, mealId, foodIndex, newFoodForEdit);
+            return {
+                ok: true,
+                result: newlyEditedFood
+            };
+        }
+        return {
+            ok: false,
+            message: 'Failed in MealListFoodService'
+        };
+
+        // return this.MealListFoodDao.edit(user, dayIndex, mealId, foodIndex, newActualAmount);
     }
 
     public async delete(user: IUserDocument, dayIndex: number, mealId: string, foodIndex: number) {

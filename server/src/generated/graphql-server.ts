@@ -67,7 +67,7 @@ export type CreateMealListFoodInput = {
 };
 
 export type CreateMealListFoodInputReal = {
-  createType: CreateType;
+  createType: CreateMealListFoodType;
   inputExisting?: InputMaybe<CreateMealListFoodInput_Existing>;
   inputNewNoIng?: InputMaybe<CreateMealListFoodInput_NewNoIng>;
   inputNewYesIng?: InputMaybe<CreateMealListFoodInput_NewYesIng>;
@@ -108,6 +108,12 @@ export type CreateMealListFoodResponse = {
   ok: Scalars['Boolean'];
   result?: Maybe<Food>;
 };
+
+export enum CreateMealListFoodType {
+  Existing = 'EXISTING',
+  NewNoIng = 'NEW_NO_ING',
+  NewYesIng = 'NEW_YES_ING'
+}
 
 export type DeleteFoodInput = {
   accessToken: Scalars['String'];
@@ -172,6 +178,50 @@ export type EditFoodListResponse = {
   ok: Scalars['Boolean'];
   result?: Maybe<Food>;
 };
+
+export type EditMealListFoodInputReal = {
+  editType: EditMealListFoodType;
+  inputActualAmount?: InputMaybe<EditMealListFoodInput_ActualAmount>;
+  inputNewNoIng?: InputMaybe<EditMealListFoodInput_NewNoIng>;
+  inputNewYesIng?: InputMaybe<EditMealListFoodInput_NewYesIng>;
+};
+
+export type EditMealListFoodInput_ActualAmount = {
+  dayIndex: Scalars['Float'];
+  foodIndex: Scalars['Float'];
+  mealId: Scalars['String'];
+  newActualAmount: Scalars['Float'];
+};
+
+export type EditMealListFoodInput_NewNoIng = {
+  actualAmount: Scalars['Float'];
+  calories: Scalars['Float'];
+  carbs: Scalars['Float'];
+  dayIndex: Scalars['Float'];
+  fats: Scalars['Float'];
+  foodIndex: Scalars['Float'];
+  givenAmount: Scalars['Float'];
+  mealId: Scalars['String'];
+  name: Scalars['String'];
+  proteins: Scalars['Float'];
+};
+
+export type EditMealListFoodInput_NewYesIng = {
+  actualAmount: Scalars['Float'];
+  dayIndex: Scalars['Float'];
+  foodIndex: Scalars['Float'];
+  givenAmount: Scalars['Float'];
+  ingredientActualAmounts: Array<Scalars['Float']>;
+  ingredientNames: Array<Scalars['String']>;
+  mealId: Scalars['String'];
+  name: Scalars['String'];
+};
+
+export enum EditMealListFoodType {
+  ActualAmount = 'ACTUAL_AMOUNT',
+  NewNoIng = 'NEW_NO_ING',
+  NewYesIng = 'NEW_YES_ING'
+}
 
 export type Food = {
   __typename?: 'Food';
@@ -351,12 +401,6 @@ export type User = {
   username: Scalars['String'];
 };
 
-export enum CreateType {
-  Existing = 'EXISTING',
-  NewNoIng = 'NEW_NO_ING',
-  NewYesIng = 'NEW_YES_ING'
-}
-
 
 
 export type ResolverTypeWrapper<T> = Promise<T> | T;
@@ -437,6 +481,7 @@ export type ResolversTypes = {
   CreateMealListFoodInput_NewNoIng: CreateMealListFoodInput_NewNoIng;
   CreateMealListFoodInput_NewYesIng: CreateMealListFoodInput_NewYesIng;
   CreateMealListFoodResponse: ResolverTypeWrapper<CreateMealListFoodResponse>;
+  CreateMealListFoodType: CreateMealListFoodType;
   DeleteFoodInput: DeleteFoodInput;
   DeleteFoodListResponse: ResolverTypeWrapper<DeleteFoodListResponse>;
   DeleteMealInput: DeleteMealInput;
@@ -444,6 +489,11 @@ export type ResolversTypes = {
   EditFoodInput: EditFoodInput;
   EditFoodListInput: EditFoodListInput;
   EditFoodListResponse: ResolverTypeWrapper<EditFoodListResponse>;
+  EditMealListFoodInputReal: EditMealListFoodInputReal;
+  EditMealListFoodInput_ActualAmount: EditMealListFoodInput_ActualAmount;
+  EditMealListFoodInput_NewNoIng: EditMealListFoodInput_NewNoIng;
+  EditMealListFoodInput_NewYesIng: EditMealListFoodInput_NewYesIng;
+  EditMealListFoodType: EditMealListFoodType;
   Float: ResolverTypeWrapper<Scalars['Float']>;
   Food: ResolverTypeWrapper<Food>;
   GetFoodListResponse: ResolverTypeWrapper<GetFoodListResponse>;
@@ -462,7 +512,6 @@ export type ResolversTypes = {
   RegisterSuccess: ResolverTypeWrapper<RegisterSuccess>;
   String: ResolverTypeWrapper<Scalars['String']>;
   User: ResolverTypeWrapper<User>;
-  createType: CreateType;
 };
 
 /** Mapping between all available schema types and the resolvers parents */
@@ -485,6 +534,10 @@ export type ResolversParentTypes = {
   EditFoodInput: EditFoodInput;
   EditFoodListInput: EditFoodListInput;
   EditFoodListResponse: EditFoodListResponse;
+  EditMealListFoodInputReal: EditMealListFoodInputReal;
+  EditMealListFoodInput_ActualAmount: EditMealListFoodInput_ActualAmount;
+  EditMealListFoodInput_NewNoIng: EditMealListFoodInput_NewNoIng;
+  EditMealListFoodInput_NewYesIng: EditMealListFoodInput_NewYesIng;
   Float: Scalars['Float'];
   Food: Food;
   GetFoodListResponse: GetFoodListResponse;

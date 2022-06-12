@@ -35,51 +35,102 @@ const typeDefs = gql`
         actualAmount: Float
     }
 
-    type GetFoodListResponse {
-        ok: Boolean!
-        result: [Food!]
-        message: String
-    }
-
-    type Query {
-        # health check
-        boop: String!
-        clearDb: String
-        getFoodList: GetFoodListResponse
-        getMeals(id: ID!, day1: Boolean!, day2: Boolean!, day3: Boolean!, day4: Boolean!, day5: Boolean!, day6: Boolean!, day7: Boolean!): User!
-        getMealListMeal(dayIndex: Float!): GetMealListMealResponse
-    }
-
     input RegisterInput {
         username: String!
         email: String!
         password: String!
     }
 
-    type RegisterSuccess {
-        user: User!
+    enum CreateMealListFoodType {
+        EXISTING
+        NEW_NO_ING
+        NEW_YES_ING
     }
 
-    type RegisterError {
-        message: String!
+    input CreateMealListFoodInputReal {
+        createType: CreateMealListFoodType!
+        inputExisting: CreateMealListFoodInput_Existing
+        inputNewNoIng: CreateMealListFoodInput_NewNoIng
+        inputNewYesIng: CreateMealListFoodInput_NewYesIng
     }
 
-    type CreateFoodListResponse {
-        ok: Boolean!
-        result: Food
-        message: String
+    input CreateMealListFoodInput_Existing {
+        existingFoodName: String!
+        actualAmount: Float!
+
+        dayIndex: Float!
+        mealId: String!
     }
 
-    type EditFoodListResponse {
-        ok: Boolean!
-        result: Food
-        message: String
+    input CreateMealListFoodInput_NewNoIng {
+        name: String!
+        calories: Float!
+        proteins: Float!
+        carbs: Float!
+        fats: Float!
+        givenAmount: Float!
+        actualAmount: Float!
+        dayIndex: Float!
+
+        mealId: String!
     }
 
-    type DeleteFoodListResponse {
-        ok: Boolean!
-        result: String
-        message: String
+    input CreateMealListFoodInput_NewYesIng {
+        name: String!
+        ingredientNames: [String!]!
+        ingredientActualAmounts: [Float!]!
+        givenAmount: Float!
+        actualAmount: Float!
+
+        dayIndex: Float!
+        mealId: String!
+    }
+
+    enum EditMealListFoodType {
+        ACTUAL_AMOUNT
+        NEW_NO_ING
+        NEW_YES_ING
+    }
+
+    input EditMealListFoodInputReal {
+        editType: EditMealListFoodType!
+        inputActualAmount: EditMealListFoodInput_ActualAmount
+        inputNewNoIng: EditMealListFoodInput_NewNoIng
+        inputNewYesIng: EditMealListFoodInput_NewYesIng
+    }
+
+    input EditMealListFoodInput_ActualAmount {
+        newActualAmount: Float!
+
+        dayIndex: Float!
+        mealId: String!
+        foodIndex: Float!
+    }
+
+    input EditMealListFoodInput_NewNoIng {
+        name: String!
+        calories: Float!
+        proteins: Float!
+        carbs: Float!
+        fats: Float!
+        givenAmount: Float!
+        actualAmount: Float!
+
+        dayIndex: Float!
+        mealId: String!
+        foodIndex: Float!
+    }
+
+    input EditMealListFoodInput_NewYesIng {
+        name: String!
+        ingredientNames: [String!]!
+        ingredientActualAmounts: [Float!]!
+        givenAmount: Float!
+        actualAmount: Float!
+
+        dayIndex: Float!
+        mealId: String!
+        foodIndex: Float!
     }
 
     type CreateMealListFoodResponse {
@@ -94,17 +145,6 @@ const typeDefs = gql`
         message: String
     }
 
-    union RegisterResult = RegisterSuccess | RegisterError
-
-    type LoginSuccess {
-        user: User!
-    }
-
-    type LoginError {
-        message: String!
-    }
-
-    union LoginResult = LoginSuccess | LoginError
     input CreateFoodInput {
         acessToken: String!
         dayIndex: Int
@@ -159,49 +199,6 @@ const typeDefs = gql`
         dayIndex: Float!
         mealId: String!
     }
-    enum createType {
-        EXISTING
-        NEW_NO_ING
-        NEW_YES_ING
-    }
-    input CreateMealListFoodInputReal {
-        createType: createType!
-        inputExisting: CreateMealListFoodInput_Existing
-        inputNewNoIng: CreateMealListFoodInput_NewNoIng
-        inputNewYesIng: CreateMealListFoodInput_NewYesIng
-    }
-
-    input CreateMealListFoodInput_Existing {
-        existingFoodName: String!
-        actualAmount: Float!
-
-        dayIndex: Float!
-        mealId: String!
-    }
-
-    input CreateMealListFoodInput_NewNoIng {
-        name: String!
-        calories: Float!
-        proteins: Float!
-        carbs: Float!
-        fats: Float!
-        givenAmount: Float!
-        actualAmount: Float!
-        dayIndex: Float!
-
-        mealId: String!
-    }
-
-    input CreateMealListFoodInput_NewYesIng {
-        name: String!
-        ingredientNames: [String!]!
-        ingredientActualAmounts: [Float!]!
-        givenAmount: Float!
-        actualAmount: Float!
-
-        dayIndex: Float!
-        mealId: String!
-    }
 
     input CreateMealInput {
         accessToken: String!
@@ -246,13 +243,22 @@ const typeDefs = gql`
         newActualAmount: Float
     }
 
+    type Query {
+        # health check
+        boop: String!
+        clearDb: String
+        getFoodList: GetFoodListResponse!
+        getMeals(id: ID!, day1: Boolean!, day2: Boolean!, day3: Boolean!, day4: Boolean!, day5: Boolean!, day6: Boolean!, day7: Boolean!): User!
+        getMealListMeal(dayIndex: Float!): GetMealListMealResponse!
+    }
+
     type Mutation {
         register(input: RegisterInput!): RegisterResult!
         login(email: String!, password: String!): LoginResult!
 
         createFoodList(input: CreateFoodListInput!): CreateFoodListResponse!
-        editFoodList(input: EditFoodListInput!): EditFoodListResponse
-        deleteFoodList(oldFoodNameToDelete: String!): DeleteFoodListResponse
+        editFoodList(input: EditFoodListInput!): EditFoodListResponse!
+        deleteFoodList(oldFoodNameToDelete: String!): DeleteFoodListResponse!
 
         createMealListFood(input: CreateMealListFoodInputReal): CreateMealListFoodResponse
 
@@ -261,6 +267,50 @@ const typeDefs = gql`
         deleteMeal(input: DeleteMealInput!): ID!
         deleteFood(input: DeleteFoodInput!): String!
         editFood(input: EditFoodInput!): String!
+    }
+
+    type RegisterSuccess {
+        user: User!
+    }
+
+    type RegisterError {
+        message: String!
+    }
+
+    union RegisterResult = RegisterSuccess | RegisterError
+
+    type LoginSuccess {
+        user: User!
+    }
+
+    type LoginError {
+        message: String!
+    }
+
+    union LoginResult = LoginSuccess | LoginError
+
+    type CreateFoodListResponse {
+        ok: Boolean!
+        result: Food
+        message: String
+    }
+
+    type GetFoodListResponse {
+        ok: Boolean!
+        result: [Food!]
+        message: String
+    }
+
+    type EditFoodListResponse {
+        ok: Boolean!
+        result: Food
+        message: String
+    }
+
+    type DeleteFoodListResponse {
+        ok: Boolean!
+        result: String
+        message: String
     }
 `;
 
