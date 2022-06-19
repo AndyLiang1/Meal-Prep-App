@@ -133,16 +133,10 @@ const typeDefs = gql`
         foodIndex: Float!
     }
 
-    type CreateMealListFoodResponse {
-        ok: Boolean!
-        result: Food
-        message: String
-    }
-
-    type GetMealListMealResponse {
-        ok: Boolean!
-        result: [Meal!]
-        message: String
+    input DeleteMealListFoodInputReal {
+        dayIndex: Float!
+        mealId: String!
+        foodIndex: Float!
     }
 
     input CreateFoodInput {
@@ -260,7 +254,9 @@ const typeDefs = gql`
         editFoodList(input: EditFoodListInput!): EditFoodListResponse!
         deleteFoodList(oldFoodNameToDelete: String!): DeleteFoodListResponse!
 
-        createMealListFood(input: CreateMealListFoodInputReal): CreateMealListFoodResponse
+        createMealListFood(input: CreateMealListFoodInputReal!): CreateMealListFoodResponse!
+        editMealListFood(input: EditMealListFoodInputReal!): EditMealListFoodResponse!
+        deleteMealListFood(input: DeleteMealListFoodInputReal!): DeleteMealListFoodResponse!
 
         createFood(input: CreateFoodInput!): Food!
         createMeal(input: CreateMealInput!): ID!
@@ -308,6 +304,30 @@ const typeDefs = gql`
     }
 
     type DeleteFoodListResponse {
+        ok: Boolean!
+        result: String
+        message: String
+    }
+
+    type CreateMealListFoodResponse {
+        ok: Boolean!
+        result: Food
+        message: String
+    }
+
+    type GetMealListMealResponse {
+        ok: Boolean!
+        result: [Meal!]
+        message: String
+    }
+
+    type EditMealListFoodResponse {
+        ok: Boolean!
+        result: Food
+        message: String
+    }
+
+    type DeleteMealListFoodResponse {
         ok: Boolean!
         result: String
         message: String

@@ -9,7 +9,7 @@ import { UserInputError } from 'apollo-server';
 import {createFood, deleteFood, editFood} from './Mutations/Food'
 import {createMeal, deleteMeal} from './Mutations/Meal'
 import { createFoodList, editFoodList, deleteFoodList } from './Mutations/FoodListResolver';
-import {createMealListFood} from './Mutations/MealListFoodResolver'
+import {createMealListFood, deleteMealListFood, editMealListFood} from './Mutations/MealListFoodResolver'
 
 
 const Mutation = {
@@ -22,10 +22,12 @@ const Mutation = {
     editFood,
 
     createFoodList,
-    editFoodList, 
+    editFoodList,
     deleteFoodList,
 
-    createMealListFood
+    createMealListFood,
+    editMealListFood,
+    deleteMealListFood
 };
 
 export default Mutation;

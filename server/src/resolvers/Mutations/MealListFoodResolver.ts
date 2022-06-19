@@ -12,3 +12,7 @@ export const editMealListFood = async (parent: any, { user, input }: { user: IUs
     return newlyEditedFoodResponse;
 };
 
+export const deleteMealListFood = async(parent: any, { user, input }: { user: IUserDocument; input: any }, context: any, info: any) => {
+    const deletedResponse = await services.mealListFoodService.delete(user, input)
+    return deletedResponse;
+}

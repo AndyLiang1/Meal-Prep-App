@@ -53,7 +53,9 @@ const authMiddleware = {
         editFoodList: checkAuth,
         deleteFoodList: checkAuth,
 
-        createMealListFood: checkAuth
+        createMealListFood: checkAuth,
+        editMealListFood: checkAuth, 
+        deleteMealListFood: checkAuth
     }
 };
 

@@ -136,6 +136,19 @@ export type DeleteMealInput = {
   mealId: Scalars['ID'];
 };
 
+export type DeleteMealListFoodInputReal = {
+  dayIndex: Scalars['Float'];
+  foodIndex: Scalars['Float'];
+  mealId: Scalars['String'];
+};
+
+export type DeleteMealListFoodResponse = {
+  __typename?: 'DeleteMealListFoodResponse';
+  message?: Maybe<Scalars['String']>;
+  ok: Scalars['Boolean'];
+  result?: Maybe<Scalars['String']>;
+};
+
 export type EditFoodFromMealListInput = {
   accessToken: Scalars['ID'];
   dayIndex: Scalars['Int'];
@@ -217,6 +230,13 @@ export type EditMealListFoodInput_NewYesIng = {
   name: Scalars['String'];
 };
 
+export type EditMealListFoodResponse = {
+  __typename?: 'EditMealListFoodResponse';
+  message?: Maybe<Scalars['String']>;
+  ok: Scalars['Boolean'];
+  result?: Maybe<Food>;
+};
+
 export enum EditMealListFoodType {
   ActualAmount = 'ACTUAL_AMOUNT',
   NewNoIng = 'NEW_NO_ING',
@@ -274,12 +294,14 @@ export type Mutation = {
   createFood: Food;
   createFoodList: CreateFoodListResponse;
   createMeal: Scalars['ID'];
-  createMealListFood?: Maybe<CreateMealListFoodResponse>;
+  createMealListFood: CreateMealListFoodResponse;
   deleteFood: Scalars['String'];
-  deleteFoodList?: Maybe<DeleteFoodListResponse>;
+  deleteFoodList: DeleteFoodListResponse;
   deleteMeal: Scalars['ID'];
+  deleteMealListFood: DeleteMealListFoodResponse;
   editFood: Scalars['String'];
-  editFoodList?: Maybe<EditFoodListResponse>;
+  editFoodList: EditFoodListResponse;
+  editMealListFood: EditMealListFoodResponse;
   login: LoginResult;
   register: RegisterResult;
 };
@@ -301,7 +323,7 @@ export type MutationCreateMealArgs = {
 
 
 export type MutationCreateMealListFoodArgs = {
-  input?: InputMaybe<CreateMealListFoodInputReal>;
+  input: CreateMealListFoodInputReal;
 };
 
 
@@ -320,6 +342,11 @@ export type MutationDeleteMealArgs = {
 };
 
 
+export type MutationDeleteMealListFoodArgs = {
+  input: DeleteMealListFoodInputReal;
+};
+
+
 export type MutationEditFoodArgs = {
   input: EditFoodInput;
 };
@@ -327,6 +354,11 @@ export type MutationEditFoodArgs = {
 
 export type MutationEditFoodListArgs = {
   input: EditFoodListInput;
+};
+
+
+export type MutationEditMealListFoodArgs = {
+  input: EditMealListFoodInputReal;
 };
 
 
@@ -344,8 +376,8 @@ export type Query = {
   __typename?: 'Query';
   boop: Scalars['String'];
   clearDb?: Maybe<Scalars['String']>;
-  getFoodList?: Maybe<GetFoodListResponse>;
-  getMealListMeal?: Maybe<GetMealListMealResponse>;
+  getFoodList: GetFoodListResponse;
+  getMealListMeal: GetMealListMealResponse;
   getMeals: User;
 };
 
@@ -485,6 +517,8 @@ export type ResolversTypes = {
   DeleteFoodInput: DeleteFoodInput;
   DeleteFoodListResponse: ResolverTypeWrapper<DeleteFoodListResponse>;
   DeleteMealInput: DeleteMealInput;
+  DeleteMealListFoodInputReal: DeleteMealListFoodInputReal;
+  DeleteMealListFoodResponse: ResolverTypeWrapper<DeleteMealListFoodResponse>;
   EditFoodFromMealListInput: EditFoodFromMealListInput;
   EditFoodInput: EditFoodInput;
   EditFoodListInput: EditFoodListInput;
@@ -493,6 +527,7 @@ export type ResolversTypes = {
   EditMealListFoodInput_ActualAmount: EditMealListFoodInput_ActualAmount;
   EditMealListFoodInput_NewNoIng: EditMealListFoodInput_NewNoIng;
   EditMealListFoodInput_NewYesIng: EditMealListFoodInput_NewYesIng;
+  EditMealListFoodResponse: ResolverTypeWrapper<EditMealListFoodResponse>;
   EditMealListFoodType: EditMealListFoodType;
   Float: ResolverTypeWrapper<Scalars['Float']>;
   Food: ResolverTypeWrapper<Food>;
@@ -530,6 +565,8 @@ export type ResolversParentTypes = {
   DeleteFoodInput: DeleteFoodInput;
   DeleteFoodListResponse: DeleteFoodListResponse;
   DeleteMealInput: DeleteMealInput;
+  DeleteMealListFoodInputReal: DeleteMealListFoodInputReal;
+  DeleteMealListFoodResponse: DeleteMealListFoodResponse;
   EditFoodFromMealListInput: EditFoodFromMealListInput;
   EditFoodInput: EditFoodInput;
   EditFoodListInput: EditFoodListInput;
@@ -538,6 +575,7 @@ export type ResolversParentTypes = {
   EditMealListFoodInput_ActualAmount: EditMealListFoodInput_ActualAmount;
   EditMealListFoodInput_NewNoIng: EditMealListFoodInput_NewNoIng;
   EditMealListFoodInput_NewYesIng: EditMealListFoodInput_NewYesIng;
+  EditMealListFoodResponse: EditMealListFoodResponse;
   Float: Scalars['Float'];
   Food: Food;
   GetFoodListResponse: GetFoodListResponse;
@@ -579,7 +617,21 @@ export type DeleteFoodListResponseResolvers<ContextType = any, ParentType extend
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
+export type DeleteMealListFoodResponseResolvers<ContextType = any, ParentType extends ResolversParentTypes['DeleteMealListFoodResponse'] = ResolversParentTypes['DeleteMealListFoodResponse']> = {
+  message?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  ok?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
+  result?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
 export type EditFoodListResponseResolvers<ContextType = any, ParentType extends ResolversParentTypes['EditFoodListResponse'] = ResolversParentTypes['EditFoodListResponse']> = {
+  message?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  ok?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
+  result?: Resolver<Maybe<ResolversTypes['Food']>, ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type EditMealListFoodResponseResolvers<ContextType = any, ParentType extends ResolversParentTypes['EditMealListFoodResponse'] = ResolversParentTypes['EditMealListFoodResponse']> = {
   message?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   ok?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
   result?: Resolver<Maybe<ResolversTypes['Food']>, ParentType, ContextType>;
@@ -638,12 +690,14 @@ export type MutationResolvers<ContextType = any, ParentType extends ResolversPar
   createFood?: Resolver<ResolversTypes['Food'], ParentType, ContextType, RequireFields<MutationCreateFoodArgs, 'input'>>;
   createFoodList?: Resolver<ResolversTypes['CreateFoodListResponse'], ParentType, ContextType, RequireFields<MutationCreateFoodListArgs, 'input'>>;
   createMeal?: Resolver<ResolversTypes['ID'], ParentType, ContextType, RequireFields<MutationCreateMealArgs, 'input'>>;
-  createMealListFood?: Resolver<Maybe<ResolversTypes['CreateMealListFoodResponse']>, ParentType, ContextType, Partial<MutationCreateMealListFoodArgs>>;
+  createMealListFood?: Resolver<ResolversTypes['CreateMealListFoodResponse'], ParentType, ContextType, RequireFields<MutationCreateMealListFoodArgs, 'input'>>;
   deleteFood?: Resolver<ResolversTypes['String'], ParentType, ContextType, RequireFields<MutationDeleteFoodArgs, 'input'>>;
-  deleteFoodList?: Resolver<Maybe<ResolversTypes['DeleteFoodListResponse']>, ParentType, ContextType, RequireFields<MutationDeleteFoodListArgs, 'oldFoodNameToDelete'>>;
+  deleteFoodList?: Resolver<ResolversTypes['DeleteFoodListResponse'], ParentType, ContextType, RequireFields<MutationDeleteFoodListArgs, 'oldFoodNameToDelete'>>;
   deleteMeal?: Resolver<ResolversTypes['ID'], ParentType, ContextType, RequireFields<MutationDeleteMealArgs, 'input'>>;
+  deleteMealListFood?: Resolver<ResolversTypes['DeleteMealListFoodResponse'], ParentType, ContextType, RequireFields<MutationDeleteMealListFoodArgs, 'input'>>;
   editFood?: Resolver<ResolversTypes['String'], ParentType, ContextType, RequireFields<MutationEditFoodArgs, 'input'>>;
-  editFoodList?: Resolver<Maybe<ResolversTypes['EditFoodListResponse']>, ParentType, ContextType, RequireFields<MutationEditFoodListArgs, 'input'>>;
+  editFoodList?: Resolver<ResolversTypes['EditFoodListResponse'], ParentType, ContextType, RequireFields<MutationEditFoodListArgs, 'input'>>;
+  editMealListFood?: Resolver<ResolversTypes['EditMealListFoodResponse'], ParentType, ContextType, RequireFields<MutationEditMealListFoodArgs, 'input'>>;
   login?: Resolver<ResolversTypes['LoginResult'], ParentType, ContextType, RequireFields<MutationLoginArgs, 'email' | 'password'>>;
   register?: Resolver<ResolversTypes['RegisterResult'], ParentType, ContextType, RequireFields<MutationRegisterArgs, 'input'>>;
 };
@@ -651,8 +705,8 @@ export type MutationResolvers<ContextType = any, ParentType extends ResolversPar
 export type QueryResolvers<ContextType = any, ParentType extends ResolversParentTypes['Query'] = ResolversParentTypes['Query']> = {
   boop?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   clearDb?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
-  getFoodList?: Resolver<Maybe<ResolversTypes['GetFoodListResponse']>, ParentType, ContextType>;
-  getMealListMeal?: Resolver<Maybe<ResolversTypes['GetMealListMealResponse']>, ParentType, ContextType, RequireFields<QueryGetMealListMealArgs, 'dayIndex'>>;
+  getFoodList?: Resolver<ResolversTypes['GetFoodListResponse'], ParentType, ContextType>;
+  getMealListMeal?: Resolver<ResolversTypes['GetMealListMealResponse'], ParentType, ContextType, RequireFields<QueryGetMealListMealArgs, 'dayIndex'>>;
   getMeals?: Resolver<ResolversTypes['User'], ParentType, ContextType, RequireFields<QueryGetMealsArgs, 'day1' | 'day2' | 'day3' | 'day4' | 'day5' | 'day6' | 'day7' | 'id'>>;
 };
 
@@ -691,7 +745,9 @@ export type Resolvers<ContextType = any> = {
   CreateFoodListResponse?: CreateFoodListResponseResolvers<ContextType>;
   CreateMealListFoodResponse?: CreateMealListFoodResponseResolvers<ContextType>;
   DeleteFoodListResponse?: DeleteFoodListResponseResolvers<ContextType>;
+  DeleteMealListFoodResponse?: DeleteMealListFoodResponseResolvers<ContextType>;
   EditFoodListResponse?: EditFoodListResponseResolvers<ContextType>;
+  EditMealListFoodResponse?: EditMealListFoodResponseResolvers<ContextType>;
   Food?: FoodResolvers<ContextType>;
   GetFoodListResponse?: GetFoodListResponseResolvers<ContextType>;
   GetMealListMealResponse?: GetMealListMealResponseResolvers<ContextType>;

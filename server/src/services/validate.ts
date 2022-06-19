@@ -6,7 +6,8 @@ import {
     Meal,
     EditMealListFoodInput_ActualAmount,
     EditMealListFoodInput_NewNoIng,
-    EditMealListFoodInput_NewYesIng
+    EditMealListFoodInput_NewYesIng,
+    DeleteMealListFoodInputReal
 } from '../generated/graphql-server';
 import { IUserDocument } from '../models/User';
 import { foodStatsWillBeBasedOnIngredients } from './helpers';
@@ -81,7 +82,6 @@ const valUniqueFoodNameAndIng = (user: IUserDocument, ingNames: string[], thisFo
     for (let foodName of ingNames) {
         // no infinite cycle of food being its own ing
         if (thisFoodName === foodName) {
-            console.log(thisFoodName);
             return errorMessage.uniqueFoodNameAndIngCheck.ingOfItself;
         }
     }
@@ -169,7 +169,6 @@ const actualAmountAndDayIndexValid = (actualAmount: number, dayIndex: number) =>
     if (dayIndex < 0 || dayIndex > 6) {
         return errorMessage.actualAmountAndDayIndexValid.invalidDayIndex;
     }
-    return '';
 };
 
 const nameValid = (name: string) => {
@@ -295,6 +294,20 @@ const editMealListFood_ActualAmount = (input: EditMealListFoodInput_ActualAmount
         ok: true
     };
 };
+
+const deleteMealListFood = (input: DeleteMealListFoodInputReal) => {
+    const { dayIndex, foodIndex, mealId } = input;
+    let actualAmountAndDayIndexOk = actualAmountAndDayIndexValid(1, dayIndex);
+    if (typeof actualAmountAndDayIndexOk === 'string') {
+        return {
+            ok: false,
+            message: actualAmountAndDayIndexOk
+        };
+    }
+    return {
+        ok: true
+    };
+};
 // const createMealListFood = (
 //     user: IUserDocument,
 //     // existingFoodName: string | null | undefined,
@@ -372,7 +385,8 @@ const validator = {
     createMealListFood_Existing,
     createOrEditMealListFood_NewNoIng,
     createOrEditMealListFood_NewYesIng,
-    editMealListFood_ActualAmount
+    editMealListFood_ActualAmount,
+    deleteMealListFood
 };
 
 export default validator;

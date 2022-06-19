@@ -48,7 +48,8 @@ export class MealListFoodDao {
     private async getFoodHelper(day: Meal[], mealId: string, foodIndex: number) {
         for (let meal of day) {
             if (mealId === meal.id) {
-                return meal.foods[foodIndex];
+                const retFood: any = meal.foods[foodIndex];
+                return retFood;
             }
             break;
         }
@@ -113,7 +114,7 @@ export class MealListFoodDao {
                 break;
         }
         await user.save();
-        return newFood
+        return newFood;
     }
     private async deleteFoodHelper(day: Meal[], mealId: string, foodIndex: number) {
         for (let meal of day) {
@@ -152,27 +153,46 @@ export class MealListFoodDao {
         await user.save();
     }
     private editMoreFoodInDay(day: Meal[], oldFoodName: string, editedFood: Food) {
-        day.forEach((meal) => {
-            meal.foods.forEach((food: Food) => {
-                if (oldFoodName === food.name) {
-                    food.name = editedFood.name;
-                    food.calories = (food.actualAmount! / editedFood.givenAmount) * editedFood.calories;
-                    food.proteins = (food.actualAmount! / editedFood.givenAmount) * editedFood.proteins;
-                    food.carbs = (food.actualAmount! / editedFood.givenAmount) * editedFood.carbs;
-                    food.fats = (food.actualAmount! / editedFood.givenAmount) * editedFood.fats;
-                    return; // equiv to continue
-                }
-                food.ingredients.forEach((ing) => {
-                    if (oldFoodName === ing.name) {
-                        ing.name = editedFood.name;
-                        ing.calories = (ing.actualAmount! / editedFood.givenAmount) * editedFood.calories;
-                        ing.proteins = (ing.actualAmount! / editedFood.givenAmount) * editedFood.proteins;
-                        ing.carbs = (ing.actualAmount! / editedFood.givenAmount) * editedFood.carbs;
-                        ing.fats = (ing.actualAmount! / editedFood.givenAmount) * editedFood.fats;
+        if (editedFood.ingredients.length) {
+            day.forEach((meal) => {
+                meal.foods.forEach((food: Food) => {
+                    if (oldFoodName === food.name) {
+                        food.name = editedFood.name;
+                        food.calories = editedFood.calories;
+                        food.proteins = editedFood.proteins;
+                        food.carbs = editedFood.carbs;
+                        food.fats = editedFood.fats;
+                        food.ingredients = editedFood.ingredients;
+                        food.givenAmount = editedFood.givenAmount;
+                        return; // equiv to continue
                     }
                 });
             });
-        });
+        } else {
+            day.forEach((meal) => {
+                meal.foods.forEach((food: Food) => {
+                    if (oldFoodName === food.name) {
+                        food.name = editedFood.name;
+                        food.calories = editedFood.calories;
+                        food.proteins = editedFood.proteins;
+                        food.carbs = editedFood.carbs;
+                        food.fats = editedFood.fats;
+                        food.ingredients = editedFood.ingredients;
+                        food.givenAmount = editedFood.givenAmount;
+                        return; // equiv to continue
+                    }
+                    food.ingredients.forEach((ing) => {
+                        if (oldFoodName === ing.name) {
+                            ing.name = editedFood.name;
+                            ing.calories = editedFood.calories;
+                            ing.proteins = editedFood.proteins;
+                            ing.carbs = editedFood.carbs;
+                            ing.fats = editedFood.fats;
+                        }
+                    });
+                });
+            });
+        }
     }
 
     public async editMoreFood(user: IUserDocument, oldFoodName: string, editedFood: Food) {

@@ -33,7 +33,6 @@ export function UserPage(props: IUserPageProps) {
         }
     });
 
-    // useEffect(() => {
     //     try {
     //         // getMealAsync();
     //     } catch (error) {

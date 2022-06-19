@@ -7,7 +7,8 @@ import {
     Meal,
     EditMealListFoodInput_NewYesIng,
     EditMealListFoodInput_ActualAmount,
-    EditMealListFoodInput_NewNoIng
+    EditMealListFoodInput_NewNoIng,
+    DeleteMealListFoodInputReal
 } from '../generated/graphql-server';
 import { IUserDocument } from '../models/User';
 import { createFoodWithIng } from './helpers';
@@ -202,7 +203,7 @@ export class MealListFoodService {
     public async edit(user: IUserDocument, input: any) {
         const { editType } = input;
         let inputIsValid;
-        let newFoodForEdit: any = null;
+        let newFoodForEdit: Food | null = null;
         let dayIndex;
         let mealId;
         let foodIndex;
@@ -210,7 +211,7 @@ export class MealListFoodService {
         switch (editType) {
             case 'ACTUAL_AMOUNT':
                 const { inputActualAmount }: { inputActualAmount: EditMealListFoodInput_ActualAmount } = input;
-                inputIsValid = validator.editMealListFood_ActualAmount(input);
+                inputIsValid = validator.editMealListFood_ActualAmount(inputActualAmount);
                 if (!inputIsValid.ok && inputIsValid.message) {
                     return {
                         ok: false,
@@ -222,9 +223,16 @@ export class MealListFoodService {
                 foodIndex = inputActualAmount.foodIndex;
                 const currentFood = await this.MealListFoodDao.get(user, dayIndex, mealId, foodIndex);
                 newFoodForEdit = {
-                    ...currentFood,
+                    name: currentFood.name,
+                    calories: currentFood.calories,
+                    proteins: currentFood.proteins,
+                    carbs: currentFood.carbs,
+                    fats: currentFood.fats,
+                    ingredients: currentFood.ingredients,
+                    givenAmount: currentFood.givenAmount,
                     actualAmount: inputActualAmount.newActualAmount
                 };
+                break;
             case 'NEW_NO_ING':
                 const { inputNewNoIng }: { inputNewNoIng: EditMealListFoodInput_NewNoIng } = input;
                 inputIsValid = validator.createOrEditMealListFood_NewNoIng(user, inputNewNoIng);
@@ -254,6 +262,7 @@ export class MealListFoodService {
                     proteins: inputNewNoIng.proteins,
                     carbs: inputNewNoIng.carbs,
                     fats: inputNewNoIng.fats,
+                    ingredients: [],
                     givenAmount: inputNewNoIng.givenAmount,
                     actualAmount: inputNewNoIng.actualAmount
                 };
@@ -278,8 +287,8 @@ export class MealListFoodService {
                     newFoodForEdit.proteins,
                     newFoodForEdit.carbs,
                     newFoodForEdit.fats,
-                    newFoodForEdit.ingredientAmounts,
-                    newFoodForEdit.ingredientActualAmounts,
+                    inputNewYesIng.ingredientNames,
+                    inputNewYesIng.ingredientActualAmounts,
                     newFoodForEdit.givenAmount
                 );
                 newFoodForEdit = {
@@ -290,7 +299,7 @@ export class MealListFoodService {
             default:
                 break;
         }
-        if (typeof dayIndex === 'number' && typeof mealId === 'string' && typeof foodIndex === 'number') {
+        if (typeof dayIndex === 'number' && typeof mealId === 'string' && typeof foodIndex === 'number' && newFoodForEdit) {
             const newlyEditedFood = await this.MealListFoodDao.edit(user, dayIndex, mealId, foodIndex, newFoodForEdit);
             return {
                 ok: true,
@@ -305,7 +314,21 @@ export class MealListFoodService {
         // return this.MealListFoodDao.edit(user, dayIndex, mealId, foodIndex, newActualAmount);
     }
 
-    public async delete(user: IUserDocument, dayIndex: number, mealId: string, foodIndex: number) {
-        return this.MealListFoodDao.delete(user, dayIndex, mealId, foodIndex);
+    public async delete(user: IUserDocument, input: DeleteMealListFoodInputReal) {
+        let inputIsValid = validator.deleteMealListFood(input);
+
+        if (!inputIsValid.ok && inputIsValid.message) {
+            return {
+                ok: false,
+                message: inputIsValid.message
+            };
+        }
+
+        const { dayIndex, mealId, foodIndex } = input;
+        await this.MealListFoodDao.delete(user, dayIndex, mealId, foodIndex);
+        return {
+            ok: true,
+            result: 'Successfully deleted food'
+        };
     }
 }
