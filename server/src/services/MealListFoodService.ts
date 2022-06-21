@@ -8,7 +8,10 @@ import {
     EditMealListFoodInput_NewYesIng,
     EditMealListFoodInput_ActualAmount,
     EditMealListFoodInput_NewNoIng,
-    DeleteMealListFoodInputReal
+    DeleteMealListFoodInputReal,
+    CreateFoodListInput_NewYesIng,
+    CreateFoodListInput_NewNoIng,
+    CreateFoodListInputReal
 } from '../generated/graphql-server';
 import { IUserDocument } from '../models/User';
 import { createFoodWithIng } from './helpers';
@@ -16,7 +19,6 @@ import services from './services';
 import validator from './validate';
 
 export class MealListFoodService {
-    // private MealListFoodDao;
     constructor(private MealListFoodDao: MealListFoodDao) {}
 
     public async create(
@@ -89,17 +91,20 @@ export class MealListFoodService {
                     givenAmount: inputNewNoIng.givenAmount,
                     actualAmount: inputNewNoIng.actualAmount
                 };
-                await services.foodListService.create(
-                    user,
-                    inputNewNoIng.name,
-                    inputNewNoIng.calories,
-                    inputNewNoIng.proteins,
-                    inputNewNoIng.carbs,
-                    inputNewNoIng.fats,
-                    [],
-                    [],
-                    inputNewNoIng.givenAmount
-                );
+
+                const inputNewNoIngForFoodList = {
+                    createType: 'NEW_NO_ING',
+                    inputNewNoIng: {
+                        name: inputNewNoIng.name,
+                        calories: inputNewNoIng.calories,
+                        proteins: inputNewNoIng.proteins,
+                        carbs: inputNewNoIng.carbs,
+                        fats: inputNewNoIng.fats,
+                        givenAmount: inputNewNoIng.givenAmount
+                    }
+                };
+
+                await services.foodListService.create(user, inputNewNoIngForFoodList);
                 dayIndex = inputNewNoIng.dayIndex;
                 mealId = inputNewNoIng.mealId;
                 break;
@@ -117,17 +122,18 @@ export class MealListFoodService {
                     ...createdFoodWithIng,
                     actualAmount: inputNewYesIng.actualAmount
                 };
-                await services.foodListService.create(
-                    user,
-                    inputNewYesIng.name,
-                    null,
-                    null,
-                    null,
-                    null,
-                    inputNewYesIng.ingredientNames,
-                    inputNewYesIng.ingredientActualAmounts,
-                    inputNewYesIng.givenAmount
-                );
+
+                const inputNewYesIngForFoodList = {
+                    createType: 'NEW_YES_ING',
+                    inputNewYesIng: {
+                        name: inputNewYesIng.name,
+                        ingredientNames: inputNewYesIng.ingredientNames,
+                        ingredientActualAmounts: inputNewYesIng.ingredientActualAmounts,
+                        givenAmount: inputNewYesIng.givenAmount
+                    }
+                };
+
+                await services.foodListService.create(user, inputNewYesIngForFoodList);
                 dayIndex = inputNewYesIng.dayIndex;
                 mealId = inputNewYesIng.mealId;
                 break;
@@ -245,17 +251,18 @@ export class MealListFoodService {
                 dayIndex = inputNewNoIng.dayIndex;
                 mealId = inputNewNoIng.mealId;
                 foodIndex = inputNewNoIng.foodIndex;
-                await services.foodListService.create(
-                    user,
-                    inputNewNoIng.name,
-                    inputNewNoIng.calories,
-                    inputNewNoIng.proteins,
-                    inputNewNoIng.carbs,
-                    inputNewNoIng.fats,
-                    [],
-                    [],
-                    inputNewNoIng.givenAmount
-                );
+                const inputNewNoIngForFoodList = {
+                    createType: 'NEW_NO_ING',
+                    inputNewNoIng: {
+                        name: inputNewNoIng.name,
+                        calories: inputNewNoIng.calories,
+                        proteins: inputNewNoIng.proteins,
+                        carbs: inputNewNoIng.carbs,
+                        fats: inputNewNoIng.fats,
+                        givenAmount: inputNewNoIng.givenAmount
+                    }
+                };
+                await services.foodListService.create(user, inputNewNoIngForFoodList);
                 newFoodForEdit = {
                     name: inputNewNoIng.name,
                     calories: inputNewNoIng.calories,
@@ -280,17 +287,16 @@ export class MealListFoodService {
                 mealId = inputNewYesIng.mealId;
                 foodIndex = inputNewYesIng.foodIndex;
                 newFoodForEdit = createFoodWithIng(user, inputNewYesIng.name, inputNewYesIng.ingredientNames, inputNewYesIng.ingredientActualAmounts, inputNewYesIng.givenAmount);
-                await services.foodListService.create(
-                    user,
-                    newFoodForEdit.name,
-                    newFoodForEdit.calories,
-                    newFoodForEdit.proteins,
-                    newFoodForEdit.carbs,
-                    newFoodForEdit.fats,
-                    inputNewYesIng.ingredientNames,
-                    inputNewYesIng.ingredientActualAmounts,
-                    newFoodForEdit.givenAmount
-                );
+                const inputNewYesIngForFoodList = {
+                    createType: 'NEW_YES_ING',
+                    inputNewYesIng: {
+                        name: inputNewYesIng.name,
+                        ingredientNames: inputNewYesIng.ingredientNames,
+                        ingredientActualAmounts: inputNewYesIng.ingredientActualAmounts,
+                        givenAmount: inputNewYesIng.givenAmount
+                    }
+                };
+                await services.foodListService.create(user, inputNewYesIngForFoodList);
                 newFoodForEdit = {
                     ...newFoodForEdit,
                     actualAmount: inputNewYesIng.actualAmount
@@ -312,6 +318,10 @@ export class MealListFoodService {
         };
 
         // return this.MealListFoodDao.edit(user, dayIndex, mealId, foodIndex, newActualAmount);
+    }
+
+    public async editMoreFood(user: IUserDocument, oldFoodName: string, editedFood: Food) {
+        return await this.MealListFoodDao.editMoreFood(user, oldFoodName, editedFood);
     }
 
     public async delete(user: IUserDocument, input: DeleteMealListFoodInputReal) {

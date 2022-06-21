@@ -39,12 +39,39 @@ export type CreateFoodListInput = {
   proteins?: InputMaybe<Scalars['Float']>;
 };
 
+export type CreateFoodListInputReal = {
+  createType: CreateFoodListType;
+  inputNewNoIng?: InputMaybe<CreateFoodListInput_NewNoIng>;
+  inputNewYesIng?: InputMaybe<CreateFoodListInput_NewYesIng>;
+};
+
+export type CreateFoodListInput_NewNoIng = {
+  calories: Scalars['Float'];
+  carbs: Scalars['Float'];
+  fats: Scalars['Float'];
+  givenAmount: Scalars['Float'];
+  name: Scalars['String'];
+  proteins: Scalars['Float'];
+};
+
+export type CreateFoodListInput_NewYesIng = {
+  givenAmount: Scalars['Float'];
+  ingredientActualAmounts: Array<Scalars['Float']>;
+  ingredientNames: Array<Scalars['String']>;
+  name: Scalars['String'];
+};
+
 export type CreateFoodListResponse = {
   __typename?: 'CreateFoodListResponse';
   message?: Maybe<Scalars['String']>;
   ok: Scalars['Boolean'];
   result?: Maybe<Food>;
 };
+
+export enum CreateFoodListType {
+  NewNoIng = 'NEW_NO_ING',
+  NewYesIng = 'NEW_YES_ING'
+}
 
 export type CreateMealInput = {
   accessToken: Scalars['String'];
@@ -505,7 +532,11 @@ export type ResolversTypes = {
   Boolean: ResolverTypeWrapper<Scalars['Boolean']>;
   CreateFoodInput: CreateFoodInput;
   CreateFoodListInput: CreateFoodListInput;
+  CreateFoodListInputReal: CreateFoodListInputReal;
+  CreateFoodListInput_NewNoIng: CreateFoodListInput_NewNoIng;
+  CreateFoodListInput_NewYesIng: CreateFoodListInput_NewYesIng;
   CreateFoodListResponse: ResolverTypeWrapper<CreateFoodListResponse>;
+  CreateFoodListType: CreateFoodListType;
   CreateMealInput: CreateMealInput;
   CreateMealListFoodInput: CreateMealListFoodInput;
   CreateMealListFoodInputReal: CreateMealListFoodInputReal;
@@ -554,6 +585,9 @@ export type ResolversParentTypes = {
   Boolean: Scalars['Boolean'];
   CreateFoodInput: CreateFoodInput;
   CreateFoodListInput: CreateFoodListInput;
+  CreateFoodListInputReal: CreateFoodListInputReal;
+  CreateFoodListInput_NewNoIng: CreateFoodListInput_NewNoIng;
+  CreateFoodListInput_NewYesIng: CreateFoodListInput_NewYesIng;
   CreateFoodListResponse: CreateFoodListResponse;
   CreateMealInput: CreateMealInput;
   CreateMealListFoodInput: CreateMealListFoodInput;

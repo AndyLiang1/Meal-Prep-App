@@ -183,11 +183,19 @@ export class MealListFoodDao {
                     }
                     food.ingredients.forEach((ing) => {
                         if (oldFoodName === ing.name) {
+                            food.calories -= (ing.actualAmount! / ing.givenAmount) * ing.calories;
+                            food.proteins -= (ing.actualAmount! / ing.givenAmount) * ing.proteins;
+                            food.carbs -= (ing.actualAmount! / ing.givenAmount) * ing.carbs;
+                            food.fats -= (ing.actualAmount! / ing.givenAmount) * ing.fats;
                             ing.name = editedFood.name;
                             ing.calories = editedFood.calories;
                             ing.proteins = editedFood.proteins;
                             ing.carbs = editedFood.carbs;
                             ing.fats = editedFood.fats;
+                            food.calories += (ing.actualAmount! / ing.givenAmount) * editedFood.calories;
+                            food.proteins += (ing.actualAmount! / ing.givenAmount) * editedFood.proteins;
+                            food.carbs += (ing.actualAmount! / ing.givenAmount) * editedFood.carbs;
+                            food.fats += (ing.actualAmount! / ing.givenAmount) * editedFood.fats;
                         }
                     });
                 });

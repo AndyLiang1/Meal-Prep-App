@@ -41,6 +41,33 @@ const typeDefs = gql`
         password: String!
     }
 
+    enum CreateFoodListType {
+        NEW_NO_ING
+        NEW_YES_ING
+    }
+
+    input CreateFoodListInputReal {
+        createType: CreateFoodListType!
+        inputNewNoIng: CreateFoodListInput_NewNoIng
+        inputNewYesIng: CreateFoodListInput_NewYesIng
+    }
+
+    input CreateFoodListInput_NewNoIng {
+        name: String!
+        calories: Float!
+        proteins: Float!
+        carbs: Float!
+        fats: Float!
+        givenAmount: Float!
+    }
+
+    input CreateFoodListInput_NewYesIng {
+        name: String!
+        ingredientNames: [String!]!
+        ingredientActualAmounts: [Float!]!
+        givenAmount: Float!
+    }
+
     enum CreateMealListFoodType {
         EXISTING
         NEW_NO_ING
@@ -250,7 +277,7 @@ const typeDefs = gql`
         register(input: RegisterInput!): RegisterResult!
         login(email: String!, password: String!): LoginResult!
 
-        createFoodList(input: CreateFoodListInput!): CreateFoodListResponse!
+        createFoodList(input: CreateFoodListInputReal!): CreateFoodListResponse!
         editFoodList(input: EditFoodListInput!): EditFoodListResponse!
         deleteFoodList(oldFoodNameToDelete: String!): DeleteFoodListResponse!
 

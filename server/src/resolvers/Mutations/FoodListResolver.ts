@@ -3,9 +3,7 @@ import services from '../../services/services';
 import { IUserDocument } from '../../models/User';
 
 export const createFoodList = async (parent: any, { user, input }: { user: IUserDocument; input: CreateFoodListInput }, context: any, info: any) => {
-    const { name, calories, proteins, carbs, fats, ingredientNames, ingredientActualAmounts, givenAmount } = input;
-
-    const createFoodListResponse = await services.foodListService.create(user, name, calories, proteins, carbs, fats, ingredientNames, ingredientActualAmounts, givenAmount);
+    const createFoodListResponse = await services.foodListService.create(user, input);
     return createFoodListResponse;
 };
 

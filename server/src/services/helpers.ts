@@ -47,7 +47,6 @@ export const createFoodWithIng = (user: IUserDocument, newFoodName: string, newI
     };
 };
 
-
 export const foodStatsWillBeBasedOnIngredients = (calories: any, proteins: any, carbs: any, fats: any, newIngNames: any[]) => {
     return typeof calories === 'number' && typeof proteins === 'number' && typeof carbs === 'number' && typeof fats === 'number' && newIngNames.length === 0;
 };

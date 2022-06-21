@@ -1,57 +1,57 @@
 import { MealListFoodDao } from '../daos/MealListFoodDao';
 import { FoodListDao } from '../daos/FoodListDao';
-import { CreateFoodListResponse, Food, Meal } from '../generated/graphql-server';
+import { CreateFoodListInputReal, CreateFoodListInput_NewNoIng, CreateFoodListInput_NewYesIng, CreateFoodListResponse, Food, Meal } from '../generated/graphql-server';
 import { IUserDocument } from '../models/User';
 import { MealListFoodService } from './MealListFoodService';
 import validator from './validate';
 import { createFoodWithIng } from './helpers';
+import services from './services';
 
 export class FoodListService {
     constructor(private FoodListDao: FoodListDao) {}
 
-    public async create(
-        user: IUserDocument,
-        name: string,
-        calories: number | null | undefined,
-        proteins: number | null | undefined,
-        carbs: number | null | undefined,
-        fats: number | null | undefined,
-        newIngNames: string[],
-        newIngActualAmounts: number[],
-        givenAmount: number
-    ) {
+    public async create(user: IUserDocument, input: any) {
         try {
-            const inputIsValid = validator.createFoodList(user, name, calories, proteins, carbs, fats, newIngNames, newIngActualAmounts, givenAmount);
-            if (!inputIsValid.ok && inputIsValid.message) {
-                return {
-                    ok: false,
-                    message: inputIsValid.message
-                };
-            }
-
-            if (newIngNames.length !== newIngActualAmounts.length) {
-                return {
-                    ok: false,
-                    message: "There is a mismatch between the new ingredient names array's length and the new ingredient actual amounts' array's length"
-                };
-            }
+            let inputIsValid;
+            const { createType } = input;
             let newFood: Food | null = null;
 
-            if (typeof calories === 'number' && typeof proteins === 'number' && typeof carbs === 'number' && typeof fats === 'number' && newIngNames.length === 0) {
-                newFood = {
-                    name,
-                    calories,
-                    proteins,
-                    carbs,
-                    fats,
-                    ingredients: [],
-                    givenAmount
-                };
-            } else {
-                newFood = createFoodWithIng(user, name, newIngNames, newIngActualAmounts, givenAmount);
+            switch (createType) {
+                case 'NEW_NO_ING':
+                    const { inputNewNoIng }: { inputNewNoIng: CreateFoodListInput_NewNoIng } = input;
+                    inputIsValid = validator.createFoodList_NewNoIng(user, inputNewNoIng);
+                    if (!inputIsValid.ok && inputIsValid.message) {
+                        return {
+                            ok: false,
+                            message: inputIsValid.message
+                        };
+                    }
+                    newFood = {
+                        name: inputNewNoIng.name,
+                        calories: inputNewNoIng.calories,
+                        proteins: inputNewNoIng.proteins,
+                        carbs: inputNewNoIng.carbs,
+                        fats: inputNewNoIng.fats,
+                        ingredients: [],
+                        givenAmount: inputNewNoIng.givenAmount
+                    };
+                    break;
+                case 'NEW_YES_ING':
+                    const { inputNewYesIng }: { inputNewYesIng: CreateFoodListInput_NewYesIng } = input;
+                    inputIsValid = validator.createFoodList_NewYesIng(user, inputNewYesIng);
+                    if (!inputIsValid.ok && inputIsValid.message) {
+                        return {
+                            ok: false,
+                            message: inputIsValid.message
+                        };
+                    }
+                    newFood = createFoodWithIng(user, inputNewYesIng.name, inputNewYesIng.ingredientNames, inputNewYesIng.ingredientActualAmounts, inputNewYesIng.givenAmount);
+                    break;
+                default:
+                    break;
             }
 
-            const newlyCreatedFood = await this.FoodListDao.create(user, newFood);
+            const newlyCreatedFood = await this.FoodListDao.create(user, newFood!);
             return {
                 ok: true,
                 result: newlyCreatedFood
@@ -68,7 +68,7 @@ export class FoodListService {
     public async get(user: IUserDocument) {
         try {
             const foodList = await this.FoodListDao.get(user);
-            const sortedFoodList = foodList.sort((food1, food2) => food1.name > food2.name ? 1 : -1)
+            const sortedFoodList = foodList.sort((food1, food2) => (food1.name > food2.name ? 1 : -1));
             return {
                 ok: true,
                 result: sortedFoodList
@@ -125,10 +125,12 @@ export class FoodListService {
             editedFood = createFoodWithIng(user, newFoodName, newIngNames, newIngActualAmounts, newGivenAmount);
         }
 
-        editedFood = await this.FoodListDao.edit(user, oldFoodName, editedFood);
+        const newlyEditedFood = await this.FoodListDao.edit(user, oldFoodName, editedFood);
+
+        await services.mealListFoodService.editMoreFood(user, oldFoodName, editedFood);
         return {
             ok: true,
-            result: editedFood
+            result: newlyEditedFood
         };
     }
 
