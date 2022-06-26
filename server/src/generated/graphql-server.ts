@@ -212,12 +212,41 @@ export type EditFoodListInput = {
   oldFoodName: Scalars['String'];
 };
 
+export type EditFoodListInputReal = {
+  editType: EditFoodListType;
+  inputNewNoIng?: InputMaybe<EditFoodListInput_NewNoIng>;
+  inputNewYesIng?: InputMaybe<EditFoodListInput_NewYesIng>;
+};
+
+export type EditFoodListInput_NewNoIng = {
+  calories: Scalars['Float'];
+  carbs: Scalars['Float'];
+  fats: Scalars['Float'];
+  givenAmount: Scalars['Float'];
+  name: Scalars['String'];
+  oldFoodName: Scalars['String'];
+  proteins: Scalars['Float'];
+};
+
+export type EditFoodListInput_NewYesIng = {
+  givenAmount: Scalars['Float'];
+  ingredientActualAmounts: Array<Scalars['Float']>;
+  ingredientNames: Array<Scalars['String']>;
+  name: Scalars['String'];
+  oldFoodName: Scalars['String'];
+};
+
 export type EditFoodListResponse = {
   __typename?: 'EditFoodListResponse';
   message?: Maybe<Scalars['String']>;
   ok: Scalars['Boolean'];
   result?: Maybe<Food>;
 };
+
+export enum EditFoodListType {
+  NewNoIng = 'NEW_NO_ING',
+  NewYesIng = 'NEW_YES_ING'
+}
 
 export type EditMealListFoodInputReal = {
   editType: EditMealListFoodType;
@@ -340,7 +369,7 @@ export type MutationCreateFoodArgs = {
 
 
 export type MutationCreateFoodListArgs = {
-  input: CreateFoodListInput;
+  input: CreateFoodListInputReal;
 };
 
 
@@ -380,7 +409,7 @@ export type MutationEditFoodArgs = {
 
 
 export type MutationEditFoodListArgs = {
-  input: EditFoodListInput;
+  input: EditFoodListInputReal;
 };
 
 
@@ -553,7 +582,11 @@ export type ResolversTypes = {
   EditFoodFromMealListInput: EditFoodFromMealListInput;
   EditFoodInput: EditFoodInput;
   EditFoodListInput: EditFoodListInput;
+  EditFoodListInputReal: EditFoodListInputReal;
+  EditFoodListInput_NewNoIng: EditFoodListInput_NewNoIng;
+  EditFoodListInput_NewYesIng: EditFoodListInput_NewYesIng;
   EditFoodListResponse: ResolverTypeWrapper<EditFoodListResponse>;
+  EditFoodListType: EditFoodListType;
   EditMealListFoodInputReal: EditMealListFoodInputReal;
   EditMealListFoodInput_ActualAmount: EditMealListFoodInput_ActualAmount;
   EditMealListFoodInput_NewNoIng: EditMealListFoodInput_NewNoIng;
@@ -604,6 +637,9 @@ export type ResolversParentTypes = {
   EditFoodFromMealListInput: EditFoodFromMealListInput;
   EditFoodInput: EditFoodInput;
   EditFoodListInput: EditFoodListInput;
+  EditFoodListInputReal: EditFoodListInputReal;
+  EditFoodListInput_NewNoIng: EditFoodListInput_NewNoIng;
+  EditFoodListInput_NewYesIng: EditFoodListInput_NewYesIng;
   EditFoodListResponse: EditFoodListResponse;
   EditMealListFoodInputReal: EditMealListFoodInputReal;
   EditMealListFoodInput_ActualAmount: EditMealListFoodInput_ActualAmount;

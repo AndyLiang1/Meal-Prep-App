@@ -59,6 +59,6 @@ export const getUserMeals = async (dayIndex: number, user: any, getMeals: any) =
             return day
         }
     } catch (error) {
-        console.log(error);
+        console.error(error);
     }
 };

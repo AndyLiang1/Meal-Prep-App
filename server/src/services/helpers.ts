@@ -36,6 +36,7 @@ export const createFoodWithIng = (user: IUserDocument, newFoodName: string, newI
             }
         }
     });
+
     return {
         name: newFoodName,
         calories: cals,

@@ -1,6 +1,15 @@
 import { MealListFoodDao } from '../daos/MealListFoodDao';
 import { FoodListDao } from '../daos/FoodListDao';
-import { CreateFoodListInputReal, CreateFoodListInput_NewNoIng, CreateFoodListInput_NewYesIng, CreateFoodListResponse, Food, Meal } from '../generated/graphql-server';
+import {
+    CreateFoodListInputReal,
+    CreateFoodListInput_NewNoIng,
+    CreateFoodListInput_NewYesIng,
+    CreateFoodListResponse,
+    EditFoodListInput_NewNoIng,
+    EditFoodListInput_NewYesIng,
+    Food,
+    Meal
+} from '../generated/graphql-server';
 import { IUserDocument } from '../models/User';
 import { MealListFoodService } from './MealListFoodService';
 import validator from './validate';
@@ -89,45 +98,50 @@ export class FoodListService {
         };
     }
 
-    public async edit(
-        user: IUserDocument,
-        oldFoodName: string,
-        newFoodName: string,
-        newCalories: number | null | undefined,
-        newProteins: number | null | undefined,
-        newCarbs: number | null | undefined,
-        newFats: number | null | undefined,
-        newIngNames: string[],
-        newIngActualAmounts: number[],
-        newGivenAmount: number
-    ) {
-        if (newIngNames.length !== newIngActualAmounts.length) {
-            return {
-                ok: false,
-                message: "There is a mismatch between the new ingredient names array's length and the new ingredient actual amounts' array's length"
-            };
+    public async edit(user: IUserDocument, input: any) {
+        const { editType } = input;
+        let inputIsValid: any;
+        let editedFood: Food | null = null
+        let oldFoodName = '';
+        switch (editType) {
+            case 'NEW_NO_ING':
+                const { inputNewNoIng }: { inputNewNoIng: EditFoodListInput_NewNoIng } = input;
+                inputIsValid = validator.editFoodList_NewNoIng(user, inputNewNoIng);
+                if (!inputIsValid.ok && inputIsValid.message) {
+                    return {
+                        ok: false,
+                        message: inputIsValid.message
+                    };
+                }
+                editedFood = {
+                    name: inputNewNoIng.name,
+                    calories: inputNewNoIng.calories,
+                    proteins: inputNewNoIng.proteins,
+                    carbs: inputNewNoIng.carbs,
+                    fats: inputNewNoIng.fats,
+                    ingredients: [],
+                    givenAmount: inputNewNoIng.givenAmount
+                };
+                oldFoodName = inputNewNoIng.oldFoodName
+                break;
+            case 'NEW_YES_ING':
+                const { inputNewYesIng }: { inputNewYesIng: EditFoodListInput_NewYesIng } = input;
+                inputIsValid = validator.editFoodList_NewYesIng(user, inputNewYesIng);
+                if (!inputIsValid.ok && inputIsValid.message) {
+                    return {
+                        ok: false,
+                        message: inputIsValid.message
+                    };
+                }
+                editedFood = createFoodWithIng(user, inputNewYesIng.name, inputNewYesIng.ingredientNames, inputNewYesIng.ingredientActualAmounts, inputNewYesIng.givenAmount);
+                oldFoodName = inputNewYesIng.oldFoodName
+                break;
+            default:
+                break;
         }
-        // if we have ingredients, then our stats are based off of the
-        // ingredients
-        let editedFood: Food | null = null;
+        const newlyEditedFood = await this.FoodListDao.edit(user, oldFoodName, editedFood!);
 
-        if (typeof newCalories === 'number' && typeof newProteins === 'number' && typeof newCarbs === 'number' && typeof newFats === 'number' && newIngNames.length === 0) {
-            editedFood = {
-                name: newFoodName,
-                calories: newCalories,
-                proteins: newProteins,
-                carbs: newCarbs,
-                fats: newFats,
-                ingredients: [],
-                givenAmount: newGivenAmount
-            };
-        } else {
-            editedFood = createFoodWithIng(user, newFoodName, newIngNames, newIngActualAmounts, newGivenAmount);
-        }
-
-        const newlyEditedFood = await this.FoodListDao.edit(user, oldFoodName, editedFood);
-
-        await services.mealListFoodService.editMoreFood(user, oldFoodName, editedFood);
+        await services.mealListFoodService.editMoreFood(user, oldFoodName, editedFood!);
         return {
             ok: true,
             result: newlyEditedFood

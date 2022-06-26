@@ -9,7 +9,9 @@ import {
     EditMealListFoodInput_NewYesIng,
     DeleteMealListFoodInputReal,
     CreateFoodListInput_NewNoIng,
-    CreateFoodListInput_NewYesIng
+    CreateFoodListInput_NewYesIng,
+    EditFoodListInput_NewNoIng,
+    EditFoodListInput_NewYesIng
 } from '../generated/graphql-server';
 import { IUserDocument } from '../models/User';
 import { foodStatsWillBeBasedOnIngredients } from './helpers';
@@ -23,11 +25,11 @@ const errorMessage = {
         givenAmount: 'Please ensure givenAmount field is greater than 0. '
     },
 
-    existingNameValid: {
+    existingvalNameNotEmpty: {
         invalidExistingName: 'This food name is invalid. '
     },
     uniqueFoodNameAndIngCheck: {
-        uniqueFoodName: 'Cannot create a food if it already exists in foodList. ',
+        uniqueFoodName: 'There is already a food with the same name in your foodList. ',
         ingOfItself: 'A food cannot be an ingredient of itself. ',
         ingHasIng: 'An ingredient cannot have its own ingredients. '
     },
@@ -80,7 +82,7 @@ const valStats = (calories: number, proteins: number, carbs: number, fats: numbe
     return true;
 };
 
-const valUniqueFoodNameAndIng = (user: IUserDocument, ingNames: string[], thisFoodName: string) => {
+const valFoodIsNotIngOfItself_FoodNotInFoodListAlready_IngDoesNotHaveIng = (user: IUserDocument, ingNames: string[], thisFoodName: string, foodCanAlreadyExistInFoodListSinceWeAreEditing = false) => {
     for (let foodName of ingNames) {
         // no infinite cycle of food being its own ing
         if (thisFoodName === foodName) {
@@ -89,9 +91,10 @@ const valUniqueFoodNameAndIng = (user: IUserDocument, ingNames: string[], thisFo
     }
     for (let foodInFoodList of user.foodList) {
         // cannot create a food if it exists in foodList
-        if (foodInFoodList.name === thisFoodName) {
+        if (foodInFoodList.name === thisFoodName && !foodCanAlreadyExistInFoodListSinceWeAreEditing) {
             return errorMessage.uniqueFoodNameAndIngCheck.uniqueFoodName;
         }
+        // checks every food in food list against all ingredients of current food
         for (let ingName of ingNames) {
             if (foodInFoodList.name === ingName) {
                 // an ing cannot have ing
@@ -102,6 +105,16 @@ const valUniqueFoodNameAndIng = (user: IUserDocument, ingNames: string[], thisFo
         }
     }
     return true;
+};
+
+const valFoodNotUsedAsIngAlready = (user: IUserDocument, name: string) => {
+    for (let food of user.foodList) {
+        for (let ing of food.ingredients) {
+            if (name === ing.name) {
+                return 'Sorry, this food is already being used as an ingredient for ' + food.name + '. ';
+            }
+        }
+    }
 };
 
 const valIngActualAmounts = (ingActualAmounts: number[]) => {
@@ -133,7 +146,7 @@ const createFoodList = (
     if (foodStatsWillBeBasedOnIngredients(calories, proteins, carbs, fats, newIngNames)) {
         statsOk = valStats(calories!, proteins!, carbs!, fats!);
     }
-    let nameAndIngOk = valUniqueFoodNameAndIng(user, newIngNames, name);
+    let nameAndIngOk = valFoodIsNotIngOfItself_FoodNotInFoodListAlready_IngDoesNotHaveIng(user, newIngNames, name);
     let newIngActualAmountOk = valIngActualAmounts(newIngActualAmounts);
     let givenAmountOk = valGivenAmount(givenAmount);
 
@@ -173,17 +186,17 @@ const actualAmountAndDayIndexValid = (actualAmount: number, dayIndex: number) =>
     }
 };
 
-const nameValid = (name: string) => {
+const valNameNotEmpty = (name: string) => {
     if (name === '') {
-        return errorMessage.existingNameValid.invalidExistingName;
+        return errorMessage.existingvalNameNotEmpty.invalidExistingName;
     }
 };
 
 const createFoodList_NewNoIng = (user: IUserDocument, input: CreateFoodListInput_NewNoIng) => {
     const { name, calories, proteins, carbs, fats, givenAmount } = input;
-    let nameNotEmptyOk = nameValid(name);
+    let nameNotEmptyOk = valNameNotEmpty(name);
     let statsOk = valStats(calories, proteins, carbs, fats);
-    let nameAndIngOk = valUniqueFoodNameAndIng(user, [], name!);
+    let nameAndIngOk = valFoodIsNotIngOfItself_FoodNotInFoodListAlready_IngDoesNotHaveIng(user, [], name!);
     let givenAmountOk = valGivenAmount(givenAmount!);
     if (typeof nameNotEmptyOk === 'string') {
         return {
@@ -213,7 +226,7 @@ const createFoodList_NewNoIng = (user: IUserDocument, input: CreateFoodListInput
 };
 const createFoodList_NewYesIng = (user: IUserDocument, input: CreateFoodListInput_NewYesIng) => {
     const { name, ingredientNames, ingredientActualAmounts, givenAmount } = input;
-    let nameNotEmptyOk = nameValid(name);
+    let nameNotEmptyOk = valNameNotEmpty(name);
     if (typeof nameNotEmptyOk === 'string') {
         return {
             ok: false,
@@ -226,7 +239,7 @@ const createFoodList_NewYesIng = (user: IUserDocument, input: CreateFoodListInpu
         };
     }
 
-    let nameAndIngOk = valUniqueFoodNameAndIng(user, ingredientNames, name!);
+    let nameAndIngOk = valFoodIsNotIngOfItself_FoodNotInFoodListAlready_IngDoesNotHaveIng(user, ingredientNames, name!);
     let ingActualAmountsOk = valIngActualAmounts(ingredientActualAmounts);
     let givenAmountOk = valGivenAmount(givenAmount);
 
@@ -251,8 +264,80 @@ const createFoodList_NewYesIng = (user: IUserDocument, input: CreateFoodListInpu
     };
 };
 
+const editFoodList_NewNoIng = (user: IUserDocument, input: EditFoodListInput_NewNoIng) => {
+    const { oldFoodName, name, calories, proteins, carbs, fats, givenAmount } = input;
+    let nameNotEmptyOk = valNameNotEmpty(name);
+    let statsOk = valStats(calories, proteins, carbs, fats);
+    let givenAmountOk = valGivenAmount(givenAmount!);
+
+    if (typeof nameNotEmptyOk === 'string') {
+        return {
+            ok: false,
+            message: nameNotEmptyOk
+        };
+    } else if (typeof statsOk === 'string') {
+        return {
+            ok: false,
+            message: statsOk
+        };
+    } else if (typeof givenAmountOk === 'string') {
+        return {
+            ok: false,
+            message: givenAmountOk
+        };
+    }
+    return {
+        ok: true
+    };
+};
+const editFoodList_NewYesIng = (user: IUserDocument, input: EditFoodListInput_NewYesIng) => {
+    const { oldFoodName, name, ingredientNames, ingredientActualAmounts, givenAmount } = input;
+    let nameNotEmptyOk = valNameNotEmpty(name);
+
+    if (typeof nameNotEmptyOk === 'string') {
+        return {
+            ok: false,
+            message: nameNotEmptyOk
+        };
+    } else if (ingredientNames.length !== ingredientActualAmounts.length) {
+        return {
+            ok: false,
+            message: 'Ingredient names array and ingredient actual amounts array has a different number of elements. '
+        };
+    }
+
+    let nameAndIngOk = valFoodIsNotIngOfItself_FoodNotInFoodListAlready_IngDoesNotHaveIng(user, ingredientNames, name!, true);
+    let ingActualAmountsOk = valIngActualAmounts(ingredientActualAmounts);
+    let givenAmountOk = valGivenAmount(givenAmount!);
+    let foodNotAlreadyUsedAsIngOk = valFoodNotUsedAsIngAlready(user, oldFoodName);
+    if (typeof nameAndIngOk === 'string') {
+        return {
+            ok: false,
+            message: nameAndIngOk
+        };
+    } else if (typeof givenAmountOk === 'string') {
+        return {
+            ok: false,
+            message: givenAmountOk
+        };
+    } else if (typeof ingActualAmountsOk === 'string') {
+        return {
+            ok: false,
+            message: ingActualAmountsOk
+        };
+    } else if (typeof foodNotAlreadyUsedAsIngOk === 'string') {
+        return {
+            ok: false,
+            message: foodNotAlreadyUsedAsIngOk
+        };
+    }
+    return {
+        ok: true
+    };
+};
+
 const createMealListFood_Existing = (input: CreateMealListFoodInput_Existing) => {
-    let nameNotEmptyOk = nameValid(input.existingFoodName);
+    let nameNotEmptyOk = valNameNotEmpty(input.existingFoodName);
     if (typeof nameNotEmptyOk === 'string') {
         return {
             ok: false,
@@ -271,9 +356,9 @@ const createMealListFood_Existing = (input: CreateMealListFoodInput_Existing) =>
 
 const createOrEditMealListFood_NewNoIng = (user: IUserDocument, input: CreateMealListFoodInput_NewNoIng | EditMealListFoodInput_NewNoIng) => {
     const { name, calories, proteins, carbs, fats, givenAmount, actualAmount, dayIndex } = input;
-    let nameNotEmptyOk = nameValid(name);
+    let nameNotEmptyOk = valNameNotEmpty(name);
     let statsOk = valStats(calories, proteins, carbs, fats);
-    let nameAndIngOk = valUniqueFoodNameAndIng(user, [], name!);
+    let nameAndIngOk = valFoodIsNotIngOfItself_FoodNotInFoodListAlready_IngDoesNotHaveIng(user, [], name!);
     let givenAmountOk = valGivenAmount(givenAmount!);
     let actualAmountAndDayIndexOk = actualAmountAndDayIndexValid(actualAmount, dayIndex);
     if (typeof nameNotEmptyOk === 'string') {
@@ -310,7 +395,7 @@ const createOrEditMealListFood_NewNoIng = (user: IUserDocument, input: CreateMea
 
 const createOrEditMealListFood_NewYesIng = (user: IUserDocument, input: CreateMealListFoodInput_NewYesIng | EditMealListFoodInput_NewYesIng) => {
     const { name, ingredientNames, ingredientActualAmounts, givenAmount, actualAmount, dayIndex } = input;
-    let nameNotEmptyOk = nameValid(name);
+    let nameNotEmptyOk = valNameNotEmpty(name);
 
     if (typeof nameNotEmptyOk === 'string') {
         return {
@@ -324,7 +409,7 @@ const createOrEditMealListFood_NewYesIng = (user: IUserDocument, input: CreateMe
         };
     }
 
-    let nameAndIngOk = valUniqueFoodNameAndIng(user, ingredientNames, name!);
+    let nameAndIngOk = valFoodIsNotIngOfItself_FoodNotInFoodListAlready_IngDoesNotHaveIng(user, ingredientNames, name!);
     let ingActualAmountsOk = valIngActualAmounts(ingredientActualAmounts);
     let givenAmountOk = valGivenAmount(givenAmount!);
     let actualAmountAndDayIndexOk = actualAmountAndDayIndexValid(actualAmount, dayIndex);
@@ -454,12 +539,16 @@ const deleteMealListFood = (input: DeleteMealListFoodInputReal) => {
 const validator = {
     register,
     login,
+
     createFoodList,
 
     // createMealListFood
 
     createFoodList_NewNoIng,
     createFoodList_NewYesIng,
+    editFoodList_NewNoIng,
+    editFoodList_NewYesIng,
+
     createMealListFood_Existing,
     createOrEditMealListFood_NewNoIng,
     createOrEditMealListFood_NewYesIng,

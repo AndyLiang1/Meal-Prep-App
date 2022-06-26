@@ -11,7 +11,6 @@ export class MealListMealService {
 
     public async get(user: IUserDocument, dayIndex: number) {
         const meals = await this.MealListMealDao.get(user, dayIndex);
-        console.log(meals)
         return {
             ok: true,
             result: meals

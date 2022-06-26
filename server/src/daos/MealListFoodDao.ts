@@ -181,23 +181,36 @@ export class MealListFoodDao {
                         food.givenAmount = editedFood.givenAmount;
                         return; // equiv to continue
                     }
-                    food.ingredients.forEach((ing) => {
+                    // food.ingredients.forEach((ing) => {
+                    for (let [i, ing] of food.ingredients.entries()) {
                         if (oldFoodName === ing.name) {
                             food.calories -= (ing.actualAmount! / ing.givenAmount) * ing.calories;
                             food.proteins -= (ing.actualAmount! / ing.givenAmount) * ing.proteins;
                             food.carbs -= (ing.actualAmount! / ing.givenAmount) * ing.carbs;
                             food.fats -= (ing.actualAmount! / ing.givenAmount) * ing.fats;
-                            ing.name = editedFood.name;
-                            ing.calories = editedFood.calories;
-                            ing.proteins = editedFood.proteins;
-                            ing.carbs = editedFood.carbs;
-                            ing.fats = editedFood.fats;
-                            food.calories += (ing.actualAmount! / ing.givenAmount) * editedFood.calories;
-                            food.proteins += (ing.actualAmount! / ing.givenAmount) * editedFood.proteins;
-                            food.carbs += (ing.actualAmount! / ing.givenAmount) * editedFood.carbs;
-                            food.fats += (ing.actualAmount! / ing.givenAmount) * editedFood.fats;
+                            // hmm not sure why this won't work, referencing issue likely 
+                            // ing.name = editedFood.name;
+                            // ing.calories = editedFood.calories;
+                            // ing.proteins = editedFood.proteins;
+                            // ing.carbs = editedFood.carbs;
+                            // ing.fats = editedFood.fats;
+                            // ing.givenAmount = editedFood.givenAmount;
+                            food.ingredients[i] = {
+                                name: editedFood.name,
+                                calories: editedFood.calories,
+                                proteins: editedFood.proteins,
+                                carbs: editedFood.carbs,
+                                fats: editedFood.fats,
+                                ingredients: [],
+                                givenAmount: editedFood.givenAmount,
+                                actualAmount: ing.actualAmount
+                            };
+                            food.calories += (ing.actualAmount! / editedFood.givenAmount) * editedFood.calories;
+                            food.proteins += (ing.actualAmount! / editedFood.givenAmount) * editedFood.proteins;
+                            food.carbs += (ing.actualAmount! / editedFood.givenAmount) * editedFood.carbs;
+                            food.fats += (ing.actualAmount! / editedFood.givenAmount) * editedFood.fats;
                         }
-                    });
+                    }
                 });
             });
         }

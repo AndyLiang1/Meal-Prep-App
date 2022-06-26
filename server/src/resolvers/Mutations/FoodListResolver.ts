@@ -13,8 +13,7 @@ export const getFoodList = async (parent: any, { user }: { user: IUserDocument }
 };
 
 export const editFoodList = async (parent: any, { user, input }: { user: IUserDocument; input: EditFoodListInput }, context: any, info: any) => {
-    const { oldFoodName, newFoodName, newCalories, newProteins, newCarbs, newFats, newGivenAmount, newIngNames, newIngActualAmounts } = input;
-    const editFoodListResponse = await services.foodListService.edit(user, oldFoodName, newFoodName, newCalories, newProteins, newCarbs, newFats, newIngNames, newIngActualAmounts, newGivenAmount);
+    const editFoodListResponse = await services.foodListService.edit(user, input);
     return editFoodListResponse;
 };
 
