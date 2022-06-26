@@ -170,7 +170,17 @@ const UserSchema: Schema = new Schema(
             }
         ],
         // days: any,
-        foodList: { type: Array, required: true }
+        foodList: [
+            {
+                name: String,
+                calories: Number,
+                proteins: Number,
+                carbs: Number,
+                fats: Number,
+                ingredients: Array,
+                givenAmount: Number,
+            }
+        ]
     },
     {
         versionKey: false

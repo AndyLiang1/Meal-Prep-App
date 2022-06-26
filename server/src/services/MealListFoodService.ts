@@ -58,7 +58,13 @@ export class MealListFoodService {
                 const getByNameResponse = await services.foodListService.getByName(user, inputExisting.existingFoodName);
                 if (getByNameResponse.ok && getByNameResponse.result) {
                     newFoodForMeal = {
-                        ...getByNameResponse.result,
+                        name: getByNameResponse.result.name,
+                        calories: getByNameResponse.result.calories,
+                        proteins: getByNameResponse.result.proteins,
+                        carbs: getByNameResponse.result.carbs,
+                        fats: getByNameResponse.result.fats,
+                        ingredients: getByNameResponse.result.ingredients,
+                        givenAmount: getByNameResponse.result.givenAmount,
                         actualAmount: inputExisting.actualAmount
                     };
                 } else {

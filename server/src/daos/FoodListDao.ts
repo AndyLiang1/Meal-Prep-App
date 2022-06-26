@@ -29,8 +29,6 @@ export class FoodListDao {
             } else {
                 for (let [j, ing] of food.ingredients.entries()) {
                     if (oldFoodName === ing.name) {
-                        console.log('========= Food we are editing: ', food.name + ' at index: ', i);
-                        console.log('before change: ', user.foodList[3].calories);
                         user.foodList[i].calories -= (ing.actualAmount! / ing.givenAmount) * ing.calories;
                         user.foodList[i].proteins -= (ing.actualAmount! / ing.givenAmount) * ing.proteins;
                         user.foodList[i].carbs -= (ing.actualAmount! / ing.givenAmount) * ing.carbs;
@@ -49,14 +47,12 @@ export class FoodListDao {
                         user.foodList[i].proteins += (ing.actualAmount! / editedFood.givenAmount) * editedFood.proteins;
                         user.foodList[i].carbs += (ing.actualAmount! / editedFood.givenAmount) * editedFood.carbs;
                         user.foodList[i].fats += (ing.actualAmount! / editedFood.givenAmount) * editedFood.fats;
-                        console.log('after change: ', user.foodList[3].calories);
                     }
                 }
             }
         }
 
-        console.log(user.foodList[3]);
-        user.markModified('foodList');
+        // user.markModified('foodList');
         await user.save();
         return editedFood;
     }
