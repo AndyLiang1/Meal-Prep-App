@@ -351,10 +351,12 @@ export type Mutation = {
   createFoodList: CreateFoodListResponse;
   createMeal: Scalars['ID'];
   createMealListFood: CreateMealListFoodResponse;
+  createMealListMeal?: Maybe<Scalars['ID']>;
   deleteFood: Scalars['String'];
   deleteFoodList: DeleteFoodListResponse;
   deleteMeal: Scalars['ID'];
   deleteMealListFood: DeleteMealListFoodResponse;
+  deleteMealListMeal?: Maybe<Scalars['ID']>;
   editFood: Scalars['String'];
   editFoodList: EditFoodListResponse;
   editMealListFood: EditMealListFoodResponse;
@@ -383,6 +385,11 @@ export type MutationCreateMealListFoodArgs = {
 };
 
 
+export type MutationCreateMealListMealArgs = {
+  dayIndex: Scalars['Float'];
+};
+
+
 export type MutationDeleteFoodArgs = {
   input: DeleteFoodInput;
 };
@@ -400,6 +407,12 @@ export type MutationDeleteMealArgs = {
 
 export type MutationDeleteMealListFoodArgs = {
   input: DeleteMealListFoodInputReal;
+};
+
+
+export type MutationDeleteMealListMealArgs = {
+  dayIndex: Scalars['Float'];
+  mealId: Scalars['String'];
 };
 
 
@@ -761,10 +774,12 @@ export type MutationResolvers<ContextType = any, ParentType extends ResolversPar
   createFoodList?: Resolver<ResolversTypes['CreateFoodListResponse'], ParentType, ContextType, RequireFields<MutationCreateFoodListArgs, 'input'>>;
   createMeal?: Resolver<ResolversTypes['ID'], ParentType, ContextType, RequireFields<MutationCreateMealArgs, 'input'>>;
   createMealListFood?: Resolver<ResolversTypes['CreateMealListFoodResponse'], ParentType, ContextType, RequireFields<MutationCreateMealListFoodArgs, 'input'>>;
+  createMealListMeal?: Resolver<Maybe<ResolversTypes['ID']>, ParentType, ContextType, RequireFields<MutationCreateMealListMealArgs, 'dayIndex'>>;
   deleteFood?: Resolver<ResolversTypes['String'], ParentType, ContextType, RequireFields<MutationDeleteFoodArgs, 'input'>>;
   deleteFoodList?: Resolver<ResolversTypes['DeleteFoodListResponse'], ParentType, ContextType, RequireFields<MutationDeleteFoodListArgs, 'oldFoodNameToDelete'>>;
   deleteMeal?: Resolver<ResolversTypes['ID'], ParentType, ContextType, RequireFields<MutationDeleteMealArgs, 'input'>>;
   deleteMealListFood?: Resolver<ResolversTypes['DeleteMealListFoodResponse'], ParentType, ContextType, RequireFields<MutationDeleteMealListFoodArgs, 'input'>>;
+  deleteMealListMeal?: Resolver<Maybe<ResolversTypes['ID']>, ParentType, ContextType, RequireFields<MutationDeleteMealListMealArgs, 'dayIndex' | 'mealId'>>;
   editFood?: Resolver<ResolversTypes['String'], ParentType, ContextType, RequireFields<MutationEditFoodArgs, 'input'>>;
   editFoodList?: Resolver<ResolversTypes['EditFoodListResponse'], ParentType, ContextType, RequireFields<MutationEditFoodListArgs, 'input'>>;
   editMealListFood?: Resolver<ResolversTypes['EditMealListFoodResponse'], ParentType, ContextType, RequireFields<MutationEditMealListFoodArgs, 'input'>>;

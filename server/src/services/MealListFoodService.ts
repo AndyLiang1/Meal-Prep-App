@@ -347,4 +347,8 @@ export class MealListFoodService {
             result: 'Successfully deleted food'
         };
     }
+
+    public async deleteMoreFood(user: IUserDocument, foodNameToDelete: string) {
+        return await this.MealListFoodDao.deleteMoreFood(user, foodNameToDelete)
+    }
 }

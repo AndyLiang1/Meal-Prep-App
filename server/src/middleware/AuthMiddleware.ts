@@ -3,6 +3,7 @@ import { config } from '../config/config';
 import services from '../services/services';
 
 const checkAuth = async (resolve: any, parent: any, args: any, context: any, info: any) => {
+    console.log('check auth')
     if (!context.authorization) {
         console.error(`Error in ${info.path.key}: no auth token`);
         return {
@@ -52,6 +53,10 @@ const authMiddleware = {
         createFoodList: checkAuth,
         editFoodList: checkAuth,
         deleteFoodList: checkAuth,
+
+        createMealListMeal: checkAuth, 
+        // deleteMealListMeal: checkAuth, 
+        testt: checkAuth,
 
         createMealListFood: checkAuth,
         editMealListFood: checkAuth, 

@@ -298,8 +298,9 @@ const typeDefs = gql`
         boop: String!
         clearDb: String
         getFoodList: GetFoodListResponse!
-        getMeals(id: ID!, day1: Boolean!, day2: Boolean!, day3: Boolean!, day4: Boolean!, day5: Boolean!, day6: Boolean!, day7: Boolean!): User!
         getMealListMeal(dayIndex: Float!): GetMealListMealResponse!
+
+        getMeals(id: ID!, day1: Boolean!, day2: Boolean!, day3: Boolean!, day4: Boolean!, day5: Boolean!, day6: Boolean!, day7: Boolean!): User!
     }
 
     type Mutation {
@@ -313,6 +314,9 @@ const typeDefs = gql`
         createMealListFood(input: CreateMealListFoodInputReal!): CreateMealListFoodResponse!
         editMealListFood(input: EditMealListFoodInputReal!): EditMealListFoodResponse!
         deleteMealListFood(input: DeleteMealListFoodInputReal!): DeleteMealListFoodResponse!
+
+        createMealListMeal(dayIndex: Float!): ID
+        testt(dayIndex: Float!, mealId: String!): ID!
 
         createFood(input: CreateFoodInput!): Food!
         createMeal(input: CreateMealInput!): ID!

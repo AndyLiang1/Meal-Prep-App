@@ -154,31 +154,37 @@ export class MealListFoodDao {
     }
     private editMoreFoodInDay(day: Meal[], oldFoodName: string, editedFood: Food) {
         if (editedFood.ingredients.length) {
-            day.forEach((meal) => {
-                meal.foods.forEach((food: Food) => {
+            day.forEach((meal, i) => {
+                meal.foods.forEach((food: Food, j) => {
                     if (oldFoodName === food.name) {
-                        food.name = editedFood.name;
-                        food.calories = editedFood.calories;
-                        food.proteins = editedFood.proteins;
-                        food.carbs = editedFood.carbs;
-                        food.fats = editedFood.fats;
-                        food.ingredients = editedFood.ingredients;
-                        food.givenAmount = editedFood.givenAmount;
+                        day[i].foods[j] = {
+                            name: editedFood.name,
+                            calories: editedFood.calories,
+                            proteins: editedFood.proteins,
+                            carbs: editedFood.carbs,
+                            fats: editedFood.fats,
+                            ingredients: editedFood.ingredients,
+                            givenAmount: editedFood.givenAmount,
+                            actualAmount: food.actualAmount!
+                        };
                         return; // equiv to continue
                     }
                 });
             });
         } else {
-            day.forEach((meal) => {
-                meal.foods.forEach((food: Food) => {
+            day.forEach((meal, i) => {
+                meal.foods.forEach((food: Food, j) => {
                     if (oldFoodName === food.name) {
-                        food.name = editedFood.name;
-                        food.calories = editedFood.calories;
-                        food.proteins = editedFood.proteins;
-                        food.carbs = editedFood.carbs;
-                        food.fats = editedFood.fats;
-                        food.ingredients = editedFood.ingredients;
-                        food.givenAmount = editedFood.givenAmount;
+                        day[i].foods[j] = {
+                            name: editedFood.name,
+                            calories: editedFood.calories,
+                            proteins: editedFood.proteins,
+                            carbs: editedFood.carbs,
+                            fats: editedFood.fats,
+                            ingredients: editedFood.ingredients,
+                            givenAmount: editedFood.givenAmount,
+                            actualAmount: food.actualAmount!
+                        };
                         return; // equiv to continue
                     }
                     // food.ingredients.forEach((ing) => {
@@ -188,7 +194,7 @@ export class MealListFoodDao {
                             food.proteins -= (ing.actualAmount! / ing.givenAmount) * ing.proteins;
                             food.carbs -= (ing.actualAmount! / ing.givenAmount) * ing.carbs;
                             food.fats -= (ing.actualAmount! / ing.givenAmount) * ing.fats;
-                            // hmm not sure why this won't work, referencing issue likely 
+                            // hmm not sure why this won't work, referencing issue likely
                             // ing.name = editedFood.name;
                             // ing.calories = editedFood.calories;
                             // ing.proteins = editedFood.proteins;
@@ -232,11 +238,18 @@ export class MealListFoodDao {
             meal.foods = meal.foods.filter((food) => {
                 return foodNameToDelete !== food.name;
             });
-            meal.foods.forEach((food) => {
-                food.ingredients = food.ingredients.filter((ing) => {
-                    return ing.name !== foodNameToDelete;
-                });
-            });
+            meal.foods.forEach((food, i) =>  {
+                for (let j = food.ingredients.length - 1; j >= 0; j--) {
+                    let ing = food.ingredients[j];
+                    if (foodNameToDelete === ing.name) {
+                        meal.foods[i].calories -= (ing.actualAmount! / ing.givenAmount) * ing.calories;
+                        meal.foods[i].proteins -= (ing.actualAmount! / ing.givenAmount) * ing.proteins;
+                        meal.foods[i].carbs -= (ing.actualAmount! / ing.givenAmount) * ing.carbs;
+                        meal.foods[i].fats -= (ing.actualAmount! / ing.givenAmount) * ing.fats;
+                        meal.foods[i].ingredients.splice(j, 1);
+                    }
+                }
+            })
         }
     }
 

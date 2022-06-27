@@ -107,7 +107,16 @@ const valFoodIsNotIngOfItself_FoodNotInFoodListAlready_IngDoesNotHaveIng = (user
     return true;
 };
 
+const valFoodNameNotUsedByOtherInFoodList = (user: IUserDocument, oldFoodName: string, name: string) => {
+    for (let food of user.foodList) {
+        if (name === food.name && oldFoodName != food.name) {
+            return errorMessage.uniqueFoodNameAndIngCheck.uniqueFoodName;
+        }
+    }
+};
+
 const valFoodNotUsedAsIngAlready = (user: IUserDocument, name: string) => {
+    // don't need to check user meals since all food in meals are just foods from foodlist
     for (let food of user.foodList) {
         for (let ing of food.ingredients) {
             if (name === ing.name) {
@@ -269,6 +278,7 @@ const editFoodList_NewNoIng = (user: IUserDocument, input: EditFoodListInput_New
     let nameNotEmptyOk = valNameNotEmpty(name);
     let statsOk = valStats(calories, proteins, carbs, fats);
     let givenAmountOk = valGivenAmount(givenAmount!);
+    let foodNameNotUsedByOtherInFoodListOk = valFoodNameNotUsedByOtherInFoodList(user, oldFoodName, name);
 
     if (typeof nameNotEmptyOk === 'string') {
         return {
@@ -284,6 +294,11 @@ const editFoodList_NewNoIng = (user: IUserDocument, input: EditFoodListInput_New
         return {
             ok: false,
             message: givenAmountOk
+        };
+    } else if (typeof foodNameNotUsedByOtherInFoodListOk === 'string') {
+        return {
+            ok: false,
+            message: foodNameNotUsedByOtherInFoodListOk
         };
     }
     return {
@@ -310,6 +325,7 @@ const editFoodList_NewYesIng = (user: IUserDocument, input: EditFoodListInput_Ne
     let ingActualAmountsOk = valIngActualAmounts(ingredientActualAmounts);
     let givenAmountOk = valGivenAmount(givenAmount!);
     let foodNotAlreadyUsedAsIngOk = valFoodNotUsedAsIngAlready(user, oldFoodName);
+    let foodNameNotUsedByOtherInFoodListOk = valFoodNameNotUsedByOtherInFoodList(user, oldFoodName, name);
     if (typeof nameAndIngOk === 'string') {
         return {
             ok: false,
@@ -329,6 +345,11 @@ const editFoodList_NewYesIng = (user: IUserDocument, input: EditFoodListInput_Ne
         return {
             ok: false,
             message: foodNotAlreadyUsedAsIngOk
+        };
+    } else if (typeof foodNameNotUsedByOtherInFoodListOk === 'string') {
+        return {
+            ok: false,
+            message: foodNameNotUsedByOtherInFoodListOk
         };
     }
     return {

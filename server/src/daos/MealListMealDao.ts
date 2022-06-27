@@ -3,16 +3,13 @@ import { IUser, IUserDocument } from '../models/User';
 import { createUID } from '../resolvers/Mutations/Auth';
 
 export class MealListMealDao {
-
-    constructor() {
-    }
+    constructor() {}
 
     public async create(user: IUserDocument, dayIndex: number) {
         let newMeal: Meal = {
             name: 'Meal',
             index: 0,
-            foods: [],
-            id: createUID()
+            foods: []
         };
         switch (dayIndex) {
             case 0:
@@ -64,35 +61,45 @@ export class MealListMealDao {
         }
     }
 
-    private async deleteMealHelper(day: Meal[], mealId: string) {
+    // have to make day of type any[] due to meal not have id 
+    private async deleteMealHelper(day: any[], mealId: string) {
         for (let [i, meal] of day.entries()) {
-            if (mealId === meal.id) {
+            console.log(meal.id);
+            if (mealId === meal._id) {
+                console.log('here corr');
                 day.splice(i, 1);
             }
-            break
-        };
+            break;
+        }
     }
-    
+
     public async delete(user: IUserDocument, dayIndex: number, mealId: string) {
         switch (dayIndex) {
             case 0:
                 this.deleteMealHelper(user.day1, mealId);
+                break;
             case 1:
                 this.deleteMealHelper(user.day2, mealId);
+                break;
             case 2:
                 this.deleteMealHelper(user.day3, mealId);
+                break;
             case 3:
                 this.deleteMealHelper(user.day4, mealId);
+                break;
             case 4:
                 this.deleteMealHelper(user.day5, mealId);
+                break;
             case 5:
                 this.deleteMealHelper(user.day6, mealId);
+                break;
             case 6:
                 this.deleteMealHelper(user.day7, mealId);
+                break;
             default:
-                this.deleteMealHelper(user.day1, mealId);
+                break;
         }
-        await user.save()
+        await user.save();
         return mealId;
     }
 }

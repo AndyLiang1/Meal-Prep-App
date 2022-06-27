@@ -61,6 +61,18 @@ export class FoodListDao {
         user.foodList = user.foodList.filter((food) => {
             return food.name !== foodNameToDelete;
         });
+        user.foodList.forEach((food, i, foodList) => {
+            for (let j = food.ingredients.length - 1; j >= 0; j--) {
+                let ing = food.ingredients[j];
+                if (foodNameToDelete === ing.name) {
+                    foodList[i].calories -= (ing.actualAmount! / ing.givenAmount) * ing.calories;
+                    foodList[i].proteins -= (ing.actualAmount! / ing.givenAmount) * ing.proteins;
+                    foodList[i].carbs -= (ing.actualAmount! / ing.givenAmount) * ing.carbs;
+                    foodList[i].fats -= (ing.actualAmount! / ing.givenAmount) * ing.fats;
+                    foodList[i].ingredients.splice(j, 1);
+                }
+            }
+        });
         await user.save();
         return foodNameToDelete;
     }

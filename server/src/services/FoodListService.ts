@@ -150,6 +150,7 @@ export class FoodListService {
 
     public async delete(user: IUserDocument, foodNameToDelete: string) {
         const deletedFoodName = await this.FoodListDao.delete(user, foodNameToDelete);
+        await services.mealListFoodService.deleteMoreFood(user, foodNameToDelete)
         return {
             ok: true,
             result: deletedFoodName
