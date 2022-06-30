@@ -23,7 +23,6 @@ const checkAuth = async (resolve: any, parent: any, args: any, context: any, inf
                 };
             }
             const argsWithUser = { user, ...args };
-            console.log('got user: ', user)
             const result = await resolve(parent, argsWithUser, context, info);
             return result;
         }

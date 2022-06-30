@@ -48,7 +48,6 @@ export function Login(props: ILoginProps) {
                  setLoginErrorMsg((data!.login as LoginError).message);
              }
             const { username, accessToken, id } = (data!.login as LoginSuccess).user;
-            console.log(accessToken);
             localStorage.setItem('accessToken', accessToken);
             localStorage.setItem('username', username);
             localStorage.setItem('id', id);

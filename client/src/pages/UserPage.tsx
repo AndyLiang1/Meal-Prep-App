@@ -6,7 +6,7 @@ import { MealList } from '../components/MealList/Meal/MealList';
 import { Header } from '../components/Others/Header';
 import { addUserToStore, changeDay } from '../state/action-creators';
 import { IRootState } from '../state/reducers';
-import { Food, GetMealListMealsDocument, Meal, User } from '../generated/graphql-client';
+import { Food, GetFoodListDocument, GetMealListMealsDocument, Meal, User } from '../generated/graphql-client';
 import styles from './UserPage.module.css';
 import { FoodList } from '../components/FoodList/FoodList';
 import { UserInfoInterface } from '../state/reducers/UserData';
@@ -20,23 +20,34 @@ export function UserPage(props: IUserPageProps) {
     const dispatch = useDispatch();
 
     const [day, setDay] = useState<any>([]);
-    const [foodList, setFoodList] = useState<Food[]>([]);
+    const [foodList, setFoodList] = useState<any>([]);
     // const { user }: { user: UserInfoInterface } = useSelector((state: IRootState) => state);
-    const [getMealListMeal, { loading, error, data }] = useLazyQuery(GetMealListMealsDocument, {
+    const [getMealListMeal] = useLazyQuery(GetMealListMealsDocument, {
         variables: {
             dayIndex
         }
     });
-    const getMeals = async () => {
-        const info = await getMealListMeal();
-        console.log(info);
-        setDay(info);
+    const [getFoodList] = useLazyQuery(GetFoodListDocument)
+    const getFoodInMeals = async () => {
+        const { data } = await getMealListMeal();
+        if (data?.getMealListMeal.ok) {
+            setDay(data?.getMealListMeal.result);
+        } else {
+            console.error(data?.getMealListMeal.message);
+        }
     };
 
-    useEffect(() => {
-        console.log(day.data);
-        const { username } = user;
+    const getFoodInFoodList = async() => {
+         const { data } = await getFoodList();
+        if (data?.getFoodList.ok) {
+            setFoodList(data?.getFoodList.result);
+        } else {
+            console.error(data?.getFoodList.message);
+        } 
+    }
 
+    useEffect(() => {
+        const { username } = user;
         dispatch(
             addUserToStore({
                 username,
@@ -46,23 +57,13 @@ export function UserPage(props: IUserPageProps) {
                 foodList
             })
         );
-    }, [day]);
+    }, [day, foodList]);
 
     useEffect(() => {
-        getMeals();
+        getFoodInMeals();
+        getFoodInFoodList()
     }, []);
 
-    useEffect(() => {
-        // dispatch(
-        //     addUserToStore({
-        //         username,
-        //         day: mealListMeals,
-        //         loggedIn: true,
-        //         accessToken: localStorage.getItem('accessToken')!,
-        //         foodList
-        //     })
-        // );
-    }, []);
 
     return (
         <div>

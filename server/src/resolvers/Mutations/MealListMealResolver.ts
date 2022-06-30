@@ -8,7 +8,6 @@ export const createMealListMeal = async (parent: any, { user, dayIndex }: { user
 };
 
 export const getMealListMeal = async (parent: any, { user, dayIndex }: { user: IUserDocument; dayIndex: number }, context: any, info: any) => {
-    console.log('getting right now')
     const getMealListMealResponse = await services.mealListMealService.get(user, dayIndex);
     return getMealListMealResponse;
 };

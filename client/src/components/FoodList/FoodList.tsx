@@ -14,7 +14,6 @@ export function FoodList(props: IFoodListProps) {
     useEffect(() => {
         // console.log(user);
     });
-    console.log(user.foodList.length);
     return (
         <div className={styles.container}>
             <div className={styles.foodList_header}>Food List</div>
