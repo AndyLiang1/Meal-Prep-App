@@ -2,7 +2,6 @@ import { Food, Meal } from "../../generated/graphql-client";
 
 export interface UserInfoInterface {
     username: string;
-    id: string;
     accessToken: string;
     loggedIn: boolean;
     day?: Meal[]; // this should be the only one used
@@ -18,7 +17,6 @@ export interface UserInfoInterface {
 }
 export const defaultUserInfo: UserInfoInterface = {
     username: '',
-    id: '',
     accessToken: '',
     loggedIn: false,
     day: [],

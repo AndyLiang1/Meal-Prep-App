@@ -37,7 +37,7 @@ export class MealListMealDao {
                 break;
         }
         await user.save();
-        return newMeal.id;
+        return "Successful";
     }
 
     public async get(user: IUserDocument, dayIndex: number) {
@@ -61,15 +61,13 @@ export class MealListMealDao {
         }
     }
 
-    // have to make day of type any[] due to meal not have id 
+    // have to make day of type any[] due to meal not have id
     private async deleteMealHelper(day: any[], mealId: string) {
         for (let [i, meal] of day.entries()) {
-            console.log(meal.id);
-            if (mealId === meal._id) {
-                console.log('here corr');
+            if (mealId === meal.id) {
                 day.splice(i, 1);
+                break;
             }
-            break;
         }
     }
 

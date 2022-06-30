@@ -20,7 +20,7 @@ const typeDefs = gql`
     type Meal {
         name: String!
         index: Int!
-        id: ID
+        id: ID!
         foods: [Food!]!
     }
 
@@ -195,112 +195,12 @@ const typeDefs = gql`
         foodIndex: Float!
     }
 
-    input CreateFoodInput {
-        acessToken: String!
-        dayIndex: Int
-        mealId: ID
-        foodName: String!
-        calories: Float!
-        proteins: Float!
-        carbs: Float!
-        fats: Float!
-        ingredientNames: [String!]!
-        givenAmount: Float!
-        actualAmount: Float!
-    }
-
-    input CreateFoodListInput {
-        name: String!
-        calories: Float
-        proteins: Float
-        carbs: Float
-        fats: Float
-
-        ingredientNames: [String!]!
-        ingredientActualAmounts: [Float!]!
-        givenAmount: Float!
-    }
-
-    input EditFoodListInput {
-        oldFoodName: String!
-        newFoodName: String!
-        newCalories: Float
-        newProteins: Float
-        newCarbs: Float
-        newFats: Float
-        newIngNames: [String!]!
-        newIngActualAmounts: [Float!]!
-        newGivenAmount: Float!
-    }
-
-    input CreateMealListFoodInput {
-        existingFoodName: String
-
-        name: String
-        calories: Float
-        proteins: Float
-        carbs: Float
-        fats: Float
-        ingredientNames: [String!]!
-        ingredientActualAmounts: [Float!]!
-        givenAmount: Float
-
-        actualAmount: Float!
-        dayIndex: Float!
-        mealId: String!
-    }
-
-    input CreateMealInput {
-        accessToken: String!
-        dayIndex: Int!
-    }
-
-    input DeleteMealInput {
-        accessToken: String!
-        dayIndex: Int!
-        mealId: ID!
-    }
-
-    input DeleteFoodInput {
-        accessToken: String!
-        dayIndex: Int
-        mealId: ID
-        foodName: String
-        foodIndex: Int
-    }
-    input EditFoodFromMealListInput {
-        accessToken: ID!
-        dayIndex: Int!
-        mealId: ID!
-        foodIndex: Int!
-        newActualAmount: Int!
-    }
-
-    input EditFoodInput {
-        accessToken: String!
-        dayIndex: Int
-        mealId: ID
-        foodIndex: Int
-        foodName: String
-
-        newFoodName: String
-        newCalories: Float
-        newProteins: Float
-        newCarbs: Float
-        newFats: Float
-        newIngredientNames: [String!]
-        newGivenAmount: Float
-        newActualAmount: Float
-    }
-
     type Query {
         # health check
         boop: String!
         clearDb: String
         getFoodList: GetFoodListResponse!
         getMealListMeal(dayIndex: Float!): GetMealListMealResponse!
-
-        getMeals(id: ID!, day1: Boolean!, day2: Boolean!, day3: Boolean!, day4: Boolean!, day5: Boolean!, day6: Boolean!, day7: Boolean!): User!
     }
 
     type Mutation {
@@ -315,14 +215,8 @@ const typeDefs = gql`
         editMealListFood(input: EditMealListFoodInputReal!): EditMealListFoodResponse!
         deleteMealListFood(input: DeleteMealListFoodInputReal!): DeleteMealListFoodResponse!
 
-        createMealListMeal(dayIndex: Float!): ID
-        testt(dayIndex: Float!, mealId: String!): ID!
-
-        createFood(input: CreateFoodInput!): Food!
-        createMeal(input: CreateMealInput!): ID!
-        deleteMeal(input: DeleteMealInput!): ID!
-        deleteFood(input: DeleteFoodInput!): String!
-        editFood(input: EditFoodInput!): String!
+        createMealListMeal(dayIndex: Float!): String!
+        deleteMealListMeal(dayIndex: Float!, mealId: String!): ID!
     }
 
     type RegisterSuccess {

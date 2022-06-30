@@ -1,5 +1,5 @@
-query GetFoodList {
-    getFoodList {
+mutation CreateMealListFood($input: CreateMealListFoodInputReal!) {
+    createMealListFood(input: $input) {
         ok
         result {
             name
@@ -9,15 +9,6 @@ query GetFoodList {
             fats
             ingredients {
                 name
-                calories
-                proteins
-                carbs
-                fats
-                ingredients {
-                    name
-                }
-                givenAmount
-                actualAmount
             }
             givenAmount
             actualAmount

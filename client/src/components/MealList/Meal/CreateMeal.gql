@@ -1,3 +1,0 @@
-mutation createMeal($input: CreateMealInput!) {
-    createMeal(input: $input)
-}

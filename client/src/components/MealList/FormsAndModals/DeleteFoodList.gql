@@ -1,0 +1,7 @@
+mutation DeleteFoodList($oldFoodNameToDelete: String!) {
+    deleteFoodList(oldFoodNameToDelete: $oldFoodNameToDelete) {
+        ok
+        result
+        message
+    }
+}

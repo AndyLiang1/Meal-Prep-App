@@ -1,5 +1,5 @@
-query GetFoodList {
-    getFoodList {
+mutation EditFoodList($input: EditFoodListInputReal!) {
+    editFoodList(input: $input) {
         ok
         result {
             name
@@ -13,14 +13,8 @@ query GetFoodList {
                 proteins
                 carbs
                 fats
-                ingredients {
-                    name
-                }
-                givenAmount
-                actualAmount
             }
             givenAmount
-            actualAmount
         }
         message
     }

@@ -3,7 +3,6 @@ import { config } from '../config/config';
 import services from '../services/services';
 
 const checkAuth = async (resolve: any, parent: any, args: any, context: any, info: any) => {
-    console.log('check auth')
     if (!context.authorization) {
         console.error(`Error in ${info.path.key}: no auth token`);
         return {
@@ -12,7 +11,6 @@ const checkAuth = async (resolve: any, parent: any, args: any, context: any, inf
         };
     }
     const accessToken = context.authorization;
-    let argsWithUserId: any;
 
     try {
         const decoded = jwt.verify(accessToken, config.server.JWT_SECRET);
@@ -25,6 +23,7 @@ const checkAuth = async (resolve: any, parent: any, args: any, context: any, inf
                 };
             }
             const argsWithUser = { user, ...args };
+            console.log('got user: ', user)
             const result = await resolve(parent, argsWithUser, context, info);
             return result;
         }
@@ -39,24 +38,16 @@ const checkAuth = async (resolve: any, parent: any, args: any, context: any, inf
 const authMiddleware = {
     Query: {
         getFoodList: checkAuth,
-        getMeals: checkAuth,
         getMealListMeal: checkAuth
     },
 
     Mutation: {
-        createFood: checkAuth,
-        editFood: checkAuth,
-        deleteFood: checkAuth,
-        createMeal: checkAuth,
-        deleteMeal: checkAuth,
-
         createFoodList: checkAuth,
         editFoodList: checkAuth,
         deleteFoodList: checkAuth,
 
         createMealListMeal: checkAuth, 
-        // deleteMealListMeal: checkAuth, 
-        testt: checkAuth,
+        deleteMealListMeal: checkAuth, 
 
         createMealListFood: checkAuth,
         editMealListFood: checkAuth, 

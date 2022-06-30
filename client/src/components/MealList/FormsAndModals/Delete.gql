@@ -1,7 +1,0 @@
-mutation deleteFood($input: DeleteFoodInput!) {
-    deleteFood(input: $input)
-}
-
-mutation deleteMeal($input: DeleteMealInput!) {
-    deleteMeal(input: $input)
-}

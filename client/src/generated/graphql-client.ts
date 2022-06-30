@@ -13,66 +13,199 @@ export type Scalars = {
   Float: number;
 };
 
-export type CreateFoodInput = {
+export type CreateFoodListInputReal = {
+  createType: CreateFoodListType;
+  inputNewNoIng?: InputMaybe<CreateFoodListInput_NewNoIng>;
+  inputNewYesIng?: InputMaybe<CreateFoodListInput_NewYesIng>;
+};
+
+export type CreateFoodListInput_NewNoIng = {
+  calories: Scalars['Float'];
+  carbs: Scalars['Float'];
+  fats: Scalars['Float'];
+  givenAmount: Scalars['Float'];
+  name: Scalars['String'];
+  proteins: Scalars['Float'];
+};
+
+export type CreateFoodListInput_NewYesIng = {
+  givenAmount: Scalars['Float'];
+  ingredientActualAmounts: Array<Scalars['Float']>;
+  ingredientNames: Array<Scalars['String']>;
+  name: Scalars['String'];
+};
+
+export type CreateFoodListResponse = {
+  __typename?: 'CreateFoodListResponse';
+  message?: Maybe<Scalars['String']>;
+  ok: Scalars['Boolean'];
+  result?: Maybe<Food>;
+};
+
+export enum CreateFoodListType {
+  NewNoIng = 'NEW_NO_ING',
+  NewYesIng = 'NEW_YES_ING'
+}
+
+export type CreateMealListFoodInputReal = {
+  createType: CreateMealListFoodType;
+  inputExisting?: InputMaybe<CreateMealListFoodInput_Existing>;
+  inputNewNoIng?: InputMaybe<CreateMealListFoodInput_NewNoIng>;
+  inputNewYesIng?: InputMaybe<CreateMealListFoodInput_NewYesIng>;
+};
+
+export type CreateMealListFoodInput_Existing = {
+  actualAmount: Scalars['Float'];
+  dayIndex: Scalars['Float'];
+  existingFoodName: Scalars['String'];
+  mealId: Scalars['String'];
+};
+
+export type CreateMealListFoodInput_NewNoIng = {
   actualAmount: Scalars['Float'];
   calories: Scalars['Float'];
   carbs: Scalars['Float'];
-  dayIndex?: InputMaybe<Scalars['Int']>;
+  dayIndex: Scalars['Float'];
   fats: Scalars['Float'];
-  foodName: Scalars['String'];
   givenAmount: Scalars['Float'];
-  ingredientNames: Array<Scalars['String']>;
-  mealId?: InputMaybe<Scalars['ID']>;
+  mealId: Scalars['String'];
+  name: Scalars['String'];
   proteins: Scalars['Float'];
-  userId: Scalars['ID'];
 };
 
-export type CreateMealInput = {
-  dayIndex: Scalars['Int'];
-  userId: Scalars['ID'];
+export type CreateMealListFoodInput_NewYesIng = {
+  actualAmount: Scalars['Float'];
+  dayIndex: Scalars['Float'];
+  givenAmount: Scalars['Float'];
+  ingredientActualAmounts: Array<Scalars['Float']>;
+  ingredientNames: Array<Scalars['String']>;
+  mealId: Scalars['String'];
+  name: Scalars['String'];
 };
 
-export type DeleteFoodInput = {
-  dayIndex?: InputMaybe<Scalars['Int']>;
-  foodIndex?: InputMaybe<Scalars['Int']>;
-  foodName?: InputMaybe<Scalars['String']>;
-  mealId?: InputMaybe<Scalars['ID']>;
-  userId: Scalars['ID'];
+export type CreateMealListFoodResponse = {
+  __typename?: 'CreateMealListFoodResponse';
+  message?: Maybe<Scalars['String']>;
+  ok: Scalars['Boolean'];
+  result?: Maybe<Food>;
 };
 
-export type DeleteMealInput = {
-  dayIndex: Scalars['Int'];
-  mealId: Scalars['ID'];
-  userId: Scalars['ID'];
+export enum CreateMealListFoodType {
+  Existing = 'EXISTING',
+  NewNoIng = 'NEW_NO_ING',
+  NewYesIng = 'NEW_YES_ING'
+}
+
+export type DeleteFoodListResponse = {
+  __typename?: 'DeleteFoodListResponse';
+  message?: Maybe<Scalars['String']>;
+  ok: Scalars['Boolean'];
+  result?: Maybe<Scalars['String']>;
 };
 
-export type EditFoodFromMealListInput = {
-  dayIndex: Scalars['Int'];
-  foodIndex: Scalars['Int'];
-  mealId: Scalars['ID'];
-  newActualAmount: Scalars['Int'];
-  userId: Scalars['ID'];
+export type DeleteMealListFoodInputReal = {
+  dayIndex: Scalars['Float'];
+  foodIndex: Scalars['Float'];
+  mealId: Scalars['String'];
 };
 
-export type EditFoodInput = {
-  dayIndex?: InputMaybe<Scalars['Int']>;
-  foodIndex?: InputMaybe<Scalars['Int']>;
-  foodName?: InputMaybe<Scalars['String']>;
-  mealId?: InputMaybe<Scalars['ID']>;
-  newActualAmount?: InputMaybe<Scalars['Float']>;
-  newCalories?: InputMaybe<Scalars['Float']>;
-  newCarbs?: InputMaybe<Scalars['Float']>;
-  newFats?: InputMaybe<Scalars['Float']>;
-  newFoodName?: InputMaybe<Scalars['String']>;
-  newGivenAmount?: InputMaybe<Scalars['Float']>;
-  newIngredientNames?: InputMaybe<Array<Scalars['String']>>;
-  newProteins?: InputMaybe<Scalars['Float']>;
-  userId: Scalars['ID'];
+export type DeleteMealListFoodResponse = {
+  __typename?: 'DeleteMealListFoodResponse';
+  message?: Maybe<Scalars['String']>;
+  ok: Scalars['Boolean'];
+  result?: Maybe<Scalars['String']>;
 };
+
+export type EditFoodListInputReal = {
+  editType: EditFoodListType;
+  inputNewNoIng?: InputMaybe<EditFoodListInput_NewNoIng>;
+  inputNewYesIng?: InputMaybe<EditFoodListInput_NewYesIng>;
+};
+
+export type EditFoodListInput_NewNoIng = {
+  calories: Scalars['Float'];
+  carbs: Scalars['Float'];
+  fats: Scalars['Float'];
+  givenAmount: Scalars['Float'];
+  name: Scalars['String'];
+  oldFoodName: Scalars['String'];
+  proteins: Scalars['Float'];
+};
+
+export type EditFoodListInput_NewYesIng = {
+  givenAmount: Scalars['Float'];
+  ingredientActualAmounts: Array<Scalars['Float']>;
+  ingredientNames: Array<Scalars['String']>;
+  name: Scalars['String'];
+  oldFoodName: Scalars['String'];
+};
+
+export type EditFoodListResponse = {
+  __typename?: 'EditFoodListResponse';
+  message?: Maybe<Scalars['String']>;
+  ok: Scalars['Boolean'];
+  result?: Maybe<Food>;
+};
+
+export enum EditFoodListType {
+  NewNoIng = 'NEW_NO_ING',
+  NewYesIng = 'NEW_YES_ING'
+}
+
+export type EditMealListFoodInputReal = {
+  editType: EditMealListFoodType;
+  inputActualAmount?: InputMaybe<EditMealListFoodInput_ActualAmount>;
+  inputNewNoIng?: InputMaybe<EditMealListFoodInput_NewNoIng>;
+  inputNewYesIng?: InputMaybe<EditMealListFoodInput_NewYesIng>;
+};
+
+export type EditMealListFoodInput_ActualAmount = {
+  dayIndex: Scalars['Float'];
+  foodIndex: Scalars['Float'];
+  mealId: Scalars['String'];
+  newActualAmount: Scalars['Float'];
+};
+
+export type EditMealListFoodInput_NewNoIng = {
+  actualAmount: Scalars['Float'];
+  calories: Scalars['Float'];
+  carbs: Scalars['Float'];
+  dayIndex: Scalars['Float'];
+  fats: Scalars['Float'];
+  foodIndex: Scalars['Float'];
+  givenAmount: Scalars['Float'];
+  mealId: Scalars['String'];
+  name: Scalars['String'];
+  proteins: Scalars['Float'];
+};
+
+export type EditMealListFoodInput_NewYesIng = {
+  actualAmount: Scalars['Float'];
+  dayIndex: Scalars['Float'];
+  foodIndex: Scalars['Float'];
+  givenAmount: Scalars['Float'];
+  ingredientActualAmounts: Array<Scalars['Float']>;
+  ingredientNames: Array<Scalars['String']>;
+  mealId: Scalars['String'];
+  name: Scalars['String'];
+};
+
+export type EditMealListFoodResponse = {
+  __typename?: 'EditMealListFoodResponse';
+  message?: Maybe<Scalars['String']>;
+  ok: Scalars['Boolean'];
+  result?: Maybe<Food>;
+};
+
+export enum EditMealListFoodType {
+  ActualAmount = 'ACTUAL_AMOUNT',
+  NewNoIng = 'NEW_NO_ING',
+  NewYesIng = 'NEW_YES_ING'
+}
 
 export type Food = {
   __typename?: 'Food';
-  actualAmount: Scalars['Float'];
+  actualAmount?: Maybe<Scalars['Float']>;
   calories: Scalars['Float'];
   carbs: Scalars['Float'];
   fats: Scalars['Float'];
@@ -80,6 +213,20 @@ export type Food = {
   ingredients: Array<Food>;
   name: Scalars['String'];
   proteins: Scalars['Float'];
+};
+
+export type GetFoodListResponse = {
+  __typename?: 'GetFoodListResponse';
+  message?: Maybe<Scalars['String']>;
+  ok: Scalars['Boolean'];
+  result?: Maybe<Array<Food>>;
+};
+
+export type GetMealListMealResponse = {
+  __typename?: 'GetMealListMealResponse';
+  message?: Maybe<Scalars['String']>;
+  ok: Scalars['Boolean'];
+  result?: Maybe<Array<Meal>>;
 };
 
 export type LoginError = {
@@ -104,38 +251,57 @@ export type Meal = {
 
 export type Mutation = {
   __typename?: 'Mutation';
-  createFood: Food;
-  createMeal: Scalars['ID'];
-  deleteFood: Scalars['String'];
-  deleteMeal: Scalars['ID'];
-  editFood: Scalars['String'];
+  createFoodList: CreateFoodListResponse;
+  createMealListFood: CreateMealListFoodResponse;
+  createMealListMeal: Scalars['String'];
+  deleteFoodList: DeleteFoodListResponse;
+  deleteMealListFood: DeleteMealListFoodResponse;
+  deleteMealListMeal: Scalars['ID'];
+  editFoodList: EditFoodListResponse;
+  editMealListFood: EditMealListFoodResponse;
   login: LoginResult;
   register: RegisterResult;
 };
 
 
-export type MutationCreateFoodArgs = {
-  input: CreateFoodInput;
+export type MutationCreateFoodListArgs = {
+  input: CreateFoodListInputReal;
 };
 
 
-export type MutationCreateMealArgs = {
-  input: CreateMealInput;
+export type MutationCreateMealListFoodArgs = {
+  input: CreateMealListFoodInputReal;
 };
 
 
-export type MutationDeleteFoodArgs = {
-  input: DeleteFoodInput;
+export type MutationCreateMealListMealArgs = {
+  dayIndex: Scalars['Float'];
 };
 
 
-export type MutationDeleteMealArgs = {
-  input: DeleteMealInput;
+export type MutationDeleteFoodListArgs = {
+  oldFoodNameToDelete: Scalars['String'];
 };
 
 
-export type MutationEditFoodArgs = {
-  input: EditFoodInput;
+export type MutationDeleteMealListFoodArgs = {
+  input: DeleteMealListFoodInputReal;
+};
+
+
+export type MutationDeleteMealListMealArgs = {
+  dayIndex: Scalars['Float'];
+  mealId: Scalars['String'];
+};
+
+
+export type MutationEditFoodListArgs = {
+  input: EditFoodListInputReal;
+};
+
+
+export type MutationEditMealListFoodArgs = {
+  input: EditMealListFoodInputReal;
 };
 
 
@@ -153,25 +319,13 @@ export type Query = {
   __typename?: 'Query';
   boop: Scalars['String'];
   clearDb?: Maybe<Scalars['String']>;
-  getFoodList: Array<Food>;
-  getMeals: User;
+  getFoodList: GetFoodListResponse;
+  getMealListMeal: GetMealListMealResponse;
 };
 
 
-export type QueryGetFoodListArgs = {
-  id: Scalars['ID'];
-};
-
-
-export type QueryGetMealsArgs = {
-  day1: Scalars['Boolean'];
-  day2: Scalars['Boolean'];
-  day3: Scalars['Boolean'];
-  day4: Scalars['Boolean'];
-  day5: Scalars['Boolean'];
-  day6: Scalars['Boolean'];
-  day7: Scalars['Boolean'];
-  id: Scalars['ID'];
+export type QueryGetMealListMealArgs = {
+  dayIndex: Scalars['Float'];
 };
 
 export type RegisterError = {
@@ -224,85 +378,76 @@ export type RegisterUserMutationVariables = Exact<{
 
 export type RegisterUserMutation = { __typename?: 'Mutation', register: { __typename?: 'RegisterError', message: string } | { __typename?: 'RegisterSuccess', user: { __typename?: 'User', id: string, username: string, email: string, password: string, accessToken: string, day1: Array<{ __typename?: 'Meal', foods: Array<{ __typename?: 'Food', name: string, calories: number, proteins: number }> }> } } };
 
-export type CreateFoodFromFoodListMutationVariables = Exact<{
-  createFoodInput2: CreateFoodInput;
+export type CreateFoodListMutationVariables = Exact<{
+  input: CreateFoodListInputReal;
 }>;
 
 
-export type CreateFoodFromFoodListMutation = { __typename?: 'Mutation', createFood: { __typename?: 'Food', name: string } };
+export type CreateFoodListMutation = { __typename?: 'Mutation', createFoodList: { __typename?: 'CreateFoodListResponse', ok: boolean, message?: string | null, result?: { __typename?: 'Food', name: string, calories: number, proteins: number, carbs: number, fats: number, givenAmount: number, ingredients: Array<{ __typename?: 'Food', name: string, calories: number, proteins: number, carbs: number, fats: number }> } | null } };
 
-export type GetFoodListQueryVariables = Exact<{
-  getFoodListId: Scalars['ID'];
+export type GetFoodListQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type GetFoodListQuery = { __typename?: 'Query', getFoodList: { __typename?: 'GetFoodListResponse', ok: boolean, message?: string | null, result?: Array<{ __typename?: 'Food', name: string, calories: number, proteins: number, carbs: number, fats: number, givenAmount: number, actualAmount?: number | null, ingredients: Array<{ __typename?: 'Food', name: string, calories: number, proteins: number, carbs: number, fats: number, givenAmount: number, actualAmount?: number | null, ingredients: Array<{ __typename?: 'Food', name: string }> }> }> | null } };
+
+export type DeleteFoodListMutationVariables = Exact<{
+  oldFoodNameToDelete: Scalars['String'];
 }>;
 
 
-export type GetFoodListQuery = { __typename?: 'Query', getFoodList: Array<{ __typename?: 'Food', name: string, calories: number, proteins: number, carbs: number, fats: number, ingredients: Array<{ __typename?: 'Food', name: string, calories: number, proteins: number, carbs: number, fats: number }> }> };
+export type DeleteFoodListMutation = { __typename?: 'Mutation', deleteFoodList: { __typename?: 'DeleteFoodListResponse', ok: boolean, result?: string | null, message?: string | null } };
 
-export type DeleteFoodMutationVariables = Exact<{
-  input: DeleteFoodInput;
+export type DeleteMealListFoodMutationVariables = Exact<{
+  input: DeleteMealListFoodInputReal;
 }>;
 
 
-export type DeleteFoodMutation = { __typename?: 'Mutation', deleteFood: string };
+export type DeleteMealListFoodMutation = { __typename?: 'Mutation', deleteMealListFood: { __typename?: 'DeleteMealListFoodResponse', ok: boolean, result?: string | null, message?: string | null } };
 
-export type DeleteMealMutationVariables = Exact<{
-  input: DeleteMealInput;
+export type EditFoodListMutationVariables = Exact<{
+  input: EditFoodListInputReal;
 }>;
 
 
-export type DeleteMealMutation = { __typename?: 'Mutation', deleteMeal: string };
+export type EditFoodListMutation = { __typename?: 'Mutation', editFoodList: { __typename?: 'EditFoodListResponse', ok: boolean, message?: string | null, result?: { __typename?: 'Food', name: string, calories: number, proteins: number, carbs: number, fats: number, givenAmount: number, ingredients: Array<{ __typename?: 'Food', name: string, calories: number, proteins: number, carbs: number, fats: number }> } | null } };
 
-export type EditFoodFromMealListMutationVariables = Exact<{
-  input: EditFoodInput;
+export type EditMealListFoodMutationVariables = Exact<{
+  input: EditMealListFoodInputReal;
 }>;
 
 
-export type EditFoodFromMealListMutation = { __typename?: 'Mutation', editFood: string };
+export type EditMealListFoodMutation = { __typename?: 'Mutation', editMealListFood: { __typename?: 'EditMealListFoodResponse', ok: boolean, message?: string | null, result?: { __typename?: 'Food', name: string, calories: number, proteins: number, carbs: number, fats: number, givenAmount: number, actualAmount?: number | null, ingredients: Array<{ __typename?: 'Food', name: string, calories: number, proteins: number, carbs: number, fats: number, givenAmount: number, actualAmount?: number | null, ingredients: Array<{ __typename?: 'Food', name: string }> }> } | null } };
 
-export type EditFoodFromFoodListMutationVariables = Exact<{
-  input: EditFoodInput;
+export type CreateMealListFoodMutationVariables = Exact<{
+  input: CreateMealListFoodInputReal;
 }>;
 
 
-export type EditFoodFromFoodListMutation = { __typename?: 'Mutation', editFood: string };
+export type CreateMealListFoodMutation = { __typename?: 'Mutation', createMealListFood: { __typename?: 'CreateMealListFoodResponse', ok: boolean, message?: string | null, result?: { __typename?: 'Food', name: string, calories: number, proteins: number, carbs: number, fats: number, givenAmount: number, actualAmount?: number | null, ingredients: Array<{ __typename?: 'Food', name: string }> } | null } };
 
-export type CreateFoodFromMealMutationVariables = Exact<{
-  input: CreateFoodInput;
+export type CreateMealListMealMutationVariables = Exact<{
+  dayIndex: Scalars['Float'];
 }>;
 
 
-export type CreateFoodFromMealMutation = { __typename?: 'Mutation', createFood: { __typename?: 'Food', name: string } };
+export type CreateMealListMealMutation = { __typename?: 'Mutation', createMealListMeal: string };
 
-export type CreateMealMutationVariables = Exact<{
-  input: CreateMealInput;
+export type GetMealListMealsQueryVariables = Exact<{
+  dayIndex: Scalars['Float'];
 }>;
 
 
-export type CreateMealMutation = { __typename?: 'Mutation', createMeal: string };
-
-export type GetMealsQueryVariables = Exact<{
-  userId: Scalars['ID'];
-  day1: Scalars['Boolean'];
-  day2: Scalars['Boolean'];
-  day3: Scalars['Boolean'];
-  day4: Scalars['Boolean'];
-  day5: Scalars['Boolean'];
-  day6: Scalars['Boolean'];
-  day7: Scalars['Boolean'];
-}>;
-
-
-export type GetMealsQuery = { __typename?: 'Query', getMeals: { __typename?: 'User', username: string, id: string, day1?: Array<{ __typename?: 'Meal', name: string, index: number, id: string, foods: Array<{ __typename?: 'Food', name: string, calories: number, proteins: number, carbs: number, fats: number, givenAmount: number, actualAmount: number, ingredients: Array<{ __typename?: 'Food', name: string, calories: number, proteins: number, carbs: number, fats: number, givenAmount: number, actualAmount: number }> }> }>, day2?: Array<{ __typename?: 'Meal', name: string, index: number, id: string, foods: Array<{ __typename?: 'Food', name: string, calories: number, proteins: number, carbs: number, fats: number, givenAmount: number, actualAmount: number, ingredients: Array<{ __typename?: 'Food', name: string, calories: number, proteins: number, carbs: number, fats: number, givenAmount: number, actualAmount: number }> }> }>, day3?: Array<{ __typename?: 'Meal', name: string, index: number, id: string, foods: Array<{ __typename?: 'Food', name: string, calories: number, proteins: number, carbs: number, fats: number, givenAmount: number, actualAmount: number, ingredients: Array<{ __typename?: 'Food', name: string, calories: number, proteins: number, carbs: number, fats: number, givenAmount: number, actualAmount: number }> }> }>, day4?: Array<{ __typename?: 'Meal', name: string, index: number, id: string, foods: Array<{ __typename?: 'Food', name: string, calories: number, proteins: number, carbs: number, fats: number, givenAmount: number, actualAmount: number, ingredients: Array<{ __typename?: 'Food', name: string, calories: number, proteins: number, carbs: number, fats: number, givenAmount: number, actualAmount: number }> }> }>, day5?: Array<{ __typename?: 'Meal', name: string, index: number, id: string, foods: Array<{ __typename?: 'Food', name: string, calories: number, proteins: number, carbs: number, fats: number, givenAmount: number, actualAmount: number, ingredients: Array<{ __typename?: 'Food', name: string, calories: number, proteins: number, carbs: number, fats: number, givenAmount: number, actualAmount: number }> }> }>, day6?: Array<{ __typename?: 'Meal', name: string, index: number, id: string, foods: Array<{ __typename?: 'Food', name: string, calories: number, proteins: number, carbs: number, fats: number, givenAmount: number, actualAmount: number, ingredients: Array<{ __typename?: 'Food', name: string, calories: number, proteins: number, carbs: number, fats: number, givenAmount: number, actualAmount: number }> }> }>, day7?: Array<{ __typename?: 'Meal', name: string, index: number, id: string, foods: Array<{ __typename?: 'Food', name: string, calories: number, proteins: number, carbs: number, fats: number, givenAmount: number, actualAmount: number, ingredients: Array<{ __typename?: 'Food', name: string, calories: number, proteins: number, carbs: number, fats: number, givenAmount: number, actualAmount: number }> }> }>, foodList: Array<{ __typename?: 'Food', name: string, calories: number, proteins: number, carbs: number, fats: number, givenAmount: number, actualAmount: number, ingredients: Array<{ __typename?: 'Food', name: string, calories: number, proteins: number, carbs: number, fats: number, givenAmount: number, actualAmount: number }> }> } };
+export type GetMealListMealsQuery = { __typename?: 'Query', getMealListMeal: { __typename?: 'GetMealListMealResponse', ok: boolean, message?: string | null, result?: Array<{ __typename?: 'Meal', name: string, index: number, id: string, foods: Array<{ __typename?: 'Food', name: string, calories: number, proteins: number, carbs: number, fats: number, givenAmount: number, actualAmount?: number | null, ingredients: Array<{ __typename?: 'Food', name: string, calories: number, proteins: number, carbs: number, fats: number, givenAmount: number, actualAmount?: number | null, ingredients: Array<{ __typename?: 'Food', name: string }> }> }> }> | null } };
 
 
 export const LoginUserDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"LoginUser"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"email"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"password"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"login"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"email"},"value":{"kind":"Variable","name":{"kind":"Name","value":"email"}}},{"kind":"Argument","name":{"kind":"Name","value":"password"},"value":{"kind":"Variable","name":{"kind":"Name","value":"password"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"InlineFragment","typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"LoginSuccess"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"user"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"username"}},{"kind":"Field","name":{"kind":"Name","value":"accessToken"}}]}}]}},{"kind":"InlineFragment","typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"LoginError"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"message"}}]}}]}}]}}]} as unknown as DocumentNode<LoginUserMutation, LoginUserMutationVariables>;
 export const RegisterUserDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"RegisterUser"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"input"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"RegisterInput"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"register"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"input"},"value":{"kind":"Variable","name":{"kind":"Name","value":"input"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"InlineFragment","typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"RegisterSuccess"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"user"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"username"}},{"kind":"Field","name":{"kind":"Name","value":"email"}},{"kind":"Field","name":{"kind":"Name","value":"password"}},{"kind":"Field","name":{"kind":"Name","value":"accessToken"}},{"kind":"Field","name":{"kind":"Name","value":"day1"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"foods"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"calories"}},{"kind":"Field","name":{"kind":"Name","value":"proteins"}}]}}]}}]}}]}},{"kind":"InlineFragment","typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"RegisterError"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"message"}}]}}]}}]}}]} as unknown as DocumentNode<RegisterUserMutation, RegisterUserMutationVariables>;
-export const CreateFoodFromFoodListDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"createFoodFromFoodList"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"createFoodInput2"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"CreateFoodInput"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"createFood"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"input"},"value":{"kind":"Variable","name":{"kind":"Name","value":"createFoodInput2"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"name"}}]}}]}}]} as unknown as DocumentNode<CreateFoodFromFoodListMutation, CreateFoodFromFoodListMutationVariables>;
-export const GetFoodListDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"getFoodList"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"getFoodListId"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"ID"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"getFoodList"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"id"},"value":{"kind":"Variable","name":{"kind":"Name","value":"getFoodListId"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"calories"}},{"kind":"Field","name":{"kind":"Name","value":"proteins"}},{"kind":"Field","name":{"kind":"Name","value":"carbs"}},{"kind":"Field","name":{"kind":"Name","value":"fats"}},{"kind":"Field","name":{"kind":"Name","value":"ingredients"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"calories"}},{"kind":"Field","name":{"kind":"Name","value":"proteins"}},{"kind":"Field","name":{"kind":"Name","value":"carbs"}},{"kind":"Field","name":{"kind":"Name","value":"fats"}}]}}]}}]}}]} as unknown as DocumentNode<GetFoodListQuery, GetFoodListQueryVariables>;
-export const DeleteFoodDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"deleteFood"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"input"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"DeleteFoodInput"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"deleteFood"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"input"},"value":{"kind":"Variable","name":{"kind":"Name","value":"input"}}}]}]}}]} as unknown as DocumentNode<DeleteFoodMutation, DeleteFoodMutationVariables>;
-export const DeleteMealDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"deleteMeal"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"input"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"DeleteMealInput"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"deleteMeal"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"input"},"value":{"kind":"Variable","name":{"kind":"Name","value":"input"}}}]}]}}]} as unknown as DocumentNode<DeleteMealMutation, DeleteMealMutationVariables>;
-export const EditFoodFromMealListDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"editFoodFromMealList"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"input"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"EditFoodInput"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"editFood"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"input"},"value":{"kind":"Variable","name":{"kind":"Name","value":"input"}}}]}]}}]} as unknown as DocumentNode<EditFoodFromMealListMutation, EditFoodFromMealListMutationVariables>;
-export const EditFoodFromFoodListDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"editFoodFromFoodList"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"input"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"EditFoodInput"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"editFood"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"input"},"value":{"kind":"Variable","name":{"kind":"Name","value":"input"}}}]}]}}]} as unknown as DocumentNode<EditFoodFromFoodListMutation, EditFoodFromFoodListMutationVariables>;
-export const CreateFoodFromMealDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"createFoodFromMeal"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"input"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"CreateFoodInput"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"createFood"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"input"},"value":{"kind":"Variable","name":{"kind":"Name","value":"input"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"name"}}]}}]}}]} as unknown as DocumentNode<CreateFoodFromMealMutation, CreateFoodFromMealMutationVariables>;
-export const CreateMealDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"createMeal"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"input"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"CreateMealInput"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"createMeal"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"input"},"value":{"kind":"Variable","name":{"kind":"Name","value":"input"}}}]}]}}]} as unknown as DocumentNode<CreateMealMutation, CreateMealMutationVariables>;
-export const GetMealsDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"getMeals"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"userId"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"ID"}}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"day1"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"Boolean"}}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"day2"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"Boolean"}}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"day3"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"Boolean"}}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"day4"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"Boolean"}}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"day5"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"Boolean"}}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"day6"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"Boolean"}}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"day7"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"Boolean"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"getMeals"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"id"},"value":{"kind":"Variable","name":{"kind":"Name","value":"userId"}}},{"kind":"Argument","name":{"kind":"Name","value":"day1"},"value":{"kind":"Variable","name":{"kind":"Name","value":"day1"}}},{"kind":"Argument","name":{"kind":"Name","value":"day2"},"value":{"kind":"Variable","name":{"kind":"Name","value":"day2"}}},{"kind":"Argument","name":{"kind":"Name","value":"day3"},"value":{"kind":"Variable","name":{"kind":"Name","value":"day3"}}},{"kind":"Argument","name":{"kind":"Name","value":"day4"},"value":{"kind":"Variable","name":{"kind":"Name","value":"day4"}}},{"kind":"Argument","name":{"kind":"Name","value":"day5"},"value":{"kind":"Variable","name":{"kind":"Name","value":"day5"}}},{"kind":"Argument","name":{"kind":"Name","value":"day6"},"value":{"kind":"Variable","name":{"kind":"Name","value":"day6"}}},{"kind":"Argument","name":{"kind":"Name","value":"day7"},"value":{"kind":"Variable","name":{"kind":"Name","value":"day7"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"username"}},{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"day1"},"directives":[{"kind":"Directive","name":{"kind":"Name","value":"include"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"if"},"value":{"kind":"Variable","name":{"kind":"Name","value":"day1"}}}]}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"index"}},{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"foods"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"calories"}},{"kind":"Field","name":{"kind":"Name","value":"proteins"}},{"kind":"Field","name":{"kind":"Name","value":"carbs"}},{"kind":"Field","name":{"kind":"Name","value":"fats"}},{"kind":"Field","name":{"kind":"Name","value":"givenAmount"}},{"kind":"Field","name":{"kind":"Name","value":"actualAmount"}},{"kind":"Field","name":{"kind":"Name","value":"ingredients"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"calories"}},{"kind":"Field","name":{"kind":"Name","value":"proteins"}},{"kind":"Field","name":{"kind":"Name","value":"carbs"}},{"kind":"Field","name":{"kind":"Name","value":"fats"}},{"kind":"Field","name":{"kind":"Name","value":"givenAmount"}},{"kind":"Field","name":{"kind":"Name","value":"actualAmount"}}]}}]}}]}},{"kind":"Field","name":{"kind":"Name","value":"day2"},"directives":[{"kind":"Directive","name":{"kind":"Name","value":"include"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"if"},"value":{"kind":"Variable","name":{"kind":"Name","value":"day2"}}}]}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"index"}},{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"foods"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"calories"}},{"kind":"Field","name":{"kind":"Name","value":"proteins"}},{"kind":"Field","name":{"kind":"Name","value":"carbs"}},{"kind":"Field","name":{"kind":"Name","value":"fats"}},{"kind":"Field","name":{"kind":"Name","value":"givenAmount"}},{"kind":"Field","name":{"kind":"Name","value":"actualAmount"}},{"kind":"Field","name":{"kind":"Name","value":"ingredients"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"calories"}},{"kind":"Field","name":{"kind":"Name","value":"proteins"}},{"kind":"Field","name":{"kind":"Name","value":"carbs"}},{"kind":"Field","name":{"kind":"Name","value":"fats"}},{"kind":"Field","name":{"kind":"Name","value":"givenAmount"}},{"kind":"Field","name":{"kind":"Name","value":"actualAmount"}}]}}]}}]}},{"kind":"Field","name":{"kind":"Name","value":"day3"},"directives":[{"kind":"Directive","name":{"kind":"Name","value":"include"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"if"},"value":{"kind":"Variable","name":{"kind":"Name","value":"day3"}}}]}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"index"}},{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"foods"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"calories"}},{"kind":"Field","name":{"kind":"Name","value":"proteins"}},{"kind":"Field","name":{"kind":"Name","value":"carbs"}},{"kind":"Field","name":{"kind":"Name","value":"fats"}},{"kind":"Field","name":{"kind":"Name","value":"givenAmount"}},{"kind":"Field","name":{"kind":"Name","value":"actualAmount"}},{"kind":"Field","name":{"kind":"Name","value":"ingredients"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"calories"}},{"kind":"Field","name":{"kind":"Name","value":"proteins"}},{"kind":"Field","name":{"kind":"Name","value":"carbs"}},{"kind":"Field","name":{"kind":"Name","value":"fats"}},{"kind":"Field","name":{"kind":"Name","value":"givenAmount"}},{"kind":"Field","name":{"kind":"Name","value":"actualAmount"}}]}}]}}]}},{"kind":"Field","name":{"kind":"Name","value":"day4"},"directives":[{"kind":"Directive","name":{"kind":"Name","value":"include"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"if"},"value":{"kind":"Variable","name":{"kind":"Name","value":"day4"}}}]}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"index"}},{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"foods"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"calories"}},{"kind":"Field","name":{"kind":"Name","value":"proteins"}},{"kind":"Field","name":{"kind":"Name","value":"carbs"}},{"kind":"Field","name":{"kind":"Name","value":"fats"}},{"kind":"Field","name":{"kind":"Name","value":"givenAmount"}},{"kind":"Field","name":{"kind":"Name","value":"actualAmount"}},{"kind":"Field","name":{"kind":"Name","value":"ingredients"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"calories"}},{"kind":"Field","name":{"kind":"Name","value":"proteins"}},{"kind":"Field","name":{"kind":"Name","value":"carbs"}},{"kind":"Field","name":{"kind":"Name","value":"fats"}},{"kind":"Field","name":{"kind":"Name","value":"givenAmount"}},{"kind":"Field","name":{"kind":"Name","value":"actualAmount"}}]}}]}}]}},{"kind":"Field","name":{"kind":"Name","value":"day5"},"directives":[{"kind":"Directive","name":{"kind":"Name","value":"include"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"if"},"value":{"kind":"Variable","name":{"kind":"Name","value":"day5"}}}]}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"index"}},{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"foods"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"calories"}},{"kind":"Field","name":{"kind":"Name","value":"proteins"}},{"kind":"Field","name":{"kind":"Name","value":"carbs"}},{"kind":"Field","name":{"kind":"Name","value":"fats"}},{"kind":"Field","name":{"kind":"Name","value":"givenAmount"}},{"kind":"Field","name":{"kind":"Name","value":"actualAmount"}},{"kind":"Field","name":{"kind":"Name","value":"ingredients"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"calories"}},{"kind":"Field","name":{"kind":"Name","value":"proteins"}},{"kind":"Field","name":{"kind":"Name","value":"carbs"}},{"kind":"Field","name":{"kind":"Name","value":"fats"}},{"kind":"Field","name":{"kind":"Name","value":"givenAmount"}},{"kind":"Field","name":{"kind":"Name","value":"actualAmount"}}]}}]}}]}},{"kind":"Field","name":{"kind":"Name","value":"day6"},"directives":[{"kind":"Directive","name":{"kind":"Name","value":"include"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"if"},"value":{"kind":"Variable","name":{"kind":"Name","value":"day6"}}}]}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"index"}},{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"foods"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"calories"}},{"kind":"Field","name":{"kind":"Name","value":"proteins"}},{"kind":"Field","name":{"kind":"Name","value":"carbs"}},{"kind":"Field","name":{"kind":"Name","value":"fats"}},{"kind":"Field","name":{"kind":"Name","value":"givenAmount"}},{"kind":"Field","name":{"kind":"Name","value":"actualAmount"}},{"kind":"Field","name":{"kind":"Name","value":"ingredients"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"calories"}},{"kind":"Field","name":{"kind":"Name","value":"proteins"}},{"kind":"Field","name":{"kind":"Name","value":"carbs"}},{"kind":"Field","name":{"kind":"Name","value":"fats"}},{"kind":"Field","name":{"kind":"Name","value":"givenAmount"}},{"kind":"Field","name":{"kind":"Name","value":"actualAmount"}}]}}]}}]}},{"kind":"Field","name":{"kind":"Name","value":"day7"},"directives":[{"kind":"Directive","name":{"kind":"Name","value":"include"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"if"},"value":{"kind":"Variable","name":{"kind":"Name","value":"day7"}}}]}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"index"}},{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"foods"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"calories"}},{"kind":"Field","name":{"kind":"Name","value":"proteins"}},{"kind":"Field","name":{"kind":"Name","value":"carbs"}},{"kind":"Field","name":{"kind":"Name","value":"fats"}},{"kind":"Field","name":{"kind":"Name","value":"givenAmount"}},{"kind":"Field","name":{"kind":"Name","value":"actualAmount"}},{"kind":"Field","name":{"kind":"Name","value":"ingredients"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"calories"}},{"kind":"Field","name":{"kind":"Name","value":"proteins"}},{"kind":"Field","name":{"kind":"Name","value":"carbs"}},{"kind":"Field","name":{"kind":"Name","value":"fats"}},{"kind":"Field","name":{"kind":"Name","value":"givenAmount"}},{"kind":"Field","name":{"kind":"Name","value":"actualAmount"}}]}}]}}]}},{"kind":"Field","name":{"kind":"Name","value":"foodList"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"calories"}},{"kind":"Field","name":{"kind":"Name","value":"proteins"}},{"kind":"Field","name":{"kind":"Name","value":"carbs"}},{"kind":"Field","name":{"kind":"Name","value":"fats"}},{"kind":"Field","name":{"kind":"Name","value":"ingredients"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"calories"}},{"kind":"Field","name":{"kind":"Name","value":"proteins"}},{"kind":"Field","name":{"kind":"Name","value":"carbs"}},{"kind":"Field","name":{"kind":"Name","value":"fats"}},{"kind":"Field","name":{"kind":"Name","value":"givenAmount"}},{"kind":"Field","name":{"kind":"Name","value":"actualAmount"}}]}},{"kind":"Field","name":{"kind":"Name","value":"givenAmount"}},{"kind":"Field","name":{"kind":"Name","value":"actualAmount"}}]}}]}}]}}]} as unknown as DocumentNode<GetMealsQuery, GetMealsQueryVariables>;
+export const CreateFoodListDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"CreateFoodList"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"input"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"CreateFoodListInputReal"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"createFoodList"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"input"},"value":{"kind":"Variable","name":{"kind":"Name","value":"input"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"ok"}},{"kind":"Field","name":{"kind":"Name","value":"result"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"calories"}},{"kind":"Field","name":{"kind":"Name","value":"proteins"}},{"kind":"Field","name":{"kind":"Name","value":"carbs"}},{"kind":"Field","name":{"kind":"Name","value":"fats"}},{"kind":"Field","name":{"kind":"Name","value":"ingredients"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"calories"}},{"kind":"Field","name":{"kind":"Name","value":"proteins"}},{"kind":"Field","name":{"kind":"Name","value":"carbs"}},{"kind":"Field","name":{"kind":"Name","value":"fats"}}]}},{"kind":"Field","name":{"kind":"Name","value":"givenAmount"}}]}},{"kind":"Field","name":{"kind":"Name","value":"message"}}]}}]}}]} as unknown as DocumentNode<CreateFoodListMutation, CreateFoodListMutationVariables>;
+export const GetFoodListDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"GetFoodList"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"getFoodList"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"ok"}},{"kind":"Field","name":{"kind":"Name","value":"result"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"calories"}},{"kind":"Field","name":{"kind":"Name","value":"proteins"}},{"kind":"Field","name":{"kind":"Name","value":"carbs"}},{"kind":"Field","name":{"kind":"Name","value":"fats"}},{"kind":"Field","name":{"kind":"Name","value":"ingredients"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"calories"}},{"kind":"Field","name":{"kind":"Name","value":"proteins"}},{"kind":"Field","name":{"kind":"Name","value":"carbs"}},{"kind":"Field","name":{"kind":"Name","value":"fats"}},{"kind":"Field","name":{"kind":"Name","value":"ingredients"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"name"}}]}},{"kind":"Field","name":{"kind":"Name","value":"givenAmount"}},{"kind":"Field","name":{"kind":"Name","value":"actualAmount"}}]}},{"kind":"Field","name":{"kind":"Name","value":"givenAmount"}},{"kind":"Field","name":{"kind":"Name","value":"actualAmount"}}]}},{"kind":"Field","name":{"kind":"Name","value":"message"}}]}}]}}]} as unknown as DocumentNode<GetFoodListQuery, GetFoodListQueryVariables>;
+export const DeleteFoodListDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"DeleteFoodList"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"oldFoodNameToDelete"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"deleteFoodList"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"oldFoodNameToDelete"},"value":{"kind":"Variable","name":{"kind":"Name","value":"oldFoodNameToDelete"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"ok"}},{"kind":"Field","name":{"kind":"Name","value":"result"}},{"kind":"Field","name":{"kind":"Name","value":"message"}}]}}]}}]} as unknown as DocumentNode<DeleteFoodListMutation, DeleteFoodListMutationVariables>;
+export const DeleteMealListFoodDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"DeleteMealListFood"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"input"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"DeleteMealListFoodInputReal"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"deleteMealListFood"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"input"},"value":{"kind":"Variable","name":{"kind":"Name","value":"input"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"ok"}},{"kind":"Field","name":{"kind":"Name","value":"result"}},{"kind":"Field","name":{"kind":"Name","value":"message"}}]}}]}}]} as unknown as DocumentNode<DeleteMealListFoodMutation, DeleteMealListFoodMutationVariables>;
+export const EditFoodListDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"EditFoodList"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"input"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"EditFoodListInputReal"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"editFoodList"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"input"},"value":{"kind":"Variable","name":{"kind":"Name","value":"input"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"ok"}},{"kind":"Field","name":{"kind":"Name","value":"result"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"calories"}},{"kind":"Field","name":{"kind":"Name","value":"proteins"}},{"kind":"Field","name":{"kind":"Name","value":"carbs"}},{"kind":"Field","name":{"kind":"Name","value":"fats"}},{"kind":"Field","name":{"kind":"Name","value":"ingredients"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"calories"}},{"kind":"Field","name":{"kind":"Name","value":"proteins"}},{"kind":"Field","name":{"kind":"Name","value":"carbs"}},{"kind":"Field","name":{"kind":"Name","value":"fats"}}]}},{"kind":"Field","name":{"kind":"Name","value":"givenAmount"}}]}},{"kind":"Field","name":{"kind":"Name","value":"message"}}]}}]}}]} as unknown as DocumentNode<EditFoodListMutation, EditFoodListMutationVariables>;
+export const EditMealListFoodDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"EditMealListFood"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"input"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"EditMealListFoodInputReal"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"editMealListFood"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"input"},"value":{"kind":"Variable","name":{"kind":"Name","value":"input"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"ok"}},{"kind":"Field","name":{"kind":"Name","value":"result"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"calories"}},{"kind":"Field","name":{"kind":"Name","value":"proteins"}},{"kind":"Field","name":{"kind":"Name","value":"carbs"}},{"kind":"Field","name":{"kind":"Name","value":"fats"}},{"kind":"Field","name":{"kind":"Name","value":"ingredients"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"calories"}},{"kind":"Field","name":{"kind":"Name","value":"proteins"}},{"kind":"Field","name":{"kind":"Name","value":"carbs"}},{"kind":"Field","name":{"kind":"Name","value":"fats"}},{"kind":"Field","name":{"kind":"Name","value":"givenAmount"}},{"kind":"Field","name":{"kind":"Name","value":"actualAmount"}},{"kind":"Field","name":{"kind":"Name","value":"ingredients"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"name"}}]}}]}},{"kind":"Field","name":{"kind":"Name","value":"givenAmount"}},{"kind":"Field","name":{"kind":"Name","value":"actualAmount"}}]}},{"kind":"Field","name":{"kind":"Name","value":"message"}}]}}]}}]} as unknown as DocumentNode<EditMealListFoodMutation, EditMealListFoodMutationVariables>;
+export const CreateMealListFoodDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"CreateMealListFood"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"input"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"CreateMealListFoodInputReal"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"createMealListFood"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"input"},"value":{"kind":"Variable","name":{"kind":"Name","value":"input"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"ok"}},{"kind":"Field","name":{"kind":"Name","value":"result"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"calories"}},{"kind":"Field","name":{"kind":"Name","value":"proteins"}},{"kind":"Field","name":{"kind":"Name","value":"carbs"}},{"kind":"Field","name":{"kind":"Name","value":"fats"}},{"kind":"Field","name":{"kind":"Name","value":"ingredients"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"name"}}]}},{"kind":"Field","name":{"kind":"Name","value":"givenAmount"}},{"kind":"Field","name":{"kind":"Name","value":"actualAmount"}}]}},{"kind":"Field","name":{"kind":"Name","value":"message"}}]}}]}}]} as unknown as DocumentNode<CreateMealListFoodMutation, CreateMealListFoodMutationVariables>;
+export const CreateMealListMealDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"CreateMealListMeal"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"dayIndex"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"Float"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"createMealListMeal"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"dayIndex"},"value":{"kind":"Variable","name":{"kind":"Name","value":"dayIndex"}}}]}]}}]} as unknown as DocumentNode<CreateMealListMealMutation, CreateMealListMealMutationVariables>;
+export const GetMealListMealsDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"GetMealListMeals"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"dayIndex"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"Float"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"getMealListMeal"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"dayIndex"},"value":{"kind":"Variable","name":{"kind":"Name","value":"dayIndex"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"ok"}},{"kind":"Field","name":{"kind":"Name","value":"result"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"index"}},{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"foods"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"calories"}},{"kind":"Field","name":{"kind":"Name","value":"proteins"}},{"kind":"Field","name":{"kind":"Name","value":"carbs"}},{"kind":"Field","name":{"kind":"Name","value":"fats"}},{"kind":"Field","name":{"kind":"Name","value":"ingredients"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"calories"}},{"kind":"Field","name":{"kind":"Name","value":"proteins"}},{"kind":"Field","name":{"kind":"Name","value":"carbs"}},{"kind":"Field","name":{"kind":"Name","value":"fats"}},{"kind":"Field","name":{"kind":"Name","value":"ingredients"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"name"}}]}},{"kind":"Field","name":{"kind":"Name","value":"givenAmount"}},{"kind":"Field","name":{"kind":"Name","value":"actualAmount"}}]}},{"kind":"Field","name":{"kind":"Name","value":"givenAmount"}},{"kind":"Field","name":{"kind":"Name","value":"actualAmount"}}]}}]}},{"kind":"Field","name":{"kind":"Name","value":"message"}}]}}]}}]} as unknown as DocumentNode<GetMealListMealsQuery, GetMealListMealsQueryVariables>;

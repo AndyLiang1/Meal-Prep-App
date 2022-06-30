@@ -1,0 +1,7 @@
+mutation DeleteMealListFood($input: DeleteMealListFoodInputReal!) {
+    deleteMealListFood(input: $input) {
+        ok
+        result
+        message
+    }
+}

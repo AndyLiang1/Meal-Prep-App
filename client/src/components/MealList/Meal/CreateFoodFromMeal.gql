@@ -1,5 +1,0 @@
-mutation createFoodFromMeal($input: CreateFoodInput!) {
-    createFood(input: $input) {
-        name
-    }
-}

@@ -1,0 +1,3 @@
+mutation CreateMealListMeal($dayIndex: Float!) {
+    createMealListMeal(dayIndex: $dayIndex)
+}

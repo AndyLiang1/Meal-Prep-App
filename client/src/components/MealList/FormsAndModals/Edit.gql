@@ -1,9 +1,0 @@
-mutation editFoodFromMealList($input: EditFoodInput!) {
-    editFood(input: $input)
-}
-
-
-
-mutation editFoodFromFoodList($input: EditFoodInput!) {
-    editFood(input: $input)
-}
