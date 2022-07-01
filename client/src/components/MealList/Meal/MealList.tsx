@@ -6,7 +6,7 @@ import { CreateMealListFoodDocument, Food, GetMealListMealsDocument, Meal, User 
 import { addUserToStore, changeDay } from '../../../state/action-creators';
 import { IRootState } from '../../../state/reducers';
 import { defaultUserInfo } from '../../../state/reducers/UserData';
-// import { MealInDay } from './MealInDay';
+import { MealInDay } from './MealInDay';
 import styles from './MealList.module.css';
 
 export interface IMealListProps {
@@ -28,42 +28,40 @@ export function MealList(Props: IMealListProps) {
     const dayIndex = useSelector((state: IRootState) => state.dayIndex);
     const user = useSelector((state: IRootState) => state.user);
     const refetchTrigger = useSelector((state: IRootState) => state.refetchTrigger);
+    const [refresh, setRefresh] = useState(false);
     // const [dayIndex, setDayIndex] = useState<number>(0);
     // const dispatch = useDispatch()
 
     // const [createMeal] = useMutation(CreateMealDocument);
     // const [getMeals] = useLazyQuery(GetMealsDocument);
-    
 
-    // const addMeal = async () => {
-    //     try {
-    //         const createMealInput = {
-    //             userId: user.id,
-    //             dayIndex
-    //         };
-
-    //         await createMeal({
-    //             variables: {
-    //                 input: createMealInput
-    //             }
-    //         });
-    //         const day = await getUserMeals(dayIndex, user, getMeals);
-
-    //         dispatch(
-    //             addUserToStore({
-    //                 username: user.username,
-    //                 id: user.id,
-    //                 day,
-    //                 loggedIn: true,
-    //                 accessToken: localStorage.getItem('accessToken')!,
-    //                 foodList: user.foodList
-    //             })
-    //         );
-    //         // setRefetchUserDataTrigger(!refetchUserDataTrigger)
-    //     } catch (error) {
-    //         console.log(error);
-    //     }
-    // };
+    const addMeal = async () => {
+        // try {
+        //     const createMealInput = {
+        //         userId: user.id,
+        //         dayIndex
+        //     };
+        //     await createMeal({
+        //         variables: {
+        //             input: createMealInput
+        //         }
+        //     });
+        //     const day = await getUserMeals(dayIndex, user, getMeals);
+        //     dispatch(
+        //         addUserToStore({
+        //             username: user.username,
+        //             id: user.id,
+        //             day,
+        //             loggedIn: true,
+        //             accessToken: localStorage.getItem('accessToken')!,
+        //             foodList: user.foodList
+        //         })
+        //     );
+        //     // setRefetchUserDataTrigger(!refetchUserDataTrigger)
+        // } catch (error) {
+        //     console.log(error);
+        // }
+    };
 
     const changeDayIndex = (direction: string) => {
         if (direction === 'forward') {
@@ -80,11 +78,7 @@ export function MealList(Props: IMealListProps) {
             dispatch(changeDay(dayIndex - 1));
         }
     };
-    // useEffect(() => {
-    //     if (user) {
-    //         setDay(user.days[dayIndex]);
-    //     }
-    // }, [dayIndex, user]);
+
     return (
         <div>
             {user.day ? (
@@ -95,17 +89,19 @@ export function MealList(Props: IMealListProps) {
                         <button onClick={() => changeDayIndex('forward')}>Next</button>
                     </div>
 
-                    {/* <div className={style.dayName_container}>{user.days[dayIndex].name}</div>
-                    {user.days[dayIndex].meals.map((meal: any) => {
-                        return <MealInDay foods={meal.foods}></MealInDay>;
-                    })} */}
                     <div className={styles.mealList_container}>
-                        {/* {user.day.map((meal: Meal, index: number) => {
-                            return <MealInDay key={index} foods={meal.foods} mealId={meal.id}></MealInDay>;
-                        })} */}
-                        {/* <button className={styles.addMealBtn} onClick={() => addMeal()}>
+                        {user.day.map((meal: Meal, index: number) => {
+                            return (
+                                <div className={styles.meal}>
+                                    <MealInDay key={index} foods={meal.foods} mealId={meal.id}></MealInDay>;
+                                </div>
+                            );
+                        })}
+                        <button 
+                        // className={styles.addMealBtn} 
+                        onClick={() => addMeal()}>
                             Add Meal
-                        </button> */}
+                        </button>
                     </div>
                 </div>
             ) : (

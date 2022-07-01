@@ -62,7 +62,7 @@ export function UserPage(props: IUserPageProps) {
     useEffect(() => {
         getFoodInMeals();
         getFoodInFoodList()
-    }, []);
+    }, [dayIndex]);
 
 
     return (
