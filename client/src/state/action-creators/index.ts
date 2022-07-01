@@ -48,7 +48,7 @@ export const setModalStatus = (modalStatus: boolean) => {
     }
 }
 
-const triggerRefetch = () => {
+export const triggerRefetch = () => {
     return (dispatch: (arg0: {type: string}) => void) => {
         dispatch({
             type: `refetchTrigger`,

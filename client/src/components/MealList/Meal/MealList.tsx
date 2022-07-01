@@ -1,12 +1,11 @@
 import { gql, useLazyQuery, useMutation, useQuery } from '@apollo/client';
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { updateShorthandPropertyAssignment } from 'typescript';
-import { CreateMealListFoodDocument, Food, GetMealListMealsDocument, Meal, User } from '../../../generated/graphql-client';
-import { addUserToStore, changeDay } from '../../../state/action-creators';
+import { CreateMealListFoodDocument, CreateMealListMealDocument, Food, GetMealListMealsDocument, Meal, User } from '../../../generated/graphql-client';
+import { addUserToStore, changeDay, triggerRefetch } from '../../../state/action-creators';
 import { IRootState } from '../../../state/reducers';
 import { defaultUserInfo } from '../../../state/reducers/UserData';
-import { MealInDay } from './MealInDay';
+import { MealInDay } from './MealInMealList';
 import styles from './MealList.module.css';
 
 export interface IMealListProps {
@@ -27,40 +26,20 @@ export function MealList(Props: IMealListProps) {
     const dispatch = useDispatch();
     const dayIndex = useSelector((state: IRootState) => state.dayIndex);
     const user = useSelector((state: IRootState) => state.user);
-    const refetchTrigger = useSelector((state: IRootState) => state.refetchTrigger);
-    const [refresh, setRefresh] = useState(false);
-    // const [dayIndex, setDayIndex] = useState<number>(0);
-    // const dispatch = useDispatch()
 
-    // const [createMeal] = useMutation(CreateMealDocument);
-    // const [getMeals] = useLazyQuery(GetMealsDocument);
+    const [createMeal] = useMutation(CreateMealListMealDocument);
 
     const addMeal = async () => {
-        // try {
-        //     const createMealInput = {
-        //         userId: user.id,
-        //         dayIndex
-        //     };
-        //     await createMeal({
-        //         variables: {
-        //             input: createMealInput
-        //         }
-        //     });
-        //     const day = await getUserMeals(dayIndex, user, getMeals);
-        //     dispatch(
-        //         addUserToStore({
-        //             username: user.username,
-        //             id: user.id,
-        //             day,
-        //             loggedIn: true,
-        //             accessToken: localStorage.getItem('accessToken')!,
-        //             foodList: user.foodList
-        //         })
-        //     );
-        //     // setRefetchUserDataTrigger(!refetchUserDataTrigger)
-        // } catch (error) {
-        //     console.log(error);
-        // }
+        try {
+            await createMeal({
+                variables: {
+                    dayIndex
+                }
+            });
+            dispatch(triggerRefetch());
+        } catch (error) {
+            console.log(error);
+        }
     };
 
     const changeDayIndex = (direction: string) => {

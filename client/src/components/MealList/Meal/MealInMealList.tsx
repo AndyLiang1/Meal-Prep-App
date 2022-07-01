@@ -8,10 +8,10 @@ import { setModalStatus } from '../../../state/action-creators';
 import { IRootState } from '../../../state/reducers';
 import { AddBtn, DeleteBtn } from '../../helpers/Icons';
 // import { AddFoodForm } from '../FormsAndModals/AddFoodForm';
-// import { DeleteModal } from '../FormsAndModals/DeleteModal';
+import { DeleteModal } from '../FormsAndModals/DeleteModal';
 // import { EditFoodForm } from '../FormsAndModals/EditFoodForm';
 import { FoodInMeal } from './FoodInMeal';
-import styles from './MealInDay.module.css';
+import styles from './MealInMealList.module.css';
 
 export interface IMealInDayProps {
     foods: Food[];
@@ -23,10 +23,6 @@ export function MealInDay({ foods, mealId }: IMealInDayProps) {
     const [deleteModal, setDeleteModal] = useState<boolean>(false);
     const { modalStatus } = useSelector((state: IRootState) => state);
     const dispatch = useDispatch();
-
-    useEffect(() => {
-        console.log('Foods in meal:', foods)
-    })
 
     return (
         <div className={styles.container}>
@@ -50,6 +46,8 @@ export function MealInDay({ foods, mealId }: IMealInDayProps) {
                 <DeleteBtn
                     className={styles.btn}
                     onClick={() => {
+                        console.log('clicked')
+                        console.log(modalStatus);
                         if (!modalStatus) {
                             dispatch(setModalStatus(true));
                             setDeleteModal(true);
@@ -59,8 +57,8 @@ export function MealInDay({ foods, mealId }: IMealInDayProps) {
                     Delete Meal
                 </DeleteBtn>
             </div>
-            {/* {addFoodForm ? <AddFoodForm type="meal" setAddFoodForm={setAddFoodForm} mealId={mealId}></AddFoodForm> : null}
-            {deleteModal ? <DeleteModal objectToDelete={'meal'} setDeleteModal={setDeleteModal} mealId={mealId} fromWhere={'mealList'}></DeleteModal> : null} */}
+            {/* {addFoodForm ? <AddFoodForm type="meal" setAddFoodForm={setAddFoodForm} mealId={mealId}></AddFoodForm> : null} */}
+            {deleteModal ? <DeleteModal deleteType={'mealListMeal'} setDeleteModal={setDeleteModal} mealId={mealId}></DeleteModal> : null}
          
         </div>
     );

@@ -1,0 +1,3 @@
+mutation DeleteMealListMeal($dayIndex: Float!, $mealId: String!) {
+    deleteMealListMeal(dayIndex: $dayIndex, mealId: $mealId)
+}

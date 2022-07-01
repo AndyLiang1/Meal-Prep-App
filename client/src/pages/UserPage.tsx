@@ -17,6 +17,7 @@ export function UserPage(props: IUserPageProps) {
     // console.log(dayIndex);
     const dayIndex = useSelector((state: IRootState) => state.dayIndex);
     const user = useSelector((state: IRootState) => state.user);
+    const refetchTrigger = useSelector((state: IRootState) => state.refetchTrigger);
     const dispatch = useDispatch();
 
     const [day, setDay] = useState<any>([]);
@@ -61,8 +62,8 @@ export function UserPage(props: IUserPageProps) {
 
     useEffect(() => {
         getFoodInMeals();
-        getFoodInFoodList()
-    }, [dayIndex]);
+        getFoodInFoodList();
+    }, [dayIndex, refetchTrigger]);
 
 
     return (
