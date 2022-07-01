@@ -5,7 +5,7 @@ import { Food } from '../../generated/graphql-client';
 import { setModalStatus } from '../../state/action-creators';
 import { IRootState } from '../../state/reducers';
 import { DeleteBtn, EditBtn } from '../helpers/Icons';
-// import { DeleteModal } from '../MealList/FormsAndModals/DeleteModal';
+import { DeleteModal } from '../MealList/FormsAndModals/DeleteModal';
 // import { EditFoodForm } from '../MealList/FormsAndModals/EditFoodForm';
 import styles from './FoodInFoodList.module.css';
 
@@ -19,6 +19,8 @@ export function FoodInFoodList({ food }: IFoodInFoodListProps) {
 
     const [deleteModal, setDeleteModal] = useState(false);
     const [editForm, setEditForm] = useState(false);
+
+    console.log(food.calories)
     return (
         <>
             <div className={styles.container}>
@@ -37,7 +39,6 @@ export function FoodInFoodList({ food }: IFoodInFoodListProps) {
                         className={styles.button}
                         onClick={() => {
                             if (!modalStatus) {
-                                console.log(modalStatus);
                                 dispatch(setModalStatus(!modalStatus));
                                 setEditForm(true);
                             }
@@ -49,7 +50,6 @@ export function FoodInFoodList({ food }: IFoodInFoodListProps) {
                         className={styles.button}
                         onClick={() => {
                             if (!modalStatus) {
-                                console.log(modalStatus);
                                 dispatch(setModalStatus(!modalStatus));
                                 setDeleteModal(true);
                             }
@@ -59,8 +59,8 @@ export function FoodInFoodList({ food }: IFoodInFoodListProps) {
                     </DeleteBtn>
                 </div>
             </div>
-            {/* {deleteModal ? <DeleteModal objectToDelete={'food'} setDeleteModal={setDeleteModal} foodName={food.name} fromWhere={'foodList'}></DeleteModal> : null}
-            {editForm ? <EditFoodForm fromWhere={'foodList'} food={food} setEditForm={setEditForm}></EditFoodForm> : null} */}
+            {deleteModal ? <DeleteModal deleteType={'foodList'} setDeleteModal={setDeleteModal} foodName={food.name}></DeleteModal> : null}
+            {/* {editForm ? <EditFoodForm fromWhere={'foodList'} food={food} setEditForm={setEditForm}></EditFoodForm> : null} */}
         </>
     );
 }

@@ -1,7 +1,7 @@
 import { useLazyQuery, useMutation } from '@apollo/client';
 import * as React from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { DeleteMealListFoodDocument, DeleteMealListMealDocument } from '../../../generated/graphql-client';
+import { DeleteFoodListDocument, DeleteMealListFoodDocument, DeleteMealListMealDocument } from '../../../generated/graphql-client';
 import { addUserToStore, setModalStatus, triggerRefetch } from '../../../state/action-creators';
 import { IRootState } from '../../../state/reducers';
 import { UserInfoInterface } from '../../../state/reducers/UserData';
@@ -20,13 +20,19 @@ export function DeleteModal({ deleteType, setDeleteModal, mealId, foodName, food
     const { modalStatus } = useSelector((state: IRootState) => state);
     const dispatch = useDispatch();
 
-    const [deleteMeal] = useMutation(DeleteMealListMealDocument);
+    const [deleteMealListMeal] = useMutation(DeleteMealListMealDocument);
+    const [deleteFoodList] = useMutation(DeleteFoodListDocument);
     // const [deleteFood] = useMutation();
     const deleteUserObject = async () => {
         switch (deleteType) {
             case 'mealListMeal':
                 if (mealId) {
-                    await deleteMeal({ variables: { dayIndex, mealId: mealId! } });
+                    await deleteMealListMeal({ variables: { dayIndex, mealId: mealId! } });
+                }
+                break;
+            case 'foodList': 
+                if(foodName) {
+                    await deleteFoodList({ variables: { oldFoodNameToDelete: foodName } });
                 }
                 break;
             default:
@@ -63,7 +69,7 @@ export function DeleteModal({ deleteType, setDeleteModal, mealId, foodName, food
         <div className={styles.container}>
             {deleteType === 'mealListMeal' && <div>Are you sure you want to delete this meal?</div>}
             {deleteType === 'mealListFood' && <div>Are you sure you want to delete this food from your meal?</div>}
-            {deleteType === 'foodList' && <div>Are you sure you want to delete this food? Doing so will delete this food from all meals too!</div>}
+            {deleteType === 'foodList' && <div>Are you sure you want to delete this food? Doing so will delete this food from everywhere it is being used as an ingredient!</div>}
             <div className={styles.btn_container}></div>
             <button
                 onClick={() => {

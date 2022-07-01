@@ -51,3 +51,24 @@ export const createFoodWithIng = (user: IUserDocument, newFoodName: string, newI
 export const foodStatsWillBeBasedOnIngredients = (calories: any, proteins: any, carbs: any, fats: any, newIngNames: any[]) => {
     return typeof calories === 'number' && typeof proteins === 'number' && typeof carbs === 'number' && typeof fats === 'number' && newIngNames.length === 0;
 };
+
+export function roundToZero(num: number) {
+    return Math.round(num);
+}
+
+export function roundToTwo(num: any) {
+    const formatter = new Intl.NumberFormat('en-US', {
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2
+    });
+
+    return formatter.format(num);
+}
+
+export function checkIfSuperSmallNeg(num: number) {
+    if(num < 0 && num > -0.05) {
+        return 0
+    } else {
+        return num
+    }
+}

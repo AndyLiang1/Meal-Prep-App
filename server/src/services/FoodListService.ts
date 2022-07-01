@@ -37,7 +37,7 @@ export class FoodListService {
                     }
                     newFood = {
                         name: inputNewNoIng.name,
-                        calories: inputNewNoIng.calories,
+                        calories:inputNewNoIng.calories,
                         proteins: inputNewNoIng.proteins,
                         carbs: inputNewNoIng.carbs,
                         fats: inputNewNoIng.fats,

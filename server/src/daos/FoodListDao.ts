@@ -1,5 +1,6 @@
 import { Food } from '../generated/graphql-server';
 import UserModel, { IUserDocument } from '../models/User';
+import { checkIfSuperSmallNeg } from '../services/helpers';
 
 export class FoodListDao {
     constructor() {}
@@ -33,6 +34,10 @@ export class FoodListDao {
                         user.foodList[i].proteins -= (ing.actualAmount! / ing.givenAmount) * ing.proteins;
                         user.foodList[i].carbs -= (ing.actualAmount! / ing.givenAmount) * ing.carbs;
                         user.foodList[i].fats -= (ing.actualAmount! / ing.givenAmount) * ing.fats;
+                        user.foodList[i].calories = checkIfSuperSmallNeg(user.foodList[i].calories);
+                        user.foodList[i].proteins = checkIfSuperSmallNeg(user.foodList[i].proteins);
+                        user.foodList[i].carbs = checkIfSuperSmallNeg(user.foodList[i].carbs);
+                        user.foodList[i].fats = checkIfSuperSmallNeg(user.foodList[i].fats);
                         user.foodList[i].ingredients[j] = {
                             name: editedFood.name,
                             calories: editedFood.calories,
@@ -70,6 +75,10 @@ export class FoodListDao {
                     foodList[i].carbs -= (ing.actualAmount! / ing.givenAmount) * ing.carbs;
                     foodList[i].fats -= (ing.actualAmount! / ing.givenAmount) * ing.fats;
                     foodList[i].ingredients.splice(j, 1);
+                    foodList[i].calories = checkIfSuperSmallNeg(foodList[i].calories)
+                    foodList[i].proteins = checkIfSuperSmallNeg(foodList[i].proteins);
+                    foodList[i].carbs = checkIfSuperSmallNeg(foodList[i].carbs)
+                    foodList[i].fats = checkIfSuperSmallNeg(foodList[i].fats)
                 }
             }
         });
