@@ -101,6 +101,13 @@
     border: 1px solid black;
 }
 
+.add_field_error {
+    color: red;
+
+    margin-top: -5px;
+    font-size: 12px;
+}
+
 .create_new_food_container {
     width: 100%;
 }

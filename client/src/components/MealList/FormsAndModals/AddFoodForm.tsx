@@ -74,21 +74,21 @@ export function AddFoodForm({ createType, setAddFoodForm, mealId }: IAddFoodForm
         fats: 0
     });
 
-    const initialValues: CreateFoodFromMealInput = {
+    const initialValues: any = {
         existingFoodName: '',
-        existingFoodActualAmount: 0,
+        existingFoodActualAmount: '',
         name: '',
-        calories: 0,
-        proteins: 0,
-        carbs: 0,
-        fats: 0,
+        calories: '',
+        proteins: '',
+        carbs: '',
+        fats: '',
         ingredients: [],
-        givenAmount: 0,
-        actualAmount: 0
+        givenAmount: '',
+        actualAmount: ''
     };
 
     const validationSchema = Yup.object().shape({
-        name: Yup.string().required('Invalid food name').max(50),
+        name: Yup.string().max(50),
         calories: Yup.number().typeError('Input a number please').integer().min(1),
         proteins: Yup.number().typeError('Input a number please').min(1),
         carbs: Yup.number().typeError('Input a number please').min(1),
@@ -122,9 +122,9 @@ export function AddFoodForm({ createType, setAddFoodForm, mealId }: IAddFoodForm
     const handleDeleteIng = (ingredientToDeleteName: string, ingredientToDeleteActualAmount: number) => {
         for (let i = 0; i < ingredients.length; i++) {
             if (ingredientToDeleteName === ingredients[i].name && ingredientToDeleteActualAmount === ingredients[i].actualAmount) {
-                let newIngredientsList = [...ingredients]
-                newIngredientsList.splice(i, 1)
-                setIngredients(newIngredientsList)
+                let newIngredientsList = [...ingredients];
+                newIngredientsList.splice(i, 1);
+                setIngredients(newIngredientsList);
                 break;
             }
         }
@@ -160,7 +160,6 @@ export function AddFoodForm({ createType, setAddFoodForm, mealId }: IAddFoodForm
     };
 
     useEffect(() => {
-        console.log('Ingredients is now: ', ingredients)
         calcTotalStats();
     }, [ingredients]);
 
@@ -170,11 +169,11 @@ export function AddFoodForm({ createType, setAddFoodForm, mealId }: IAddFoodForm
             case true:
                 const createFoodListInputNewNoIngInfo: CreateFoodListInput_NewNoIng = {
                     name: submittedData.name,
-                    calories: totalStats.calories,
-                    proteins: totalStats.proteins,
-                    carbs: totalStats.carbs,
-                    fats: totalStats.fats,
-                    givenAmount: submittedData.givenAmount
+                    calories: Number(submittedData.calories),
+                    proteins: Number(submittedData.proteins),
+                    carbs: Number(submittedData.carbs),
+                    fats: Number(submittedData.fats),
+                    givenAmount: Number(submittedData.givenAmount)
                 };
                 const createFoodListInputNewNoIng: CreateFoodListInputReal = {
                     createType: 'NEW_NO_ING' as CreateFoodListType,
@@ -192,7 +191,7 @@ export function AddFoodForm({ createType, setAddFoodForm, mealId }: IAddFoodForm
                     name: submittedData.name,
                     ingredientNames,
                     ingredientActualAmounts,
-                    givenAmount: submittedData.givenAmount
+                    givenAmount: Number(submittedData.givenAmount)
                 };
 
                 const createFoodListInputNewYesIng: CreateFoodListInputReal = {
@@ -212,12 +211,12 @@ export function AddFoodForm({ createType, setAddFoodForm, mealId }: IAddFoodForm
     };
 
     const submitMealListFood = async (submittedData: CreateFoodFromMealInput) => {
-        const createFromExistingFood = submittedData.existingFoodName !== null && submittedData.existingFoodName !== undefined;
+        const createFromExistingFood = submittedData.existingFoodName !== '';
         switch (createFromExistingFood) {
             case true:
                 const createMealListFoodInputExistingInfo: CreateMealListFoodInput_Existing = {
                     existingFoodName: submittedData.existingFoodName,
-                    actualAmount: submittedData.actualAmount,
+                    actualAmount: Number(submittedData.existingFoodActualAmount),
                     dayIndex,
                     mealId: mealId!
                 };
@@ -225,6 +224,7 @@ export function AddFoodForm({ createType, setAddFoodForm, mealId }: IAddFoodForm
                     createType: 'EXISTING' as CreateMealListFoodType,
                     inputExisting: createMealListFoodInputExistingInfo
                 };
+                console.log(createMealListFoodInputExisting);
                 await createMealListFood({
                     variables: {
                         input: createMealListFoodInputExisting
@@ -237,13 +237,13 @@ export function AddFoodForm({ createType, setAddFoodForm, mealId }: IAddFoodForm
                     case true:
                         const createMealListFoodInputNewNoIngInfo: CreateMealListFoodInput_NewNoIng = {
                             name: submittedData.name,
-                            calories: totalStats.calories,
-                            proteins: totalStats.proteins,
-                            carbs: totalStats.carbs,
-                            fats: totalStats.fats,
+                            calories: Number(submittedData.calories),
+                            proteins: Number(submittedData.proteins),
+                            carbs: Number(submittedData.carbs),
+                            fats: Number(submittedData.fats),
 
-                            givenAmount: submittedData.givenAmount,
-                            actualAmount: submittedData.actualAmount,
+                            givenAmount: Number(submittedData.givenAmount),
+                            actualAmount: Number(submittedData.actualAmount),
 
                             dayIndex,
                             mealId: mealId!
@@ -265,8 +265,8 @@ export function AddFoodForm({ createType, setAddFoodForm, mealId }: IAddFoodForm
                             ingredientNames,
                             ingredientActualAmounts,
 
-                            givenAmount: submittedData.givenAmount,
-                            actualAmount: submittedData.actualAmount,
+                            givenAmount: Number(submittedData.givenAmount),
+                            actualAmount: Number(submittedData.actualAmount),
 
                             dayIndex,
                             mealId: mealId!
@@ -295,18 +295,18 @@ export function AddFoodForm({ createType, setAddFoodForm, mealId }: IAddFoodForm
         }
         switch (createType) {
             case 'mealListFood':
-                submitMealListFood(submittedData);
+                await submitMealListFood(submittedData);
                 break;
             case 'foodList':
-                submitFoodList(submittedData);
+                await submitFoodList(submittedData);
                 break;
             default:
                 break;
         }
 
         dispatch(triggerRefetch());
+        dispatch(setModalStatus(false));
         setAddFoodForm(false);
-
     };
 
     return (
@@ -339,7 +339,7 @@ export function AddFoodForm({ createType, setAddFoodForm, mealId }: IAddFoodForm
                                         })}
                                     </Field>
                                     <div className={styles.add_label}>Actual Amount</div>
-                                    <Field className={styles.add_field} type="number" name="existingFoodActualAmount"></Field>
+                                    <Field className={styles.add_field} name="existingFoodActualAmount"></Field>
                                 </div>
                             )}
                             <div className={styles.create_new_food_container}>
@@ -347,65 +347,80 @@ export function AddFoodForm({ createType, setAddFoodForm, mealId }: IAddFoodForm
 
                                 <div className={styles.add_label}>Name</div>
                                 <Field className={styles.add_field} name="name" type="text" />
+                                <ErrorMessage name="name" component="div" className={styles.add_field_error}></ErrorMessage>
 
+                                <div className={styles.add_label}>Ingredients</div>
+                                <Field
+                                    className={styles.add_field}
+                                    name="ingredients"
+                                    as="select"
+                                    onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+                                        const newIngName = e.target.value;
+                                        user.foodList.forEach((food) => {
+                                            if (food.name === newIngName) {
+                                                let ingredient = {
+                                                    ...food
+                                                };
+                                                setNewPotentialIngredient(ingredient);
+                                                setNewIngActualAmount(ingredient.givenAmount);
+                                            }
+                                        });
+                                    }}
+                                    value={newPotentialIngredient ? newPotentialIngredient.name : '--'}
+                                >
+                                    <option value=""></option>
+                                    {user.foodList.map((food: Food, index: number) => {
+                                        return (
+                                            <option key={index} value={food.name}>
+                                                {food.name}
+                                            </option>
+                                        );
+                                    })}
+                                </Field>
+                                <div className={styles.ing_container}>
+                                    {ingredients.map((food: Food, index: number) => {
+                                        return <Ingredient key={index} ingredient={food} onDeleteIng={handleDeleteIng}></Ingredient>;
+                                    })}
+                                </div>
+                                {newPotentialIngredient && (
+                                    <div className={styles.potentialNewIng}>
+                                        <div>
+                                            {newPotentialIngredient.name} | Given Amt: {newPotentialIngredient.givenAmount}
+                                            {''}
+                                        </div>
+                                        <div className={styles.potentialNewIng_AA_container}>
+                                            <div>Actual Amt</div>
+                                            <div> </div>
+                                            <Field
+                                                className={styles.potentialIngActualAmount}
+                                                type="number"
+                                                onChange={(e: React.ChangeEvent<HTMLInputElement>) => setNewIngActualAmount(parseInt(e.target.value))}
+                                                value={newIngActualAmount}
+                                            ></Field>
+                                        </div>
+
+                                        <button type="button" className="btn btn-primary" onClick={() => addToIngredientList(newIngActualAmount)}>
+                                            Add Ingredient to Food
+                                        </button>
+                                    </div>
+                                )}
                                 {!ingredients.length ? (
                                     <div>
                                         <div className={styles.add_label}>Calories</div>
-                                        <Field
-                                            className={styles.add_field}
-                                            name="calories"
-                                            // type="text"
-                                            // onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-                                            //     setTotalStats({
-                                            //         ...totalStats,
-                                            //         calories: Number(e.target.value)
-                                            //     })
-                                            // }
-                                            // value={totalStats.calories ? totalStats.calories : ''}
-                                        />
-                                        <ErrorMessage name = "calories"></ErrorMessage>
+                                        <Field className={styles.add_field} name="calories" />
+                                        <ErrorMessage name="calories" component="div" className={styles.add_field_error}></ErrorMessage>
 
                                         <div className={styles.add_label}>Proteins</div>
-                                        <Field
-                                            className={styles.add_field}
-                                            name="proteins"
-                                            // type="text"
-                                            // onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-                                            //     setTotalStats({
-                                            //         ...totalStats,
-                                            //         proteins: Number(e.target.value)
-                                            //     })
-                                            // }
-                                            // value={totalStats.proteins ? totalStats.proteins : ''}
-                                        />
+                                        <Field className={styles.add_field} name="proteins" />
+                                        <ErrorMessage name="proteins" component="div" className={styles.add_field_error}></ErrorMessage>
 
                                         <div className={styles.add_label}>Carbs</div>
-                                        <Field
-                                            className={styles.add_field}
-                                            name="carbs"
-                                            type="text"
-                                            onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-                                                setTotalStats({
-                                                    ...totalStats,
-                                                    carbs: Number(e.target.value)
-                                                })
-                                            }
-                                            value={totalStats.carbs ? totalStats.carbs : ''}
-                                        />
+                                        <Field className={styles.add_field} name="carbs" />
+                                        <ErrorMessage name="carbs" component="div" className={styles.add_field_error}></ErrorMessage>
 
                                         <div className={styles.add_label}>Fats</div>
-                                        <Field
-                                            className={styles.add_field}
-                                            name="fats"
-                                            type="text"
-                                            onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-                                                setTotalStats({
-                                                    ...totalStats,
-                                                    fats: Number(e.target.value)
-                                                })
-                                            }
-                                            value={totalStats.fats ? totalStats.fats : ''}
-                                        />
+                                        <Field className={styles.add_field} name="fats" />
+                                        <ErrorMessage name="fats" component="div" className={styles.add_field_error}></ErrorMessage>
                                     </div>
                                 ) : (
                                     <div>
@@ -475,67 +490,15 @@ export function AddFoodForm({ createType, setAddFoodForm, mealId }: IAddFoodForm
                                         </div>
                                     </div>
                                 )}
-                                <div className={styles.add_label}>Ingredients</div>
-                                <Field
-                                    className={styles.add_field}
-                                    name="ingredients"
-                                    as="select"
-                                    onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-                                        const newIngName = e.target.value;
-                                        user.foodList.forEach((food) => {
-                                            if (food.name === newIngName) {
-                                                let ingredient = {
-                                                    ...food
-                                                };
-                                                setNewPotentialIngredient(ingredient);
-                                                setNewIngActualAmount(ingredient.givenAmount);
-                                            }
-                                        });
-                                    }}
-                                    value={newPotentialIngredient ? newPotentialIngredient.name : '--'}
-                                >
-                                    <option value=""></option>
-                                    {user.foodList.map((food: Food, index: number) => {
-                                        return (
-                                            <option key={index} value={food.name}>
-                                                {food.name}
-                                            </option>
-                                        );
-                                    })}
-                                </Field>
-                                {newPotentialIngredient && (
-                                    <div className={styles.potentialNewIng}>
-                                        <div>
-                                            {newPotentialIngredient.name} | Given Amt: {newPotentialIngredient.givenAmount}
-                                            {''}
-                                        </div>
-                                        <div className={styles.potentialNewIng_AA_container}>
-                                            <div>Actual Amt</div>
-                                            <div> </div>
-                                            <Field
-                                                className={styles.potentialIngActualAmount}
-                                                type="number"
-                                                onChange={(e: React.ChangeEvent<HTMLInputElement>) => setNewIngActualAmount(parseInt(e.target.value))}
-                                                value={newIngActualAmount}
-                                            ></Field>
-                                        </div>
 
-                                        <button type="button" className="btn btn-primary" onClick={() => addToIngredientList(newIngActualAmount)}>
-                                            Add Ingredient to Food
-                                        </button>
-                                    </div>
-                                )}
-                                <div className={styles.ing_container}>
-                                    {ingredients.map((food: Food, index: number) => {
-                                        return <Ingredient key={index} ingredient={food} onDeleteIng={handleDeleteIng}></Ingredient>;
-                                    })}
-                                </div>
                                 <div className={styles.add_label}>Given Amount</div>
-                                <Field className={styles.add_field} name="givenAmount" type="number" />
+                                <Field className={styles.add_field} name="givenAmount" />
+                                <ErrorMessage name="givenAmount" component="div" className={styles.add_field_error}></ErrorMessage>
                                 {createType === 'mealListFood' && (
                                     <>
                                         <div className={styles.add_label}>Actual Amount</div>
-                                        <Field className={styles.add_field} name="actualAmount" type="number" />
+                                        <Field className={styles.add_field} name="actualAmount" />
+                                        <ErrorMessage name="actualAmount" component="div" className={styles.add_field_error}></ErrorMessage>
                                     </>
                                 )}
                                 <div className={styles.btn_container}>
