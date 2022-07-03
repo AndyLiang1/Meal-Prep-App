@@ -19,8 +19,6 @@ export function FoodInFoodList({ food }: IFoodInFoodListProps) {
 
     const [deleteModal, setDeleteModal] = useState(false);
     const [editForm, setEditForm] = useState(false);
-
-    console.log(food.calories)
     return (
         <>
             <div className={styles.container}>
@@ -36,6 +34,7 @@ export function FoodInFoodList({ food }: IFoodInFoodListProps) {
                 </div>
                 <div className={styles.btn_container}>
                     <EditBtn
+                        type="button"
                         className={styles.button}
                         onClick={() => {
                             if (!modalStatus) {
@@ -47,6 +46,7 @@ export function FoodInFoodList({ food }: IFoodInFoodListProps) {
                         Edit
                     </EditBtn>
                     <DeleteBtn
+                        type="button"
                         className={styles.button}
                         onClick={() => {
                             if (!modalStatus) {
@@ -64,4 +64,3 @@ export function FoodInFoodList({ food }: IFoodInFoodListProps) {
         </>
     );
 }
-

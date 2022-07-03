@@ -1,11 +1,14 @@
 :root {
     --lighterblue: #dfefff;
     --lightblue:  lightblue;
-    --blue: rgb(68, 68, 207);
+    --blue: rgb(42, 42, 158);
+    --lightyellow: hsl(39, 100%, 62%);
     /* --lighttblue: lightblue; */
 
     --grey: rgb(189, 189, 189);
+    --lightgrey: rgb(243, 243, 243);
 
+    --lightgreen: rgb(130, 228, 130);
     font-family: Arial, Helvetica, sans-serif; 
 
 }

@@ -12,6 +12,13 @@ import { FoodList } from '../components/FoodList/FoodList';
 import { UserInfoInterface } from '../state/reducers/UserData';
 export interface IUserPageProps {}
 
+export type totalStats = {
+    calories: number;
+    proteins: number;
+    carbs: number;
+    fats: number;
+};
+
 export function UserPage(props: IUserPageProps) {
     const userId: string = localStorage.getItem('id')!;
     // console.log(dayIndex);
@@ -22,13 +29,15 @@ export function UserPage(props: IUserPageProps) {
 
     const [day, setDay] = useState<any>([]);
     const [foodList, setFoodList] = useState<any>([]);
+    const [totalStats, setTotalStats] = useState<totalStats | null>(null);
     // const { user }: { user: UserInfoInterface } = useSelector((state: IRootState) => state);
     const [getMealListMeal] = useLazyQuery(GetMealListMealsDocument, {
         variables: {
             dayIndex
         }
     });
-    const [getFoodList] = useLazyQuery(GetFoodListDocument)
+
+    const [getFoodList] = useLazyQuery(GetFoodListDocument);
     const getFoodInMeals = async () => {
         const { data } = await getMealListMeal();
         if (data?.getMealListMeal.ok) {
@@ -38,14 +47,29 @@ export function UserPage(props: IUserPageProps) {
         }
     };
 
-    const getFoodInFoodList = async() => {
-         const { data } = await getFoodList();
+    const getFoodInFoodList = async () => {
+        const { data } = await getFoodList();
         if (data?.getFoodList.ok) {
             setFoodList(data?.getFoodList.result);
         } else {
             console.error(data?.getFoodList.message);
-        } 
-    }
+        }
+    };
+    useEffect(() => {
+        let calories = 0,
+            proteins = 0,
+            carbs = 0,
+            fats = 0;
+        for (let meal of user.day) {
+            for (let food of meal.foods) {
+                calories += food.calories * (food.actualAmount! / food.givenAmount);
+                proteins += food.proteins * (food.actualAmount! / food.givenAmount);
+                carbs += food.carbs * (food.actualAmount! / food.givenAmount);
+                fats += food.fats * (food.actualAmount! / food.givenAmount);
+            }
+        }
+        setTotalStats({ calories, proteins, carbs, fats });
+    }, [user]);
 
     useEffect(() => {
         const { username } = user;
@@ -65,12 +89,11 @@ export function UserPage(props: IUserPageProps) {
         getFoodInFoodList();
     }, [dayIndex, refetchTrigger]);
 
-
     return (
         <div>
             <Header></Header>
             <div className={styles.container}>
-                <MealList></MealList>
+                <MealList totalStats={totalStats}></MealList>
                 <FoodList></FoodList>
             </div>
         </div>

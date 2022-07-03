@@ -1,25 +1,37 @@
 .container {
     height: 82vh;
     width: 55vw;
-    background-color: var(--lighterblue);
 
     flex-direction: column;
+
+    border-radius: 10px 10px 0px 0px;
+    box-shadow: -2px 2px 10px grey;
 }
 
 .title_container {
-    height: 5%;
+    height: 8%;
     width: 100%;
-    background-color: var(--grey);
 
     display: flex;
     justify-content: space-around;
     align-items: center;
     text-align: center;
+
+    background-color: var(--blue);
+    color: white;
+    border-radius: 10px 10px 0px 0px;
+    font-size: 20px;
+}
+
+.left_btn,
+.right_btn {
+    height: 70%;
+    width: 10%;
 }
 
 .dayName_container {
     height: 100%;
-    width: 100%;
+    width: 80%;
 
     display: flex;
     justify-content: center;
@@ -32,18 +44,53 @@
     width: 100%;
     min-height: 30%;
 
-    margin-top: 10px;
-    margin-bottom: 10px;
+    margin-top: 15px;
 }
 
 .mealList_container {
-    height: 95%;
+    height: 84%;
     width: 100%;
-    background-color: red;
 
     flex-direction: column;
     display: flex;
     align-items: center;
     text-align: center;
     overflow-y: auto;
+}
+
+.total_stats_container {
+    height: 8%;
+    width: 100%;
+
+    background-color: var(--blue);
+
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    text-align: center;
+
+    font-size: 20px;
+    color: white;
+}
+
+.total_stats_description,
+.stats {
+    height: 100%;
+    width: 20%;
+    border-right: 2px solid turquoise;
+
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    text-align: center;
+}
+
+.stats_last {
+    height: 100%;
+    width: 20%;
+
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    text-align: center;
 }

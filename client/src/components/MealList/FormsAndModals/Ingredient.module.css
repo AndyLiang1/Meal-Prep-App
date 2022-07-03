@@ -1,8 +1,38 @@
-.container { 
-    background-color: var(--grey);
+.container {
+    height: 100%;
+    width: 390px;
+
+    background-color: var(--lightgreen);
 
     display: flex;
     justify-content: space-between;
     align-items: center;
     text-align: center;
+
+    border-radius: 5px;
+    padding-left: 3px;
+    padding-right: 3px;
+}
+
+.food_info_name {
+    width: 33%;
+}
+
+.food_info_amounts {
+    width: 46%;
+}
+
+.food_info_name,
+.food_info_amounts {
+    font-size: 14px;
+}
+
+.close_btn_container {
+    width: 20%;
+    display: flex;
+    justify-content: right;
+}
+.close_btn {
+    transform: scale(1.5);
+    margin-right: 2px;
 }

@@ -1,448 +1,561 @@
-// import { Formik, Form, Field, setIn } from 'formik';
-// import * as React from 'react';
-// import { useEffect } from 'react';
-// import { useState } from 'react';
-// import { useSelector, useDispatch } from 'react-redux';
-// import * as Yup from 'yup';
+import { Formik, Form, Field, setIn, ErrorMessage } from 'formik';
+import * as React from 'react';
+import { useEffect } from 'react';
+import { useState } from 'react';
+import { useSelector, useDispatch } from 'react-redux';
+import * as Yup from 'yup';
 // import { CreateFoodFromFoodListDocument, CreateFoodFromMealDocument, CreateFoodInput, Food, GetMealsDocument } from '../../../generated/graphql-client';
-// import { addUserToStore, setModalStatus } from '../../../state/action-creators';
-// import { IRootState } from '../../../state/reducers';
-// import { UserInfoInterface } from '../../../state/reducers/UserData';
-// import styles from './AddFoodForm.module.css';
-// import { Ingredient } from './Ingredient';
+import { addUserToStore, setModalStatus, triggerRefetch } from '../../../state/action-creators';
+import { IRootState } from '../../../state/reducers';
+import { UserInfoInterface } from '../../../state/reducers/UserData';
+import styles from './AddFoodForm.module.css';
+import { Ingredient } from './Ingredient';
 
-// import { useWhatChanged, setUseWhatChange } from '@simbathesailor/use-what-changed';
-// import { useLazyQuery, useMutation } from '@apollo/client';
-// import { getUserMeals } from '../../helpers/GetMealsFunction';
-// import { AiOutlineDown, AiOutlineUp } from 'react-icons/ai';
-// import { DropdownStats } from './DropdownStats';
-// import { create } from 'yup/lib/Reference';
+import { useWhatChanged, setUseWhatChange } from '@simbathesailor/use-what-changed';
+import { useLazyQuery, useMutation } from '@apollo/client';
+import { DropdownStats } from './DropdownStats';
+import { create } from 'yup/lib/Reference';
+import {
+    CreateFoodListDocument,
+    CreateMealListFoodDocument,
+    Food,
+    CreateFoodListInput_NewNoIng,
+    CreateFoodListInputReal,
+    CreateFoodListType,
+    CreateFoodListInput_NewYesIng,
+    CreateMealListFoodInput_Existing,
+    CreateMealListFoodInputReal,
+    CreateMealListFoodType,
+    CreateMealListFoodInput_NewNoIng,
+    CreateMealListFoodInput_NewYesIng
+} from '../../../generated/graphql-client';
+import { CloseBtn, DropDownIcon, DropUpIcon } from '../../helpers/Icons';
 
-// export interface IAddFoodFormProps {
-//     type: string;
-//     setAddFoodForm: React.Dispatch<React.SetStateAction<boolean>>;
-//     mealId: string;
-// }
+export interface IAddFoodFormProps {
+    createType: string;
+    setAddFoodForm: React.Dispatch<React.SetStateAction<boolean>>;
+    mealId?: string;
+}
 
-// interface CreateFoodFromMealInput {
-//     existingFood: Food | string;
-//     existingFoodActualAmount: number;
-//     name: string;
-//     calories: number;
-//     proteins: number;
-//     carbs: number;
-//     fats: number;
-//     ingredients: Food[];
-//     givenAmount: number;
-//     actualAmount: number;
-// }
+interface CreateFoodFromMealInput {
+    existingFoodName: string;
+    existingFoodActualAmount: number;
+    name: string;
+    calories: number;
+    proteins: number;
+    carbs: number;
+    fats: number;
+    ingredients: Food[];
+    givenAmount: number;
+    actualAmount: number;
+}
 
-// export function AddFoodForm({ type, setAddFoodForm, mealId }: IAddFoodFormProps) {
-//     const { modalStatus } = useSelector((state: IRootState) => state);
-//     const user: UserInfoInterface = useSelector((state: IRootState) => state.user);
-//     const dayIndex = useSelector((state: IRootState) => state.dayIndex);
-//     const [newIngredient, setNewIngredient] = useState<Food>();
-//     const [foods, setFoods] = useState<Food[]>([]);
-//     const [ingredients, setIngredients] = useState<Food[]>([]);
-//     const [errorMsg, setErrorMsg] = useState<string>('');
-//     const [newIngActualAmount, setNewIngActualAmount] = useState(0);
+export function AddFoodForm({ createType, setAddFoodForm, mealId }: IAddFoodFormProps) {
+    const { modalStatus } = useSelector((state: IRootState) => state);
+    const user: UserInfoInterface = useSelector((state: IRootState) => state.user);
+    const dayIndex = useSelector((state: IRootState) => state.dayIndex);
+    const [newPotentialIngredient, setNewPotentialIngredient] = useState<Food>();
+    const [ingredients, setIngredients] = useState<Food[]>([]);
+    const [errorMsg, setErrorMsg] = useState<string>('');
+    const [newIngActualAmount, setNewIngActualAmount] = useState(0);
 
-//     const dispatch = useDispatch();
+    const dispatch = useDispatch();
+    const [createMealListFood] = useMutation(CreateMealListFoodDocument);
+    const [createFoodList] = useMutation(CreateFoodListDocument);
 
-//     const [createFoodFromMeal] = useMutation(CreateFoodFromMealDocument);
-//     const [createFoodFromFoodList] = useMutation(CreateFoodFromFoodListDocument);
-//     const [getMeals] = useLazyQuery(GetMealsDocument);
+    const [showIngCals, setShowIngCals] = useState(false);
+    const [showIngP, setShowIngP] = useState(false);
+    const [showIngC, setShowIngC] = useState(false);
+    const [showIngF, setShowIngF] = useState(false);
+    const [totalStats, setTotalStats] = useState({
+        calories: 0,
+        proteins: 0,
+        carbs: 0,
+        fats: 0
+    });
 
-//     const [showIngCals, setShowIngCals] = useState(false);
-//     const [showIngP, setShowIngP] = useState(false);
-//     const [showIngC, setShowIngC] = useState(false);
-//     const [showIngF, setShowIngF] = useState(false);
-//     const [totalStats, setTotalStats] = useState({
-//         calories: 0,
-//         proteins: 0,
-//         carbs: 0,
-//         fats: 0
-//     });
+    const initialValues: CreateFoodFromMealInput = {
+        existingFoodName: '',
+        existingFoodActualAmount: 0,
+        name: '',
+        calories: 0,
+        proteins: 0,
+        carbs: 0,
+        fats: 0,
+        ingredients: [],
+        givenAmount: 0,
+        actualAmount: 0
+    };
 
-//     const initialValues: CreateFoodFromMealInput = {
-//         existingFood: '',
-//         existingFoodActualAmount: 0,
-//         name: '',
-//         calories: 0,
-//         proteins: 0,
-//         carbs: 0,
-//         fats: 0,
-//         ingredients: [],
-//         givenAmount: 0,
-//         actualAmount: 0
-//     };
+    const validationSchema = Yup.object().shape({
+        name: Yup.string().required('Invalid food name').max(50),
+        calories: Yup.number().typeError('Input a number please').integer().min(1),
+        proteins: Yup.number().typeError('Input a number please').min(1),
+        carbs: Yup.number().typeError('Input a number please').min(1),
+        fats: Yup.number().typeError('Input a number please').min(1),
+        givenAmount: Yup.number().typeError('Input a number please').integer().min(1),
+        actualAmount: Yup.number().typeError('Input a number please').integer().min(1)
+    });
 
-//     const validationSchema = Yup.object().shape({
-//         // name: Yup.string().max(50),
-//         // calories: Yup.number().typeError('Input a number please').integer().min(1),
-//         // proteins: Yup.number().typeError('Input a number please').min(1),
-//         // carbs: Yup.number().typeError('Input a number please').min(1),
-//         // fats: Yup.number().typeError('Input a number please').min(1),
-//         // givenAmount: Yup.number().typeError('Input a number please').integer().min(1),
-//         // actualAmount: Yup.number().typeError('Input a number please').integer().min(1)
-//     });
+    // useEffect(() => {
+    //     for (let i = 0; i < user.foodList!.length; i++) {
+    //         if (setNewPotentialIngredient.name === user.foodList![i].name) {
+    //             const foodToAdd = user.foodList![i];
+    //             const newIngredientsList = ingredients;
+    //             newIngredientsList.push(foodToAdd);
+    //             setIngredients(newIngredientsList);
+    //         }
+    //     }
+    //     // This allows us to add the same ingredient twice,
+    //     setNewPotentialIngredient('');
+    // }, [newPotentialIngredient]);
 
-//     // useEffect(() => {
-//     //     for (let i = 0; i < user.foodList!.length; i++) {
-//     //         if (newIngredient.name === user.foodList![i].name) {
-//     //             const foodToAdd = user.foodList![i];
-//     //             const newIngredientsList = ingredients;
-//     //             newIngredientsList.push(foodToAdd);
-//     //             setIngredients(newIngredientsList);
-//     //         }
-//     //     }
-//     //     // This allows us to add the same ingredient twice,
-//     //     setNewIngredient('');
-//     // }, [newIngredient]);
+    const addToIngredientList = (newIngredientActualAmount: number) => {
+        if (newPotentialIngredient) {
+            newPotentialIngredient.actualAmount = newIngredientActualAmount;
+            const newIngredientsList = [...ingredients];
+            newIngredientsList.push(newPotentialIngredient);
+            setIngredients(newIngredientsList);
+            setNewPotentialIngredient(undefined); // to hide the form
+        }
+    };
+    const handleDeleteIng = (ingredientToDeleteName: string, ingredientToDeleteActualAmount: number) => {
+        for (let i = 0; i < ingredients.length; i++) {
+            if (ingredientToDeleteName === ingredients[i].name && ingredientToDeleteActualAmount === ingredients[i].actualAmount) {
+                let newIngredientsList = [...ingredients]
+                newIngredientsList.splice(i, 1)
+                setIngredients(newIngredientsList)
+                break;
+            }
+        }
+    };
+    const calcTotalStats = () => {
+        let cals = 0,
+            p = 0,
+            c = 0,
+            f = 0;
+        ingredients.forEach((ingredient) => {
+            const { calories, proteins, carbs, fats, givenAmount, actualAmount } = ingredient;
+            cals += Number(((calories * actualAmount!) / givenAmount).toFixed(0));
+            p += Number(((proteins * actualAmount!) / givenAmount).toFixed(2));
+            c += Number(((carbs * actualAmount!) / givenAmount).toFixed(2));
+            f += Number(((fats * actualAmount!) / givenAmount).toFixed(2));
+        });
+        setTotalStats({
+            calories: cals,
+            proteins: p,
+            carbs: c,
+            fats: f
+        });
+    };
 
-//     const addToIngredientList = (newIngredientActualAmount: number) => {
-//         if (newIngredient) {
-//             newIngredient.actualAmount = newIngredientActualAmount;
-//             const newIngredientsList = [...ingredients];
-//             newIngredientsList.push(newIngredient);
-//             setIngredients(newIngredientsList);
-//             setNewIngredient(undefined); // to hide the form
-//         }
-//     };
+    const turnIngArrToIngNameAndIngActualAmountArrays = () => {
+        const ingredientNames = [];
+        const ingredientActualAmounts = [];
+        for (let ingredient of ingredients) {
+            ingredientNames.push(ingredient.name);
+            ingredientActualAmounts.push(ingredient.actualAmount!);
+        }
+        return { ingredientNames, ingredientActualAmounts };
+    };
 
-//     const calcTotalStats = () => {
-//         let cals = 0,
-//             p = 0,
-//             c = 0,
-//             f = 0;
-//         ingredients.forEach((ingredient) => {
-//             const { calories, proteins, carbs, fats, givenAmount, actualAmount } = ingredient;
-//             cals += parseInt(((calories * actualAmount) / givenAmount).toFixed(2));
-//             p += parseInt(((proteins * actualAmount) / givenAmount).toFixed(2));
-//             c += parseInt(((carbs * actualAmount) / givenAmount).toFixed(2));
-//             f += parseInt(((fats * actualAmount) / givenAmount).toFixed(2));
-//         });
-//         setTotalStats({
-//             calories: cals,
-//             proteins: p,
-//             carbs: c,
-//             fats: f
-//         });
-//     };
+    useEffect(() => {
+        console.log('Ingredients is now: ', ingredients)
+        calcTotalStats();
+    }, [ingredients]);
 
-//     useEffect(() => {
-//         calcTotalStats();
-//     }, [ingredients]);
+    const submitFoodList = async (submittedData: CreateFoodFromMealInput) => {
+        const createNewNoIng = ingredients.length === 0;
+        switch (createNewNoIng) {
+            case true:
+                const createFoodListInputNewNoIngInfo: CreateFoodListInput_NewNoIng = {
+                    name: submittedData.name,
+                    calories: totalStats.calories,
+                    proteins: totalStats.proteins,
+                    carbs: totalStats.carbs,
+                    fats: totalStats.fats,
+                    givenAmount: submittedData.givenAmount
+                };
+                const createFoodListInputNewNoIng: CreateFoodListInputReal = {
+                    createType: 'NEW_NO_ING' as CreateFoodListType,
+                    inputNewNoIng: createFoodListInputNewNoIngInfo
+                };
+                await createFoodList({
+                    variables: {
+                        input: createFoodListInputNewNoIng
+                    }
+                });
+                break;
+            case false:
+                const { ingredientNames, ingredientActualAmounts } = turnIngArrToIngNameAndIngActualAmountArrays();
+                const createFoodListInputNewYesIngInfo: CreateFoodListInput_NewYesIng = {
+                    name: submittedData.name,
+                    ingredientNames,
+                    ingredientActualAmounts,
+                    givenAmount: submittedData.givenAmount
+                };
 
-//     const onSubmit = async (submittedData: CreateFoodFromMealInput) => {
-//         if (submittedData.existingFood !== '' && submittedData.name !== '') {
-//             setErrorMsg('Please only use one of the options to add a food to this meal. Either add an existing food, or create a new food with a unique name.');
-//             return;
-//         }
-        
-//         if (submittedData.existingFood !== '') {
-//             let createFoodFromMealArgs: CreateFoodInput;
+                const createFoodListInputNewYesIng: CreateFoodListInputReal = {
+                    createType: 'NEW_YES_ING' as CreateFoodListType,
+                    inputNewYesIng: createFoodListInputNewYesIngInfo
+                };
 
-//             user.foodList.forEach((food) => {
-//                 if (submittedData.existingFood === food.name) {
-//                     const { name, calories, proteins, carbs, fats, givenAmount, actualAmount } = food;
-//                     const ingredientNames: string[] = [];
-//                     food.ingredients.forEach((ingredient) => {
-//                         ingredientNames.push(ingredient.name);
-//                     });
+                await createFoodList({
+                    variables: {
+                        input: createFoodListInputNewYesIng
+                    }
+                });
+                break;
+            default:
+                break;
+        }
+    };
 
-//                     // const existingFoodActualAmount = (submittedData.existingFoodActualAmount);
-//                     createFoodFromMealArgs = {
-//                         userId: user.id,
-//                         dayIndex,
-//                         mealId,
-//                         foodName: name,
-//                         calories,
-//                         proteins,
-//                         carbs,
-//                         fats,
-//                         ingredientNames,
-//                         givenAmount,
-//                         actualAmount: submittedData.existingFoodActualAmount
-//                     };
-//                 }
-//             });
+    const submitMealListFood = async (submittedData: CreateFoodFromMealInput) => {
+        const createFromExistingFood = submittedData.existingFoodName !== null && submittedData.existingFoodName !== undefined;
+        switch (createFromExistingFood) {
+            case true:
+                const createMealListFoodInputExistingInfo: CreateMealListFoodInput_Existing = {
+                    existingFoodName: submittedData.existingFoodName,
+                    actualAmount: submittedData.actualAmount,
+                    dayIndex,
+                    mealId: mealId!
+                };
+                const createMealListFoodInputExisting: CreateMealListFoodInputReal = {
+                    createType: 'EXISTING' as CreateMealListFoodType,
+                    inputExisting: createMealListFoodInputExistingInfo
+                };
+                await createMealListFood({
+                    variables: {
+                        input: createMealListFoodInputExisting
+                    }
+                });
+                break;
+            default:
+                const createNewNoIng = ingredients.length === 0;
+                switch (createNewNoIng) {
+                    case true:
+                        const createMealListFoodInputNewNoIngInfo: CreateMealListFoodInput_NewNoIng = {
+                            name: submittedData.name,
+                            calories: totalStats.calories,
+                            proteins: totalStats.proteins,
+                            carbs: totalStats.carbs,
+                            fats: totalStats.fats,
 
-//             const { data } = await createFoodFromMeal({
-//                 variables: {
-//                     input: createFoodFromMealArgs!
-//                 }
-//             });
-//             dispatch(setModalStatus(false));
-//             setAddFoodForm(false);
-//         } else if (submittedData.name !== '') {
-//             // then we are not using exisitng food
-//             const { name, givenAmount, actualAmount } = submittedData;
-//             const { calories, proteins, carbs, fats } = totalStats;
-//             let foodHasUniqueName = true;
-//             user.foodList.forEach((food) => {
-//                 if (name === food.name) {
-//                     foodHasUniqueName = false;
-//                 }
-//             });
+                            givenAmount: submittedData.givenAmount,
+                            actualAmount: submittedData.actualAmount,
 
-//             if (!foodHasUniqueName) {
-//                 setErrorMsg('A food with the same name already exists.');
-//                 return;
-//             }
+                            dayIndex,
+                            mealId: mealId!
+                        };
+                        const createMealListFoodInputNewNoIng: CreateMealListFoodInputReal = {
+                            createType: 'NEW_NO_ING' as CreateMealListFoodType,
+                            inputNewNoIng: createMealListFoodInputNewNoIngInfo
+                        };
+                        await createMealListFood({
+                            variables: {
+                                input: createMealListFoodInputNewNoIng
+                            }
+                        });
+                        break;
+                    case false:
+                        const { ingredientNames, ingredientActualAmounts } = turnIngArrToIngNameAndIngActualAmountArrays();
+                        const createMealListFoodInputNewYesIngInfo: CreateMealListFoodInput_NewYesIng = {
+                            name: submittedData.name,
+                            ingredientNames,
+                            ingredientActualAmounts,
 
-//             const ingredientNames: string[] = [];
-//             ingredients.forEach((ingredient) => {
-//                 ingredientNames.push(ingredient.name);
-//             });
-//             const createFoodFromMealArgs: CreateFoodInput = {
-//                 userId: user.id,
-//                 dayIndex,
-//                 mealId,
-//                 foodName: name,
-//                 calories,
-//                 proteins,
-//                 carbs,
-//                 fats,
-//                 ingredientNames,
-//                 givenAmount,
-//                 actualAmount
-//             };
+                            givenAmount: submittedData.givenAmount,
+                            actualAmount: submittedData.actualAmount,
 
-//             const { data } = await createFoodFromMeal({
-//                 variables: {
-//                     input: createFoodFromMealArgs
-//                 }
-//             });
+                            dayIndex,
+                            mealId: mealId!
+                        };
+                        const createMealListFoodInputNewYesIng: CreateMealListFoodInputReal = {
+                            createType: 'NEW_YES_ING' as CreateMealListFoodType,
+                            inputNewYesIng: createMealListFoodInputNewYesIngInfo
+                        };
+                        await createMealListFood({
+                            variables: {
+                                input: createMealListFoodInputNewYesIng
+                            }
+                        });
+                        break;
+                    default:
+                        break;
+                }
+                break;
+        }
+    };
 
-//             dispatch(setModalStatus(false));
-//             setAddFoodForm(false);
-//         }
-//         const day = await getUserMeals(dayIndex, user, getMeals);
-//         dispatch(
-//             addUserToStore({
-//                 username: user.username,
-//                 id: user.id,
-//                 day,
-//                 loggedIn: true,
-//                 accessToken: localStorage.getItem('accessToken')!,
-//                 foodList: user.foodList
-//             })
-//         );
-//     };
+    const handleSubmit = async (submittedData: CreateFoodFromMealInput) => {
+        if (submittedData.existingFoodName !== '' && submittedData.name !== '') {
+            setErrorMsg('Please only use one of the options to add a food to this meal. Either add an existing food, or create a new food with a unique name.');
+            return;
+        }
+        switch (createType) {
+            case 'mealListFood':
+                submitMealListFood(submittedData);
+                break;
+            case 'foodList':
+                submitFoodList(submittedData);
+                break;
+            default:
+                break;
+        }
 
-//     return (
-//         <div className={styles.container}>
-//             <Formik initialValues={initialValues} validationSchema={validationSchema} onSubmit={onSubmit}>
-//                 {({ errors, touched }) => (
-//                     <Form className={styles.form}>
-//                         <div className={styles.title_container}>
-//                             {type === 'meal' ? <div>Add food to meal</div> : <div>Add food to food list</div>}
+        dispatch(triggerRefetch());
+        setAddFoodForm(false);
 
-//                             <button
-//                                 type="button"
-//                                 onClick={() => {
-//                                     dispatch(setModalStatus(false));
-//                                     setAddFoodForm(false);
-//                                 }}
-//                             >
-//                                 X
-//                             </button>
-//                         </div>
-//                         <div className={styles.existing_food_container}>
-//                             <div>Use existing food</div>
-//                             <Field className="add_field" name="existingFood" as="select">
-//                                 <option value=""></option>
+    };
 
-//                                 {user.foodList!.map((food: Food, index: number) => {
-//                                     return (
-//                                         <option key={index} value={food.name}>
-//                                             {food.name}
-//                                         </option>
-//                                     );
-//                                 })}
-//                             </Field>
-//                             <div>Actual Amount</div>
-//                             <Field className="add_field" type = "number" name="existingFoodActualAmount"></Field>
-//                         </div>
-//                         <div className={styles.create_new_food_container}>
-//                             <div>Name</div>
-//                             <Field className="add_field" name="name" type="text" />
+    return (
+        <div className={styles.container}>
+            <CloseBtn
+                className={styles.close_btn}
+                type="button"
+                onClick={() => {
+                    dispatch(setModalStatus(false));
+                    setAddFoodForm(false);
+                }}
+            ></CloseBtn>
+            <div className={styles.title_container}>{createType === 'meal' ? <div className={styles.title}>Add food to meal</div> : <div className={styles.title}>Add food to food list</div>}</div>
+            <Formik initialValues={initialValues} validationSchema={validationSchema} onSubmit={handleSubmit}>
+                {({ errors, touched }) => (
+                    <Form className={styles.form}>
+                        <div className={styles.form_container}>
+                            {createType === 'mealListFood' && (
+                                <div className={styles.existing_food_container}>
+                                    <div className={styles.sub_title}>Add by using an existing food</div>
+                                    <div className={styles.add_label}>Existing food</div>
+                                    <Field className={styles.add_field} name="existingFoodName" as="select">
+                                        <option value=""></option>
+                                        {user.foodList!.map((food: Food, index: number) => {
+                                            return (
+                                                <option key={index} value={food.name}>
+                                                    {food.name}
+                                                </option>
+                                            );
+                                        })}
+                                    </Field>
+                                    <div className={styles.add_label}>Actual Amount</div>
+                                    <Field className={styles.add_field} type="number" name="existingFoodActualAmount"></Field>
+                                </div>
+                            )}
+                            <div className={styles.create_new_food_container}>
+                                <div className={styles.sub_title}>Add by creating a new food</div>
 
-//                             {!ingredients.length ? (
-//                                 <div>
-//                                     <div>Calories</div>
-//                                     <Field
-//                                         className="add_field"
-//                                         name="calories"
-//                                         type="number"
-//                                         onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-//                                             setTotalStats({
-//                                                 ...totalStats,
-//                                                 calories: parseInt(e.target.value)
-//                                             })
-//                                         }
-//                                         value={totalStats.calories}
-//                                     />
+                                <div className={styles.add_label}>Name</div>
+                                <Field className={styles.add_field} name="name" type="text" />
 
-//                                     <div>Proteins</div>
-//                                     <Field
-//                                         className="add_field"
-//                                         name="proteins"
-//                                         type="number"
-//                                         onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-//                                             setTotalStats({
-//                                                 ...totalStats,
-//                                                 proteins: parseInt(e.target.value)
-//                                             })
-//                                         }
-//                                         value={totalStats.proteins}
-//                                     />
+                                {!ingredients.length ? (
+                                    <div>
+                                        <div className={styles.add_label}>Calories</div>
+                                        <Field
+                                            className={styles.add_field}
+                                            name="calories"
+                                            // type="text"
+                                            // onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                                            //     setTotalStats({
+                                            //         ...totalStats,
+                                            //         calories: Number(e.target.value)
+                                            //     })
+                                            // }
+                                            // value={totalStats.calories ? totalStats.calories : ''}
+                                        />
+                                        <ErrorMessage name = "calories"></ErrorMessage>
 
-//                                     <div>Carbs</div>
-//                                     <Field
-//                                         className="add_field"
-//                                         name="carbs"
-//                                         type="number"
-//                                         onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-//                                             setTotalStats({
-//                                                 ...totalStats,
-//                                                 carbs: parseInt(e.target.value)
-//                                             })
-//                                         }
-//                                         value={totalStats.carbs}
-//                                     />
+                                        <div className={styles.add_label}>Proteins</div>
+                                        <Field
+                                            className={styles.add_field}
+                                            name="proteins"
+                                            // type="text"
+                                            // onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                                            //     setTotalStats({
+                                            //         ...totalStats,
+                                            //         proteins: Number(e.target.value)
+                                            //     })
+                                            // }
+                                            // value={totalStats.proteins ? totalStats.proteins : ''}
+                                        />
 
-//                                     <div>Fats</div>
-//                                     <Field
-//                                         className="add_field"
-//                                         name="fats"
-//                                         type="number"
-//                                         onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-//                                             setTotalStats({
-//                                                 ...totalStats,
-//                                                 fats: parseInt(e.target.value)
-//                                             })
-//                                         }
-//                                         value={totalStats.fats}
-//                                     />
-//                                 </div>
-//                             ) : (
-//                                 <div>
-//                                     <div>Calories: {totalStats.calories}</div>
-//                                     {!showIngCals ? (
-//                                         <AiOutlineDown
-//                                             onClick={() => {
-//                                                 setShowIngCals(true);
-//                                             }}
-//                                         ></AiOutlineDown>
-//                                     ) : (
-//                                         <AiOutlineUp onClick={() => setShowIngCals(false)} />
-//                                     )}
-//                                     {showIngCals && <DropdownStats statName={'calories'} ingredients={ingredients}></DropdownStats>}
+                                        <div className={styles.add_label}>Carbs</div>
+                                        <Field
+                                            className={styles.add_field}
+                                            name="carbs"
+                                            type="text"
+                                            onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                                                setTotalStats({
+                                                    ...totalStats,
+                                                    carbs: Number(e.target.value)
+                                                })
+                                            }
+                                            value={totalStats.carbs ? totalStats.carbs : ''}
+                                        />
 
-//                                     <div>Proteins: {totalStats.proteins}</div>
-//                                     {!showIngP ? (
-//                                         <AiOutlineDown
-//                                             onClick={() => {
-//                                                 setShowIngP(true);
-//                                             }}
-//                                         ></AiOutlineDown>
-//                                     ) : (
-//                                         <AiOutlineUp onClick={() => setShowIngP(false)} />
-//                                     )}
-//                                     {showIngP && <DropdownStats statName={'proteins'} ingredients={ingredients}></DropdownStats>}
+                                        <div className={styles.add_label}>Fats</div>
+                                        <Field
+                                            className={styles.add_field}
+                                            name="fats"
+                                            type="text"
+                                            onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                                                setTotalStats({
+                                                    ...totalStats,
+                                                    fats: Number(e.target.value)
+                                                })
+                                            }
+                                            value={totalStats.fats ? totalStats.fats : ''}
+                                        />
+                                    </div>
+                                ) : (
+                                    <div>
+                                        <div className={styles.stats_container}>
+                                            <div className={styles.stats_name_and_dropdown}>
+                                                <div className={styles.stats_info}>Calories: {totalStats.calories.toFixed(0)}</div>
+                                                {!showIngCals ? (
+                                                    <DropDownIcon
+                                                        className={styles.stats_display_toggle}
+                                                        onClick={() => {
+                                                            setShowIngCals(true);
+                                                        }}
+                                                    ></DropDownIcon>
+                                                ) : (
+                                                    <DropUpIcon className={styles.stats_display_toggle} onClick={() => setShowIngCals(false)} />
+                                                )}
+                                            </div>
+                                            {showIngCals && <DropdownStats statName={'calories'} ingredients={ingredients}></DropdownStats>}
+                                        </div>
+                                        <div className={styles.stats_container}>
+                                            <div className={styles.stats_name_and_dropdown}>
+                                                <div className={styles.stats_info}>Proteins: {totalStats.proteins.toFixed(2)}</div>
+                                                {!showIngP ? (
+                                                    <DropDownIcon
+                                                        className={styles.stats_display_toggle}
+                                                        onClick={() => {
+                                                            setShowIngP(true);
+                                                        }}
+                                                    ></DropDownIcon>
+                                                ) : (
+                                                    <DropUpIcon className={styles.stats_display_toggle} onClick={() => setShowIngP(false)} />
+                                                )}
+                                            </div>
+                                            {showIngP && <DropdownStats statName={'proteins'} ingredients={ingredients}></DropdownStats>}
+                                        </div>
+                                        <div className={styles.stats_container}>
+                                            <div className={styles.stats_name_and_dropdown}>
+                                                <div className={styles.stats_info}>Carbs: {totalStats.carbs.toFixed(2)}</div>
+                                                {!showIngC ? (
+                                                    <DropDownIcon
+                                                        className={styles.stats_display_toggle}
+                                                        onClick={() => {
+                                                            setShowIngC(true);
+                                                        }}
+                                                    ></DropDownIcon>
+                                                ) : (
+                                                    <DropUpIcon className={styles.stats_display_toggle} onClick={() => setShowIngC(false)} />
+                                                )}
+                                            </div>
+                                            {showIngC && <DropdownStats statName={'carbs'} ingredients={ingredients} />}
+                                        </div>
+                                        <div className={styles.stats_container}>
+                                            <div className={styles.stats_name_and_dropdown}>
+                                                <div className={styles.stats_info}>Fats: {totalStats.fats.toFixed(2)}</div>
+                                                {!showIngF ? (
+                                                    <DropDownIcon
+                                                        className={styles.stats_display_toggle}
+                                                        onClick={() => {
+                                                            setShowIngF(true);
+                                                        }}
+                                                    ></DropDownIcon>
+                                                ) : (
+                                                    <DropUpIcon className={styles.stats_display_toggle} onClick={() => setShowIngF(false)} />
+                                                )}
+                                            </div>
+                                            {showIngF && <DropdownStats statName={'fats'} ingredients={ingredients}></DropdownStats>}
+                                        </div>
+                                    </div>
+                                )}
+                                <div className={styles.add_label}>Ingredients</div>
+                                <Field
+                                    className={styles.add_field}
+                                    name="ingredients"
+                                    as="select"
+                                    onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+                                        const newIngName = e.target.value;
+                                        user.foodList.forEach((food) => {
+                                            if (food.name === newIngName) {
+                                                let ingredient = {
+                                                    ...food
+                                                };
+                                                setNewPotentialIngredient(ingredient);
+                                                setNewIngActualAmount(ingredient.givenAmount);
+                                            }
+                                        });
+                                    }}
+                                    value={newPotentialIngredient ? newPotentialIngredient.name : '--'}
+                                >
+                                    <option value=""></option>
+                                    {user.foodList.map((food: Food, index: number) => {
+                                        return (
+                                            <option key={index} value={food.name}>
+                                                {food.name}
+                                            </option>
+                                        );
+                                    })}
+                                </Field>
+                                {newPotentialIngredient && (
+                                    <div className={styles.potentialNewIng}>
+                                        <div>
+                                            {newPotentialIngredient.name} | Given Amt: {newPotentialIngredient.givenAmount}
+                                            {''}
+                                        </div>
+                                        <div className={styles.potentialNewIng_AA_container}>
+                                            <div>Actual Amt</div>
+                                            <div> </div>
+                                            <Field
+                                                className={styles.potentialIngActualAmount}
+                                                type="number"
+                                                onChange={(e: React.ChangeEvent<HTMLInputElement>) => setNewIngActualAmount(parseInt(e.target.value))}
+                                                value={newIngActualAmount}
+                                            ></Field>
+                                        </div>
 
-//                                     <div>Carbs: {totalStats.carbs}</div>
-//                                     {!showIngC ? (
-//                                         <AiOutlineDown
-//                                             onClick={() => {
-//                                                 setShowIngC(true);
-//                                             }}
-//                                         ></AiOutlineDown>
-//                                     ) : (
-//                                         <AiOutlineUp onClick={() => setShowIngC(false)} />
-//                                     )}
-//                                     {showIngC && <DropdownStats statName={'carbs'} ingredients={ingredients} />}
-
-//                                     <div>Fats: {totalStats.fats}</div>
-//                                     {!showIngF ? (
-//                                         <AiOutlineDown
-//                                             onClick={() => {
-//                                                 setShowIngF(true);
-//                                             }}
-//                                         ></AiOutlineDown>
-//                                     ) : (
-//                                         <AiOutlineUp onClick={() => setShowIngF(false)} />
-//                                     )}
-//                                     {showIngF && <DropdownStats statName={'fats'} ingredients={ingredients}></DropdownStats>}
-//                                 </div>
-//                             )}
-
-//                             <div>Given Amount</div>
-//                             <Field className="add_field" name="givenAmount" type="number" />
-//                             <div>Actual Amount</div>
-//                             <Field className="add_field" name="actualAmount" type="number" />
-//                             <div>Ingredients</div>
-//                             <Field
-//                                 className="add_field"
-//                                 name="ingredients"
-//                                 as="select"
-//                                 onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-//                                     const newIngName = e.target.value;
-//                                     user.foodList.forEach((food) => {
-//                                         if (food.name === newIngName) {
-//                                             let ingredient = {
-//                                                 ...food
-//                                             };
-//                                             setNewIngredient(ingredient);
-//                                             setNewIngActualAmount(ingredient.givenAmount);
-//                                         }
-//                                     });
-//                                 }}
-//                                 value={newIngredient ? newIngredient.name : '--'}
-//                             >
-//                                 <option value=""></option>
-//                                 {user.foodList.map((food: Food, index: number) => {
-//                                     return (
-//                                         <option key={index} value={food.name}>
-//                                             {food.name}
-//                                         </option>
-//                                     );
-//                                 })}
-//                             </Field>
-//                             {newIngredient && (
-//                                 <div className={styles.potentialNewIng}>
-//                                     <div>
-//                                         {newIngredient.name} | Given Amount: {newIngredient.givenAmount}
-//                                     </div>
-//                                     <div> Actual Amount</div>
-//                                     <Field
-//                                         className={styles.newIngActualAmount}
-//                                         type="number"
-//                                         onChange={(e: React.ChangeEvent<HTMLInputElement>) => setNewIngActualAmount(parseInt(e.target.value))}
-//                                         value={newIngActualAmount}
-//                                     ></Field>
-//                                     <button type="button" onClick={() => addToIngredientList(newIngActualAmount)}>
-//                                         Adddd
-//                                     </button>
-//                                 </div>
-//                             )}
-//                             {ingredients.map((food: Food, index: number) => {
-//                                 return <Ingredient key={index} ingredient={food} ingredients={ingredients} setIngredients={setIngredients}></Ingredient>;
-//                             })}
-//                         </div>
-
-//                         <div className={styles.btn_container}>
-//                             <button className="add_button" type="submit">
-//                                 Add
-//                             </button>
-//                             {errorMsg !== '' ? errorMsg : null}
-//                         </div>
-//                     </Form>
-//                 )}
-//             </Formik>
-//         </div>
-//     );
-// }
-export const temp = {};
+                                        <button type="button" className="btn btn-primary" onClick={() => addToIngredientList(newIngActualAmount)}>
+                                            Add Ingredient to Food
+                                        </button>
+                                    </div>
+                                )}
+                                <div className={styles.ing_container}>
+                                    {ingredients.map((food: Food, index: number) => {
+                                        return <Ingredient key={index} ingredient={food} onDeleteIng={handleDeleteIng}></Ingredient>;
+                                    })}
+                                </div>
+                                <div className={styles.add_label}>Given Amount</div>
+                                <Field className={styles.add_field} name="givenAmount" type="number" />
+                                {createType === 'mealListFood' && (
+                                    <>
+                                        <div className={styles.add_label}>Actual Amount</div>
+                                        <Field className={styles.add_field} name="actualAmount" type="number" />
+                                    </>
+                                )}
+                                <div className={styles.btn_container}>
+                                    <button
+                                        className="btn btn-primary"
+                                        style={{
+                                            width: '100%',
+                                            fontSize: '16px'
+                                        }}
+                                        type="submit"
+                                    >
+                                        Add Food
+                                    </button>
+                                    {errorMsg !== '' ? errorMsg : null}
+                                </div>
+                            </div>
+                        </div>
+                    </Form>
+                )}
+            </Formik>
+        </div>
+    );
+}

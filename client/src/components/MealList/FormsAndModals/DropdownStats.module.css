@@ -1,7 +1,28 @@
 .container {
-    background-color: violet;
+    height: 100%;
+    width: 390px;
+    background-color: rgb(255, 185, 255);
     display: flex;
-    justify-content: left;
+    justify-content: space-between;
     align-items: center;
     text-align: center;
+
+    border-radius: 5px;
+    padding-left: 3px;
+    padding-right: 3px;
+}
+
+.food_info_name {
+    font-size: 14px;
+    width: 33%;
+}
+
+.food_info_stat {
+    font-size: 14px;
+    width: 20%;
+}
+
+.food_info_amounts {
+    font-size: 14px;
+    width: 46%;
 }

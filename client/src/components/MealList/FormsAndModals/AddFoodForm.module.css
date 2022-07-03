@@ -1,59 +1,175 @@
 .container {
-    height: 80vh;
-    width: 40vw;
+    height: 600px;
+    width: 500px;
 
-    background-color: var(--lightblue);
+    background-color: white;
 
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
     position: absolute;
+
+    flex-direction: column;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+}
+.close_btn {
+    position: absolute;
+    right: 20px;
+    top: 20px;
+    color: white;
+    transform: scale(2.5);
 }
 
 .form {
     height: 100%;
     width: 100%;
+    flex-direction: column;
+    display: flex;
+    justify-content: top;
+    align-items: center;
+    text-align: center;
+    overflow-y: auto;
+}
+
+.form_container {
+    height: 100%;
+    width: 80%;
 }
 
 .title_container {
-    height: 10%;
+    height: 8%;
+    min-height: 8%;
+
     width: 100%;
 
-    background-color: var(--grey);
-}
-
-.existing_food_container {
-    height: 20%;
-    width: 100%;
-
-    flex-direction: column;
+    background-color: var(--blue);
     display: flex;
     justify-content: space-around;
     align-items: center;
     text-align: center;
-
-    border-bottom: 3px solid black;
 }
 
-.add_field {
+.title {
+    font-size: 20px;
+    color: white;
+}
+
+.sub_title {
+    position: relative;
+    display: flex;
+    justify-content: left;
+    font-size: 16px;
+}
+
+.sub_title::before {
+    content: '';
+    position: absolute;
+
+    top: 100%;
+    left: 0;
+    height: 5px;
+    width: 200px;
+    background: linear-gradient(135deg, #71b7e6, #9b59b6);
+}
+
+.existing_food_container {
+    height: 25%;
+    min-height: 25%;
+
     width: 100%;
+
+    flex-direction: column;
+    display: flex;
+    padding-bottom: 3px;
+}
+
+.add_label {
+    font-weight: 400;
+    font-size: 14px;
+    display: flex;
+    justify-content: left;
+    margin-top: 3px;
+}
+.add_field {
+    height: 25px;
+    font-size: 16px;
+    width: 100%;
+    margin-bottom: 10px;
+    border: 1px solid black;
 }
 
 .create_new_food_container {
-    height: 60%;
     width: 100%;
-
-    border-bottom: 3px solid black;
-}
-
-
-.newIngActualAmount {
-    width: 40px
 }
 
 .potentialNewIng {
     display: flex;
-    justify-content: center;
+    justify-content: space-between;
     align-items: center;
     text-align: center;
+    background: var(--lightgrey);
+}
+
+.potentialNewIng_AA_container {
+    display: flex;
+    align-items: center;
+    text-align: center;
+}
+
+.potentialIngActualAmount {
+    border: 1px solid black;
+    width: 40px;
+}
+
+.ing_container {
+    flex-direction: column;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    text-align: center;
+}
+
+.stats_container {
+    width: 100%;
+
+    flex-direction: column;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    text-align: center;
+}
+
+.stats_name_and_dropdown {
+    position: relative;
+    height: 100%;
+    width: 100%;
+    display: flex;
+    justify-content: left;
+    align-items: center;
+    text-align: center;
+}
+
+.stats_info {
+    font-size: 16px;
+}
+
+.stats_display_toggle {
+    position: absolute;
+    left: 190px;
+    transform: scale(2)
+}
+
+.btn_container {
+    width: 100%;
+    padding-bottom: 10px;
+}
+
+.btn btn-primary {
+    height: 100%;
+    width: 100%;
+
+    font-size: 20px;
 }
