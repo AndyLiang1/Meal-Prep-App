@@ -1,0 +1,14 @@
+.container {
+}
+
+.error_message {
+    height: auto;
+    width: 100%;
+
+    font-size: 14px;
+    color: red;
+
+    display: flex;
+    justify-content: left;
+
+}

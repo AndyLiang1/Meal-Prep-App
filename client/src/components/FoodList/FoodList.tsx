@@ -32,13 +32,11 @@ export function FoodList(props: IFoodListProps) {
                     <button
                         type="button"
                         className="btn btn-primary"
-                        style = {
-                            {
-                                width: '90%',
-                                marginTop: '5px',
-                                fontSize: '14px'
-                            }
-                        }
+                        style={{
+                            width: '90%',
+                            marginTop: '5px',
+                            fontSize: '14px'
+                        }}
                         onClick={() => {
                             if (!modalStatus) {
                                 dispatch(setModalStatus(true));
@@ -50,7 +48,7 @@ export function FoodList(props: IFoodListProps) {
                     </button>
                 </div>
             </div>
-            {addFoodForm ? <AddFoodForm createType="foodList" setAddFoodForm={setAddFoodForm}></AddFoodForm> : null}
+            {addFoodForm ? <AddFoodForm fromWhere="foodList" setAddFoodForm={setAddFoodForm}></AddFoodForm> : null}
         </div>
     );
 }

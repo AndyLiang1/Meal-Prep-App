@@ -30,27 +30,28 @@ import {
     CreateMealListFoodInput_NewYesIng
 } from '../../../generated/graphql-client';
 import { CloseBtn, DropDownIcon, DropUpIcon } from '../../helpers/Icons';
+import { CustomErrorMessage } from '../../Others/CustomErrorMessage';
+import { foodList_newNoIng_Schema, mealListFood_createExisting_Schema, mealListFood_newNoIng_Schema } from './AddFoodFormValidationSchema';
 
 export interface IAddFoodFormProps {
-    createType: string;
+    fromWhere: string;
     setAddFoodForm: React.Dispatch<React.SetStateAction<boolean>>;
     mealId?: string;
 }
 
 interface CreateFoodFromMealInput {
     existingFoodName: string;
-    existingFoodActualAmount: number;
+    existingFoodActualAmount: any;
     name: string;
-    calories: number;
-    proteins: number;
-    carbs: number;
-    fats: number;
-    ingredients: Food[];
-    givenAmount: number;
-    actualAmount: number;
+    calories: any;
+    proteins: any;
+    carbs: any;
+    fats: any;
+    givenAmount: any;
+    actualAmount: any;
 }
 
-export function AddFoodForm({ createType, setAddFoodForm, mealId }: IAddFoodFormProps) {
+export function AddFoodForm({ fromWhere, setAddFoodForm, mealId }: IAddFoodFormProps) {
     const { modalStatus } = useSelector((state: IRootState) => state);
     const user: UserInfoInterface = useSelector((state: IRootState) => state.user);
     const dayIndex = useSelector((state: IRootState) => state.dayIndex);
@@ -74,6 +75,8 @@ export function AddFoodForm({ createType, setAddFoodForm, mealId }: IAddFoodForm
         fats: 0
     });
 
+    const [inputErrorCollection, setInputErrorCollection] = useState<any>(null);
+
     const initialValues: any = {
         existingFoodName: '',
         existingFoodActualAmount: '',
@@ -82,7 +85,6 @@ export function AddFoodForm({ createType, setAddFoodForm, mealId }: IAddFoodForm
         proteins: '',
         carbs: '',
         fats: '',
-        ingredients: [],
         givenAmount: '',
         actualAmount: ''
     };
@@ -96,19 +98,6 @@ export function AddFoodForm({ createType, setAddFoodForm, mealId }: IAddFoodForm
         givenAmount: Yup.number().typeError('Input a number please').integer().min(1),
         actualAmount: Yup.number().typeError('Input a number please').integer().min(1)
     });
-
-    // useEffect(() => {
-    //     for (let i = 0; i < user.foodList!.length; i++) {
-    //         if (setNewPotentialIngredient.name === user.foodList![i].name) {
-    //             const foodToAdd = user.foodList![i];
-    //             const newIngredientsList = ingredients;
-    //             newIngredientsList.push(foodToAdd);
-    //             setIngredients(newIngredientsList);
-    //         }
-    //     }
-    //     // This allows us to add the same ingredient twice,
-    //     setNewPotentialIngredient('');
-    // }, [newPotentialIngredient]);
 
     const addToIngredientList = (newIngredientActualAmount: number) => {
         if (newPotentialIngredient) {
@@ -224,7 +213,6 @@ export function AddFoodForm({ createType, setAddFoodForm, mealId }: IAddFoodForm
                     createType: 'EXISTING' as CreateMealListFoodType,
                     inputExisting: createMealListFoodInputExistingInfo
                 };
-                console.log(createMealListFoodInputExisting);
                 await createMealListFood({
                     variables: {
                         input: createMealListFoodInputExisting
@@ -288,12 +276,131 @@ export function AddFoodForm({ createType, setAddFoodForm, mealId }: IAddFoodForm
         }
     };
 
+    const setUpErrorMessageDisplay = (e: any) => {
+        setErrorMsg('')
+        const errorPaths: any[] = [];
+        const errorMessages: any[] = [];
+        e.inner.forEach((error: any) => {
+            errorPaths.push(error.path);
+            errorMessages.push(error.message);
+        });
+        setInputErrorCollection({ errorPaths, errorMessages });
+    };
     const handleSubmit = async (submittedData: CreateFoodFromMealInput) => {
-        if (submittedData.existingFoodName !== '' && submittedData.name !== '') {
+        const { existingFoodName, existingFoodActualAmount, name, calories, proteins, carbs, fats, givenAmount, actualAmount } = submittedData;
+        const createExisting = existingFoodName !== '' || existingFoodActualAmount !== '';
+
+        const createNew = name !== '' || calories !== '' || proteins !== '' || carbs !== '' || fats !== '' || ingredients.length !== 0 || givenAmount !== '' || actualAmount !== '';
+
+        if (createExisting && createNew) {
             setErrorMsg('Please only use one of the options to add a food to this meal. Either add an existing food, or create a new food with a unique name.');
+            setInputErrorCollection(null);
             return;
         }
-        switch (createType) {
+
+        if (!createExisting && !createNew) {
+            setErrorMsg('Please fill out the form');
+            setInputErrorCollection(null);
+            return;
+        }
+        if (createExisting) {
+            try {
+                await mealListFood_createExisting_Schema.validate({ existingFoodName, existingFoodActualAmount }, { abortEarly: false });
+            } catch (e: any) {
+                setUpErrorMessageDisplay(e);
+                return;
+            }
+        }
+        if (createNew) {
+            const createNewNoIng = ingredients.length === 0;
+            switch (fromWhere) {
+                case 'foodList':
+                    switch (createNewNoIng) {
+                        case true:
+                            try {
+                                await foodList_newNoIng_Schema.validate(
+                                    {
+                                        name,
+                                        calories,
+                                        proteins,
+                                        carbs,
+                                        fats,
+                                        givenAmount
+                                    },
+                                    { abortEarly: false }
+                                );
+                            } catch (e) {
+                                setUpErrorMessageDisplay(e);
+                                return;
+                            }
+                            break;
+                        case false:
+                            try {
+                                await foodList_newNoIng_Schema.validate(
+                                    {
+                                        name,
+                                        givenAmount
+                                    },
+                                    { abortEarly: false }
+                                );
+                            } catch (e) {
+                                setUpErrorMessageDisplay(e);
+                                return;
+                            }
+                            break;
+                        default:
+                            break;
+                    }
+                    break;
+                case 'mealListFood':
+                    switch (createNewNoIng) {
+                        case true:
+                            try {
+                                await mealListFood_newNoIng_Schema.validate(
+                                    {
+                                        name,
+                                        calories,
+                                        proteins,
+                                        carbs,
+                                        fats,
+                                        givenAmount,
+                                        actualAmount
+                                    },
+                                    { abortEarly: false }
+                                );
+                            } catch (e: any) {
+                                setUpErrorMessageDisplay(e);
+                                return;
+                            }
+                            break;
+                        case false:
+                            try {
+                                await foodList_newNoIng_Schema.validate(
+                                    {
+                                        name,
+                                        givenAmount,
+                                        actualAmount
+                                    },
+                                    { abortEarly: false }
+                                );
+                            } catch (e) {
+                                setUpErrorMessageDisplay(e);
+                                return;
+                            }
+                            break;
+                        default:
+                            break;
+                    }
+
+                    break;
+                default:
+                    break;
+            }
+
+            return;
+        }
+
+        switch (fromWhere) {
             case 'mealListFood':
                 await submitMealListFood(submittedData);
                 break;
@@ -319,12 +426,13 @@ export function AddFoodForm({ createType, setAddFoodForm, mealId }: IAddFoodForm
                     setAddFoodForm(false);
                 }}
             ></CloseBtn>
-            <div className={styles.title_container}>{createType === 'meal' ? <div className={styles.title}>Add food to meal</div> : <div className={styles.title}>Add food to food list</div>}</div>
-            <Formik initialValues={initialValues} validationSchema={validationSchema} onSubmit={handleSubmit}>
+            <div className={styles.title_container}>{fromWhere === 'meal' ? <div className={styles.title}>Add food to meal</div> : <div className={styles.title}>Add food to food list</div>}</div>
+            <Formik initialValues={initialValues} onSubmit={handleSubmit}>
                 {({ errors, touched }) => (
                     <Form className={styles.form}>
                         <div className={styles.form_container}>
-                            {createType === 'mealListFood' && (
+                            <CustomErrorMessage errorMessage={errorMsg} displayFixedMessage={errorMsg !== ''} />
+                            {fromWhere === 'mealListFood' && (
                                 <div className={styles.existing_food_container}>
                                     <div className={styles.sub_title}>Add by using an existing food</div>
                                     <div className={styles.add_label}>Existing food</div>
@@ -338,8 +446,10 @@ export function AddFoodForm({ createType, setAddFoodForm, mealId }: IAddFoodForm
                                             );
                                         })}
                                     </Field>
+                                    <CustomErrorMessage name="existingFoodName" errorCollection={inputErrorCollection} />
                                     <div className={styles.add_label}>Actual Amount</div>
                                     <Field className={styles.add_field} name="existingFoodActualAmount"></Field>
+                                    <CustomErrorMessage name="existingFoodActualAmount" errorCollection={inputErrorCollection} />
                                 </div>
                             )}
                             <div className={styles.create_new_food_container}>
@@ -347,7 +457,7 @@ export function AddFoodForm({ createType, setAddFoodForm, mealId }: IAddFoodForm
 
                                 <div className={styles.add_label}>Name</div>
                                 <Field className={styles.add_field} name="name" type="text" />
-                                <ErrorMessage name="name" component="div" className={styles.add_field_error}></ErrorMessage>
+                                <CustomErrorMessage name="name" errorCollection={inputErrorCollection} />
 
                                 <div className={styles.add_label}>Ingredients</div>
                                 <Field
@@ -408,19 +518,19 @@ export function AddFoodForm({ createType, setAddFoodForm, mealId }: IAddFoodForm
                                     <div>
                                         <div className={styles.add_label}>Calories</div>
                                         <Field className={styles.add_field} name="calories" />
-                                        <ErrorMessage name="calories" component="div" className={styles.add_field_error}></ErrorMessage>
+                                        <CustomErrorMessage name="calories" errorCollection={inputErrorCollection} />
 
                                         <div className={styles.add_label}>Proteins</div>
                                         <Field className={styles.add_field} name="proteins" />
-                                        <ErrorMessage name="proteins" component="div" className={styles.add_field_error}></ErrorMessage>
+                                        <CustomErrorMessage name="proteins" errorCollection={inputErrorCollection} />
 
                                         <div className={styles.add_label}>Carbs</div>
                                         <Field className={styles.add_field} name="carbs" />
-                                        <ErrorMessage name="carbs" component="div" className={styles.add_field_error}></ErrorMessage>
+                                        <CustomErrorMessage name="carbs" errorCollection={inputErrorCollection} />
 
                                         <div className={styles.add_label}>Fats</div>
                                         <Field className={styles.add_field} name="fats" />
-                                        <ErrorMessage name="fats" component="div" className={styles.add_field_error}></ErrorMessage>
+                                        <CustomErrorMessage name="fats" errorCollection={inputErrorCollection} />
                                     </div>
                                 ) : (
                                     <div>
@@ -493,27 +603,27 @@ export function AddFoodForm({ createType, setAddFoodForm, mealId }: IAddFoodForm
 
                                 <div className={styles.add_label}>Given Amount</div>
                                 <Field className={styles.add_field} name="givenAmount" />
-                                <ErrorMessage name="givenAmount" component="div" className={styles.add_field_error}></ErrorMessage>
-                                {createType === 'mealListFood' && (
-                                    <>
+                                <CustomErrorMessage name="givenAmount" errorCollection={inputErrorCollection} />
+                                {fromWhere === 'mealListFood' && (
+                                    <div className={styles.actual_amount_container}>
                                         <div className={styles.add_label}>Actual Amount</div>
                                         <Field className={styles.add_field} name="actualAmount" />
-                                        <ErrorMessage name="actualAmount" component="div" className={styles.add_field_error}></ErrorMessage>
-                                    </>
+                                        <CustomErrorMessage name="actualAmount" errorCollection={inputErrorCollection} />
+                                    </div>
                                 )}
-                                <div className={styles.btn_container}>
-                                    <button
-                                        className="btn btn-primary"
-                                        style={{
-                                            width: '100%',
-                                            fontSize: '16px'
-                                        }}
-                                        type="submit"
-                                    >
-                                        Add Food
-                                    </button>
-                                    {errorMsg !== '' ? errorMsg : null}
-                                </div>
+                            </div>
+                            <CustomErrorMessage errorMessage={errorMsg} displayFixedMessage={errorMsg !== ''} />
+                            <div className={styles.btn_container}>
+                                <button
+                                    className="btn btn-primary"
+                                    style={{
+                                        width: '100%',
+                                        fontSize: '16px'
+                                    }}
+                                    type="submit"
+                                >
+                                    Add Food
+                                </button>
                             </div>
                         </div>
                     </Form>

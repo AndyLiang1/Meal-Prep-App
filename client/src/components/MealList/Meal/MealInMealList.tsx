@@ -48,8 +48,6 @@ export function MealInDay({ foods, mealId }: IMealInDayProps) {
                     type="button"
                     className={styles.btn}
                     onClick={() => {
-                        console.log('clicked');
-                        console.log(modalStatus);
                         if (!modalStatus) {
                             dispatch(setModalStatus(true));
                             setDeleteModal(true);
@@ -59,7 +57,7 @@ export function MealInDay({ foods, mealId }: IMealInDayProps) {
                     Delete Meal
                 </DeleteBtn>
             </div>
-            {addFoodForm ? <AddFoodForm createType="mealListFood" setAddFoodForm={setAddFoodForm} mealId={mealId}></AddFoodForm> : null}
+            {addFoodForm ? <AddFoodForm fromWhere="mealListFood" setAddFoodForm={setAddFoodForm} mealId={mealId}></AddFoodForm> : null}
             {deleteModal ? <DeleteModal deleteType={'mealListMeal'} setDeleteModal={setDeleteModal} mealId={mealId}></DeleteModal> : null}
         </div>
     );
