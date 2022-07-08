@@ -283,6 +283,7 @@ export function EditFoodForm({ fromWhere, food, setEditFoodForm, mealId, foodInd
             default:
                 break;
         }
+        console.log(editResponse)
         if (!checkResponseOk(editResponse)) {
             return;
         }
@@ -414,8 +415,6 @@ export function EditFoodForm({ fromWhere, food, setEditFoodForm, mealId, foodInd
                 submitEditFoodList(submittedData);
                 break;
         }
-        dispatch(setModalStatus(false));
-        setEditFoodForm(false);
     };
 
     return (

@@ -11,4 +11,10 @@
     --lightgreen: rgb(130, 228, 130);
     font-family: Arial, Helvetica, sans-serif; 
 
+    --header-darkgreen: #1E3F4C;
+    --meal-top-background: #51E0C9;
+    --meal-bottom-background: #4AD1C0;
+
+    --meal-text-color: #4AD1C0;
+
 }

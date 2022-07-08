@@ -29,7 +29,7 @@ const errorMessage = {
         invalidExistingName: 'This food name is invalid. '
     },
     uniqueFoodNameAndIngCheck: {
-        uniqueFoodName: 'There is already a food with the same name in your foodList. ',
+        uniqueFoodName: 'There is already a food with the same name in your food list. ',
         ingOfItself: 'A food cannot be an ingredient of itself. ',
         ingHasIng: 'An ingredient cannot have its own ingredients. '
     },
