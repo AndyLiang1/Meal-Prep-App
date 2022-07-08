@@ -31,7 +31,9 @@ export function FoodInFoodList({ food }: IFoodInFoodListProps) {
                     <div className={styles.stats}>P: {food.proteins.toFixed(2)}</div>
                     <div className={styles.stats}>C: {food.carbs.toFixed(2)}</div>
                     <div className={styles.stats}>F: {food.fats.toFixed(2)}</div>
-                    <div className={styles.stats}>Given Amt: {food.givenAmount.toFixed(2)}</div>
+                    <div className={styles.stats}>
+                        Given Amt: {food.givenAmount.toFixed(2)}
+                    </div>
                 </div>
                 <div className={styles.btn_container}>
                     <EditBtn

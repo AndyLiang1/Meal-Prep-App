@@ -13,15 +13,15 @@ html {
     height: 8vh;
     width: 100vw;
 
-    background: rgb(137, 255, 137);
+    /* background: rgb(137, 255, 137); */
+    background: black;
     display: flex;
     justify-content: center;
     align-items: center;
     text-align: center;
 }
 
-
 .title {
-    color: rgb(255, 44, 44);
+    color: white;
     font-size: 30px;
 }

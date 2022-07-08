@@ -35,6 +35,7 @@ export function FoodList(props: IFoodListProps) {
                         style={{
                             width: '90%',
                             marginTop: '5px',
+                            marginBottom: '10px',
                             fontSize: '14px'
                         }}
                         onClick={() => {
