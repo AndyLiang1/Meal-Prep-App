@@ -6,6 +6,7 @@ import { setModalStatus } from '../../state/action-creators';
 import { IRootState } from '../../state/reducers';
 import { DeleteBtn, EditBtn } from '../helpers/Icons';
 import { DeleteModal } from '../MealList/FormsAndModals/DeleteModal';
+import { EditFoodForm } from '../MealList/FormsAndModals/EditFoodForm';
 // import { EditFoodForm } from '../MealList/FormsAndModals/EditFoodForm';
 import styles from './FoodInFoodList.module.css';
 
@@ -18,7 +19,7 @@ export function FoodInFoodList({ food }: IFoodInFoodListProps) {
     const dispatch = useDispatch();
 
     const [deleteModal, setDeleteModal] = useState(false);
-    const [editForm, setEditForm] = useState(false);
+    const [editFoodForm, setEditFoodForm] = useState(false);
     return (
         <>
             <div className={styles.container}>
@@ -39,7 +40,7 @@ export function FoodInFoodList({ food }: IFoodInFoodListProps) {
                         onClick={() => {
                             if (!modalStatus) {
                                 dispatch(setModalStatus(!modalStatus));
-                                setEditForm(true);
+                                setEditFoodForm(true);
                             }
                         }}
                     >
@@ -60,7 +61,7 @@ export function FoodInFoodList({ food }: IFoodInFoodListProps) {
                 </div>
             </div>
             {deleteModal ? <DeleteModal deleteType={'foodList'} setDeleteModal={setDeleteModal} foodName={food.name}></DeleteModal> : null}
-            {/* {editForm ? <EditFoodForm fromWhere={'foodList'} food={food} setEditForm={setEditForm}></EditFoodForm> : null} */}
+            {editFoodForm ? <EditFoodForm fromWhere={'foodList'} food={food} setEditFoodForm={setEditFoodForm}></EditFoodForm> : null}
         </>
     );
 }

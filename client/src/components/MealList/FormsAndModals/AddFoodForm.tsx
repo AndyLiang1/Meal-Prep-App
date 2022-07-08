@@ -27,11 +27,13 @@ import {
     CreateMealListFoodInputReal,
     CreateMealListFoodType,
     CreateMealListFoodInput_NewNoIng,
-    CreateMealListFoodInput_NewYesIng
+    CreateMealListFoodInput_NewYesIng,
+    CreateFoodListResponse
 } from '../../../generated/graphql-client';
 import { CloseBtn, DropDownIcon, DropUpIcon } from '../../helpers/Icons';
 import { CustomErrorMessage } from '../../Others/CustomErrorMessage';
 import { foodList_newNoIng_Schema, mealListFood_createExisting_Schema, mealListFood_newNoIng_Schema } from './AddFoodFormValidationSchema';
+import { calcTotalStats } from '../../helpers/HelperFunctionsForAddAndEditFood';
 
 export interface IAddFoodFormProps {
     fromWhere: string;
@@ -57,7 +59,6 @@ export function AddFoodForm({ fromWhere, setAddFoodForm, mealId }: IAddFoodFormP
     const dayIndex = useSelector((state: IRootState) => state.dayIndex);
     const [newPotentialIngredient, setNewPotentialIngredient] = useState<Food>();
     const [ingredients, setIngredients] = useState<Food[]>([]);
-    const [errorMsg, setErrorMsg] = useState<string>('');
     const [newIngActualAmount, setNewIngActualAmount] = useState(0);
 
     const dispatch = useDispatch();
@@ -76,6 +77,11 @@ export function AddFoodForm({ fromWhere, setAddFoodForm, mealId }: IAddFoodFormP
     });
 
     const [inputErrorCollection, setInputErrorCollection] = useState<any>(null);
+    const [errorMsg, setErrorMsg] = useState<string>('');
+
+    useEffect(() => {
+        calcTotalStats(ingredients, setTotalStats);
+    }, [ingredients]);
 
     const initialValues: any = {
         existingFoodName: '',
@@ -89,16 +95,6 @@ export function AddFoodForm({ fromWhere, setAddFoodForm, mealId }: IAddFoodFormP
         actualAmount: ''
     };
 
-    const validationSchema = Yup.object().shape({
-        name: Yup.string().max(50),
-        calories: Yup.number().typeError('Input a number please').integer().min(1),
-        proteins: Yup.number().typeError('Input a number please').min(1),
-        carbs: Yup.number().typeError('Input a number please').min(1),
-        fats: Yup.number().typeError('Input a number please').min(1),
-        givenAmount: Yup.number().typeError('Input a number please').integer().min(1),
-        actualAmount: Yup.number().typeError('Input a number please').integer().min(1)
-    });
-
     const addToIngredientList = (newIngredientActualAmount: number) => {
         if (newPotentialIngredient) {
             newPotentialIngredient.actualAmount = newIngredientActualAmount;
@@ -107,35 +103,6 @@ export function AddFoodForm({ fromWhere, setAddFoodForm, mealId }: IAddFoodFormP
             setIngredients(newIngredientsList);
             setNewPotentialIngredient(undefined); // to hide the form
         }
-    };
-    const handleDeleteIng = (ingredientToDeleteName: string, ingredientToDeleteActualAmount: number) => {
-        for (let i = 0; i < ingredients.length; i++) {
-            if (ingredientToDeleteName === ingredients[i].name && ingredientToDeleteActualAmount === ingredients[i].actualAmount) {
-                let newIngredientsList = [...ingredients];
-                newIngredientsList.splice(i, 1);
-                setIngredients(newIngredientsList);
-                break;
-            }
-        }
-    };
-    const calcTotalStats = () => {
-        let cals = 0,
-            p = 0,
-            c = 0,
-            f = 0;
-        ingredients.forEach((ingredient) => {
-            const { calories, proteins, carbs, fats, givenAmount, actualAmount } = ingredient;
-            cals += Number(((calories * actualAmount!) / givenAmount).toFixed(0));
-            p += Number(((proteins * actualAmount!) / givenAmount).toFixed(2));
-            c += Number(((carbs * actualAmount!) / givenAmount).toFixed(2));
-            f += Number(((fats * actualAmount!) / givenAmount).toFixed(2));
-        });
-        setTotalStats({
-            calories: cals,
-            proteins: p,
-            carbs: c,
-            fats: f
-        });
     };
 
     const turnIngArrToIngNameAndIngActualAmountArrays = () => {
@@ -148,12 +115,41 @@ export function AddFoodForm({ fromWhere, setAddFoodForm, mealId }: IAddFoodFormP
         return { ingredientNames, ingredientActualAmounts };
     };
 
-    useEffect(() => {
-        calcTotalStats();
-    }, [ingredients]);
+    const handleDeleteIng = (ingredientToDeleteName: string, ingredientToDeleteActualAmount: number) => {
+        for (let i = 0; i < ingredients.length; i++) {
+            if (ingredientToDeleteName === ingredients[i].name && ingredientToDeleteActualAmount === ingredients[i].actualAmount) {
+                let newIngredientsList = [...ingredients];
+                newIngredientsList.splice(i, 1);
+                setIngredients(newIngredientsList);
+                break;
+            }
+        }
+    };
 
-    const submitFoodList = async (submittedData: CreateFoodFromMealInput) => {
+    const setUpErrorMessageDisplay = (e: any) => {
+        setErrorMsg('');
+        const errorPaths: any[] = [];
+        const errorMessages: any[] = [];
+        e.inner.forEach((error: any) => {
+            errorPaths.push(error.path);
+            errorMessages.push(error.message);
+        });
+        setInputErrorCollection({ errorPaths, errorMessages });
+    };
+
+    const checkResponseOk = (response: any) => {
+        const actualResponse = response.data[Object.keys(response.data)[0]];
+        console.log(actualResponse);
+        if (!actualResponse.ok) {
+            setErrorMsg(actualResponse.message);
+            return false;
+        }
+        return true;
+    };
+
+    const submitAddFoodList = async (submittedData: CreateFoodFromMealInput) => {
         const createNewNoIng = ingredients.length === 0;
+        let createResponse;
         switch (createNewNoIng) {
             case true:
                 const createFoodListInputNewNoIngInfo: CreateFoodListInput_NewNoIng = {
@@ -168,7 +164,7 @@ export function AddFoodForm({ fromWhere, setAddFoodForm, mealId }: IAddFoodFormP
                     createType: 'NEW_NO_ING' as CreateFoodListType,
                     inputNewNoIng: createFoodListInputNewNoIngInfo
                 };
-                await createFoodList({
+                createResponse = await createFoodList({
                     variables: {
                         input: createFoodListInputNewNoIng
                     }
@@ -188,7 +184,7 @@ export function AddFoodForm({ fromWhere, setAddFoodForm, mealId }: IAddFoodFormP
                     inputNewYesIng: createFoodListInputNewYesIngInfo
                 };
 
-                await createFoodList({
+                createResponse = await createFoodList({
                     variables: {
                         input: createFoodListInputNewYesIng
                     }
@@ -197,10 +193,17 @@ export function AddFoodForm({ fromWhere, setAddFoodForm, mealId }: IAddFoodFormP
             default:
                 break;
         }
+        if (!checkResponseOk(createResponse)) {
+            return;
+        }
+        dispatch(triggerRefetch());
+        dispatch(setModalStatus(false));
+        setAddFoodForm(false);
     };
 
-    const submitMealListFood = async (submittedData: CreateFoodFromMealInput) => {
+    const submitAddMealListFood = async (submittedData: CreateFoodFromMealInput) => {
         const createFromExistingFood = submittedData.existingFoodName !== '';
+        let createResponse;
         switch (createFromExistingFood) {
             case true:
                 const createMealListFoodInputExistingInfo: CreateMealListFoodInput_Existing = {
@@ -213,13 +216,13 @@ export function AddFoodForm({ fromWhere, setAddFoodForm, mealId }: IAddFoodFormP
                     createType: 'EXISTING' as CreateMealListFoodType,
                     inputExisting: createMealListFoodInputExistingInfo
                 };
-                await createMealListFood({
+                createResponse = await createMealListFood({
                     variables: {
                         input: createMealListFoodInputExisting
                     }
                 });
                 break;
-            default:
+            case false:
                 const createNewNoIng = ingredients.length === 0;
                 switch (createNewNoIng) {
                     case true:
@@ -240,7 +243,7 @@ export function AddFoodForm({ fromWhere, setAddFoodForm, mealId }: IAddFoodFormP
                             createType: 'NEW_NO_ING' as CreateMealListFoodType,
                             inputNewNoIng: createMealListFoodInputNewNoIngInfo
                         };
-                        await createMealListFood({
+                        createResponse = await createMealListFood({
                             variables: {
                                 input: createMealListFoodInputNewNoIng
                             }
@@ -263,7 +266,7 @@ export function AddFoodForm({ fromWhere, setAddFoodForm, mealId }: IAddFoodFormP
                             createType: 'NEW_YES_ING' as CreateMealListFoodType,
                             inputNewYesIng: createMealListFoodInputNewYesIngInfo
                         };
-                        await createMealListFood({
+                        createResponse = await createMealListFood({
                             variables: {
                                 input: createMealListFoodInputNewYesIng
                             }
@@ -273,24 +276,23 @@ export function AddFoodForm({ fromWhere, setAddFoodForm, mealId }: IAddFoodFormP
                         break;
                 }
                 break;
+            default:
+                break;
         }
+        if (!checkResponseOk(createResponse)) {
+            return;
+        }
+        dispatch(triggerRefetch());
+        dispatch(setModalStatus(false));
+        setAddFoodForm(false);
     };
 
-    const setUpErrorMessageDisplay = (e: any) => {
-        setErrorMsg('')
-        const errorPaths: any[] = [];
-        const errorMessages: any[] = [];
-        e.inner.forEach((error: any) => {
-            errorPaths.push(error.path);
-            errorMessages.push(error.message);
-        });
-        setInputErrorCollection({ errorPaths, errorMessages });
-    };
     const handleSubmit = async (submittedData: CreateFoodFromMealInput) => {
         const { existingFoodName, existingFoodActualAmount, name, calories, proteins, carbs, fats, givenAmount, actualAmount } = submittedData;
-        const createExisting = existingFoodName !== '' || existingFoodActualAmount !== '';
 
+        const createExisting = existingFoodName !== '' || existingFoodActualAmount !== '';
         const createNew = name !== '' || calories !== '' || proteins !== '' || carbs !== '' || fats !== '' || ingredients.length !== 0 || givenAmount !== '' || actualAmount !== '';
+        const createNewNoIng = ingredients.length === 0;
 
         if (createExisting && createNew) {
             setErrorMsg('Please only use one of the options to add a food to this meal. Either add an existing food, or create a new food with a unique name.');
@@ -311,8 +313,8 @@ export function AddFoodForm({ fromWhere, setAddFoodForm, mealId }: IAddFoodFormP
                 return;
             }
         }
+
         if (createNew) {
-            const createNewNoIng = ingredients.length === 0;
             switch (fromWhere) {
                 case 'foodList':
                     switch (createNewNoIng) {
@@ -352,7 +354,7 @@ export function AddFoodForm({ fromWhere, setAddFoodForm, mealId }: IAddFoodFormP
                             break;
                     }
                     break;
-                case 'mealListFood':
+                case 'mealList':
                     switch (createNewNoIng) {
                         case true:
                             try {
@@ -391,29 +393,22 @@ export function AddFoodForm({ fromWhere, setAddFoodForm, mealId }: IAddFoodFormP
                         default:
                             break;
                     }
-
                     break;
                 default:
                     break;
             }
-
-            return;
         }
 
         switch (fromWhere) {
-            case 'mealListFood':
-                await submitMealListFood(submittedData);
+            case 'mealList':
+                await submitAddMealListFood(submittedData);
                 break;
             case 'foodList':
-                await submitFoodList(submittedData);
+                await submitAddFoodList(submittedData);
                 break;
             default:
                 break;
         }
-
-        dispatch(triggerRefetch());
-        dispatch(setModalStatus(false));
-        setAddFoodForm(false);
     };
 
     return (
@@ -426,13 +421,13 @@ export function AddFoodForm({ fromWhere, setAddFoodForm, mealId }: IAddFoodFormP
                     setAddFoodForm(false);
                 }}
             ></CloseBtn>
-            <div className={styles.title_container}>{fromWhere === 'meal' ? <div className={styles.title}>Add food to meal</div> : <div className={styles.title}>Add food to food list</div>}</div>
+            <div className={styles.title_container}>{fromWhere === 'mealList' ? <div className={styles.title}>Add food to meal</div> : <div className={styles.title}>Add food to food list</div>}</div>
             <Formik initialValues={initialValues} onSubmit={handleSubmit}>
                 {({ errors, touched }) => (
                     <Form className={styles.form}>
                         <div className={styles.form_container}>
                             <CustomErrorMessage errorMessage={errorMsg} displayFixedMessage={errorMsg !== ''} />
-                            {fromWhere === 'mealListFood' && (
+                            {fromWhere === 'mealList' && (
                                 <div className={styles.existing_food_container}>
                                     <div className={styles.sub_title}>Add by using an existing food</div>
                                     <div className={styles.add_label}>Existing food</div>
@@ -604,7 +599,7 @@ export function AddFoodForm({ fromWhere, setAddFoodForm, mealId }: IAddFoodFormP
                                 <div className={styles.add_label}>Given Amount</div>
                                 <Field className={styles.add_field} name="givenAmount" />
                                 <CustomErrorMessage name="givenAmount" errorCollection={inputErrorCollection} />
-                                {fromWhere === 'mealListFood' && (
+                                {fromWhere === 'mealList' && (
                                     <div className={styles.actual_amount_container}>
                                         <div className={styles.add_label}>Actual Amount</div>
                                         <Field className={styles.add_field} name="actualAmount" />

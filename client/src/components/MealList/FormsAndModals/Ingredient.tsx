@@ -13,7 +13,7 @@ export function Ingredient({ onDeleteIng, ingredient }: IIngredientProps) {
         <div className={styles.container}>
             <div className={styles.food_info_name}>{ingredient.name.length > 14 ? ingredient.name.substring(0, 13) + '...' : ingredient.name}</div>
             <div className={styles.food_info_amounts}>
-                Given / Actual :{ingredient.givenAmount} / {ingredient.actualAmount}
+                Actual / Given : {ingredient.actualAmount} / {ingredient.givenAmount}
             </div>
             <div className={styles.close_btn_container}>
                 <CloseBtn className={styles.close_btn} type="button" onClick={() => onDeleteIng(ingredient.name, ingredient.actualAmount!)}></CloseBtn>

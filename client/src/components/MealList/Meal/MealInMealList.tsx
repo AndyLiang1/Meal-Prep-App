@@ -57,7 +57,7 @@ export function MealInDay({ foods, mealId }: IMealInDayProps) {
                     Delete Meal
                 </DeleteBtn>
             </div>
-            {addFoodForm ? <AddFoodForm fromWhere="mealListFood" setAddFoodForm={setAddFoodForm} mealId={mealId}></AddFoodForm> : null}
+            {addFoodForm ? <AddFoodForm fromWhere="mealList" setAddFoodForm={setAddFoodForm} mealId={mealId}></AddFoodForm> : null}
             {deleteModal ? <DeleteModal deleteType={'mealListMeal'} setDeleteModal={setDeleteModal} mealId={mealId}></DeleteModal> : null}
         </div>
     );

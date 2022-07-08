@@ -8,7 +8,7 @@ import { useEffect, useState } from 'react';
 import { setModalStatus } from '../../../state/action-creators';
 import { DeleteBtn, EditBtn } from '../../helpers/Icons';
 import { DeleteModal } from '../FormsAndModals/DeleteModal';
-// import { EditFoodForm } from '../FormsAndModals/EditFoodForm';
+import { EditFoodForm } from '../FormsAndModals/EditFoodForm';
 
 export interface IFoodInMealProps {
     food: Food;
@@ -21,7 +21,7 @@ export function FoodInMeal({ food, mealId, foodIndex }: IFoodInMealProps) {
     const dispatch = useDispatch();
 
     const [deleteModal, setDeleteModal] = useState(false);
-    const [editForm, setEditForm] = useState(false);
+    const [editFoodForm, setEditFoodForm] = useState(false);
 
     let unMounted = false;
 
@@ -45,7 +45,7 @@ export function FoodInMeal({ food, mealId, foodIndex }: IFoodInMealProps) {
                         onClick={() => {
                             if (!modalStatus) {
                                 dispatch(setModalStatus(true));
-                                setEditForm(true);
+                                setEditFoodForm(true);
                             }
                         }}
                     >
@@ -74,10 +74,8 @@ export function FoodInMeal({ food, mealId, foodIndex }: IFoodInMealProps) {
                 <div className={styles.food_stats}>C: {((food.carbs * food.actualAmount!) / food.givenAmount).toFixed(1)}</div>
                 <div className={styles.food_stats}>F: {((food.fats * food.actualAmount!) / food.givenAmount).toFixed(1)}</div>
             </div>
-            {deleteModal ? (
-                <DeleteModal deleteType={'mealListMeal'} setDeleteModal={setDeleteModal} mealId={mealId!} foodIndex={foodIndex}></DeleteModal>
-            ) : null}
-            {/* {editForm ? <EditFoodForm fromWhere={'mealList'} food={food} setEditForm={setEditForm} mealId={mealId!} foodIndex={foodIndex}></EditFoodForm> : null} */}
+            {deleteModal ? <DeleteModal deleteType={'mealListMeal'} setDeleteModal={setDeleteModal} mealId={mealId!} foodIndex={foodIndex}></DeleteModal> : null}
+            {editFoodForm ? <EditFoodForm fromWhere={'mealList'} food={food} setEditFoodForm={setEditFoodForm} mealId={mealId!} foodIndex={foodIndex}></EditFoodForm> : null}
         </div>
     );
 }

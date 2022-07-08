@@ -23,7 +23,7 @@ export function DropdownStats({ statName, ingredients }: IDropdownStatsProps) {
                                 : (((food[statName] as number) * food.actualAmount!) / food.givenAmount).toFixed(2)}
                         </div>
                         <div className={styles.food_info_amounts}>
-                            Given / Actual :{food.givenAmount} / {food.actualAmount}
+                            Actual / Given : {food.actualAmount} / {food.givenAmount}
                         </div>
                     </div>
                 );

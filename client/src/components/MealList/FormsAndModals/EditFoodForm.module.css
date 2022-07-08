@@ -1,8 +1,211 @@
-.container { 
+.container {
+    height: auto;
+    max-height: 600px;
+    width: 500px;
+
+    background-color: white;
+
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
     position: absolute;
 
-    background-color: var(--lightblue);
+    flex-direction: column;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+}
+.close_btn {
+    position: absolute;
+    right: 20px;
+    top: 20px;
+    color: white;
+    transform: scale(2.5);
+}
+
+.title_container {
+    height: 48px;
+    min-height: 48px;
+
+    width: 100%;
+
+    background-color: var(--blue);
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    text-align: center;
+}
+
+.title {
+    font-size: 20px;
+    color: white;
+}
+
+.form {
+    height: 100%;
+    width: 100%;
+    flex-direction: column;
+    display: flex;
+    justify-content: top;
+    align-items: center;
+    text-align: center;
+    overflow-y: auto;
+}
+
+.form_container {
+    height: 100%;
+    width: 80%;
+}
+
+.sub_title {
+    position: relative;
+    display: flex;
+    justify-content: left;
+    font-size: 16px;
+    margin-top: 3px;
+    margin-bottom: 5px;
+}
+
+.sub_title::before {
+    content: '';
+    position: absolute;
+
+    top: 100%;
+    left: 0;
+    height: 5px;
+    width: 300px;
+    background: linear-gradient(135deg, #71b7e6, #9b59b6);
+}
+
+.existing_food_container {
+    min-height: 25%;
+    width: 100%;
+
+    flex-direction: column;
+    display: flex;
+    padding-bottom: 3px;
+}
+.edit_actual_amount_container {
+    width: 50%;
+
+    flex-direction: column;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    text-align: center;
+}
+
+.label_amount_container {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    text-align: center;
+}
+
+.edit_label {
+    font-weight: 400;
+    font-size: 14px;
+    display: flex;
+    justify-content: left;
+}
+
+.amount {
+    font-weight: 400;
+    font-size: 14px;
+    display: flex;
+    justify-content: right;
+}
+
+.edit_field {
+    height: 25px;
+    width: 100%;
+
+    font-size: 16px;
+    border: 1px solid black;
+}
+
+.edit_field_newActualAmount {
+    height: 25px;
+    width: 35px;
+
+    font-size: 16px;
+    border: 1px solid black;
+}
+
+.create_new_food_container {
+    width: 100%;
+}
+
+.potentialNewIng {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    text-align: center;
+    background: var(--lightgrey);
+}
+
+.potentialNewIng_AA_container {
+    display: flex;
+    align-items: center;
+    text-align: center;
+}
+
+.potentialIngActualAmount {
+    border: 1px solid black;
+    width: 40px;
+}
+
+.ing_container {
+    flex-direction: column;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    text-align: center;
+}
+
+.stats_container {
+    width: 100%;
+
+    flex-direction: column;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    text-align: center;
+}
+
+.stats_name_and_dropdown {
+    position: relative;
+    height: 100%;
+    width: 100%;
+    display: flex;
+    justify-content: left;
+    align-items: center;
+    text-align: center;
+}
+
+.stats_info {
+    font-size: 16px;
+}
+
+.stats_display_toggle {
+    position: absolute;
+    left: 190px;
+    transform: scale(2);
+}
+
+.btn_container {
+    min-height: 10%;
+    height: 10%;
+    width: 100%;
+
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+
+.btn btn-primary {
+    height: 100%;
+    width: 100%;
+    font-size: 20px;
 }
