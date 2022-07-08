@@ -10,29 +10,31 @@ import { actionCreators } from '../../state';
 import { useNavigate } from 'react-router-dom';
 import { addUserToStore } from '../../state/action-creators';
 import { LoginError, LoginResult, LoginSuccess, LoginUserDocument } from '../../generated/graphql-client';
+import styles from './Login.module.css';
+import { CloseBtn } from '../helpers/Icons';
 
-export interface ILoginProps {}
+export interface ILoginProps {
+    setDisplayLoginForm: React.Dispatch<React.SetStateAction<boolean>>;
+}
 
 interface LoginInput {
     email: string;
     password: string;
 }
 
-export function Login(props: ILoginProps) {
+export function Login({ setDisplayLoginForm }: ILoginProps) {
     const initialValues: LoginInput = {
         email: '',
         password: ''
     };
 
     const validationSchema = Yup.object().shape({
-        email: Yup.string().email('Invalid email').required(),
-        password: Yup.string().max(50).required()
+        email: Yup.string().email('Invalid email').required('This field is required'),
+        password: Yup.string().max(50).required('This field is required')
     });
 
-    const dispatch = useDispatch();
     const navigate = useNavigate();
 
-    //
     const [loginErrorMsg, setLoginErrorMsg] = useState<string>();
     const [loginUser] = useMutation(LoginUserDocument);
     const onSubmit = async (userInfo: LoginInput) => {
@@ -44,9 +46,9 @@ export function Login(props: ILoginProps) {
                     password
                 }
             });
-             if ((data!.login as LoginError).message) {
-                 setLoginErrorMsg((data!.login as LoginError).message);
-             }
+            if ((data!.login as LoginError).message) {
+                setLoginErrorMsg((data!.login as LoginError).message);
+            }
             const { username, accessToken, id } = (data!.login as LoginSuccess).user;
             localStorage.setItem('accessToken', accessToken);
             localStorage.setItem('username', username);
@@ -58,27 +60,50 @@ export function Login(props: ILoginProps) {
         }
     };
     return (
-        <div>
+        <div className={styles.container}>
+            <CloseBtn
+                className={styles.close_btn}
+                type="button"
+                onClick={() => {
+                    setDisplayLoginForm(false);
+                }}
+            ></CloseBtn>
+            <div className={styles.title_container}>
+                <div className={styles.title}>Login</div>
+            </div>
             <Formik initialValues={initialValues} onSubmit={onSubmit} validationSchema={validationSchema}>
                 {({ errors, touched }) => (
-                    <Form>
-                        <div className="sign_in_details">
-                            <label className="sign_in_label required" htmlFor="">
-                                Email
-                            </label>
-                            <Field className="sign_in_field" name="email" type="email" />
-                            {errors.email && touched.email ? <div className="sign_in_field_errors">{errors.email}</div> : null}
-                        </div>
-                        <div className="sign_in_details">
-                            <label className="sign_in_label required" htmlFor="">
-                                Password
-                            </label>
-                            <Field className="sign_in_field" name="password" type="password" />
-                            {errors.password && touched.password ? <div className="sign_in_field_errors">{errors.password}</div> : null}
-                        </div>
-                        <div className="sign_in_error_msg">{loginErrorMsg}</div>
+                    <Form className={styles.form}>
+                        <div className={styles.form_container}>
+                            <div className={styles.sign_in_details}>
+                                <label className={styles.sign_in_label} htmlFor="">
+                                    Email
+                                </label>
+                                <Field className={styles.sign_in_field} name="email" type="email" />
+                                {errors.email && touched.email ? <div className={styles.sign_in_field_errors}>{errors.email}</div> : null}
+                            </div>
+                            <div className={styles.sign_in_details}>
+                                <label className={styles.sign_in_label} htmlFor="">
+                                    Password
+                                </label>
+                                <Field className={styles.sign_in_field} name="password" type="password" />
+                                {errors.password && touched.password ? <div className={styles.sign_in_field_errors}>{errors.password}</div> : null}
+                            </div>
+                            <div className={styles.sign_in_error_msg}>{loginErrorMsg}</div>
 
-                        <button type="submit">Submit</button>
+                            <div className={styles.btn_container}>
+                                <button
+                                    className="btn btn-primary"
+                                    style={{
+                                        width: '100%',
+                                        fontSize: '16px'
+                                    }}
+                                    type="submit"
+                                >
+                                    Register
+                                </button>
+                            </div>
+                        </div>
                     </Form>
                 )}
             </Formik>
