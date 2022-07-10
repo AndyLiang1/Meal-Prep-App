@@ -370,43 +370,7 @@ export function EditFoodForm({ fromWhere, food, setEditFoodForm, mealId, foodInd
                     break;
             }
         }
-        // if (fromWhere === 'mealList') {
-        //     const editFoodFromMealArgs: EditFoodInput = {
-        //         userId: user.id,
-        //         dayIndex,
-        //         mealId,
-        //         foodIndex,
-        //         newActualAmount: parseInt(submittedData.newActualAmount)
-        //     };
-
-        //     const { data } = await editFoodFromMealList({
-        //         variables: {
-        //             input: editFoodFromMealArgs
-        //         }
-        //     });
-        // } else if (fromWhere === 'foodList') {
-        //     const { newFoodName, newIngredient, newGivenAmount } = submittedData;
-        //     const newIngredientNames: string[] = [];
-        //     ingredients.forEach((ingredient) => newIngredientNames.push(ingredient.name));
-
-        //     const editFoodFromMealArgs: EditFoodInput = {
-        //         userId: user.id,
-        //         foodName: food.name,
-        //         newFoodName,
-        //         newCalories: totalStats.calories,
-        //         newProteins: totalStats.proteins,
-        //         newCarbs: totalStats.carbs,
-        //         newFats: totalStats.fats,
-        //         newIngredientNames,
-        //         newGivenAmount,
-        //         newActualAmount: newGivenAmount
-        //     };
-        //     const { data } = await editFoodFromFoodList({
-        //         variables: {
-        //             input: editFoodFromMealArgs
-        //         }
-        //     });
-        // }
+       
         switch (fromWhere) {
             case 'mealList':
                 submitEditMealListFood(submittedData);

@@ -21,24 +21,7 @@ import validator from './validate';
 export class MealListFoodService {
     constructor(private MealListFoodDao: MealListFoodDao) {}
 
-    public async create(
-        user: IUserDocument,
-        // existingFoodName: string | null | undefined,
-
-        // name: string | null | undefined,
-        // calories: number | null | undefined,
-        // proteins: number | null | undefined,
-        // carbs: number | null | undefined,
-        // fats: number | null | undefined,
-        // newIngNames: string[],
-        // newIngActualAmounts: number[],
-
-        // givenAmount: number | null | undefined,
-        // actualAmount: number,
-        // dayIndex: number,
-        // mealId: string
-        input: any
-    ) {
+    public async create(user: IUserDocument, input: any) {
         const { createType } = input;
         let inputIsValid;
         let newFoodForMeal: Food | null | undefined = null;
@@ -146,59 +129,7 @@ export class MealListFoodService {
             default:
                 break;
         }
-        // const inputIsValid = validator.createMealListFood(user, existingFoodName, name, calories, proteins, carbs, fats, newIngNames, newIngActualAmounts, givenAmount, actualAmount, dayIndex, mealId);
-        // if (!inputIsValid.ok && inputIsValid.message) {
-        //     return {
-        //         ok: false,
-        //         message: inputIsValid.message
-        //     };
-        // }
 
-        // let newFoodForMeal: Food | null | undefined = null;
-
-        // if (existingFoodName && actualAmount) {
-        //     const getByNameResponse = await services.foodListService.getByName(user, existingFoodName);
-        //     if (getByNameResponse.ok && getByNameResponse.result) {
-        //         newFoodForMeal = {
-        //             ...getByNameResponse.result,
-        //             actualAmount
-        //         };
-        //     } else {
-        //         return {
-        //             ok: false,
-        //             message: 'No food found with this name'
-        //         };
-        //     }
-        // } else if (
-        //     name &&
-        //     typeof calories === 'number' &&
-        //     typeof proteins === 'number' &&
-        //     typeof carbs === 'number' &&
-        //     typeof fats === 'number' &&
-        //     newIngNames.length === 0 &&
-        //     typeof givenAmount === 'number'
-        // ) {
-        //     newFoodForMeal = {
-        //         name,
-        //         calories,
-        //         proteins,
-        //         carbs,
-        //         fats,
-        //         ingredients: [],
-        //         givenAmount,
-        //         actualAmount
-        //     };
-        //     await services.foodListService.create(user, name, calories, proteins, carbs, fats, [], [], givenAmount);
-        // } else {
-        //     if (name && typeof givenAmount === 'number') {
-        //         const createdFoodWithIng = createFoodWithIng(user, name, newIngNames, newIngActualAmounts, givenAmount);
-        //         newFoodForMeal = {
-        //             ...createdFoodWithIng,
-        //             actualAmount
-        //         };
-        //         await services.foodListService.create(user, name, calories, proteins, carbs, fats, newIngNames, newIngActualAmounts, givenAmount);
-        //     }
-        // }
         if (typeof dayIndex === 'number' && typeof mealId === 'string') {
             const newlyCreatedFood = await this.MealListFoodDao.create(user, newFoodForMeal!, dayIndex, mealId);
             return {
@@ -209,6 +140,16 @@ export class MealListFoodService {
         return {
             ok: false,
             message: 'Failed in MealListFoodService'
+        };
+    }
+
+    public async get(user: IUserDocument, input: any) {
+        const { dayIndex, mealId, foodIndex } = input;
+        const food = await this.MealListFoodDao.get(user, dayIndex, mealId, foodIndex);
+        return {
+            ok: food ? true : false,
+            result: food ? food : null,
+            message: !food ? 'No food found' : null
         };
     }
 
@@ -349,6 +290,6 @@ export class MealListFoodService {
     }
 
     public async deleteMoreFood(user: IUserDocument, foodNameToDelete: string) {
-        return await this.MealListFoodDao.deleteMoreFood(user, foodNameToDelete)
+        return await this.MealListFoodDao.deleteMoreFood(user, foodNameToDelete);
     }
 }

@@ -10,18 +10,50 @@ html {
 }
 
 .header {
-    height: 8vh;
+    height: 7vh;
     width: 100vw;
+    background: var(--verydarkturquoise);
 
-    /* background: rgb(137, 255, 137); */
-    background: black;
+    flex-direction: column;
     display: flex;
-    justify-content: center;
+    justify-content: space-between;
     align-items: center;
     text-align: center;
 }
 
-.title {
-    color: white;
+.bar {
+    height: 100%;
+    width: 100%;
+    position: relative;
+}
+
+.title_one,
+.title_two {
     font-size: 30px;
+
+    position: absolute;
+    bottom: 0;
+}
+
+.title_one {
+    margin-left: 40px;
+    color: white;
+}
+.title_two {
+    margin-left: 115px;
+    color: var(--header-title-two);
+    z-index: 1;
+}
+
+.round_section {
+    height: 3vh;
+    width: 240px;
+
+    background: var(--verydarkturquoise);
+
+    position: absolute;
+    top: 6vh;
+    left: 0px;
+
+    border-radius: 0px 0px 200px;
 }

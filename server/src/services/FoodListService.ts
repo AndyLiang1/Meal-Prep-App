@@ -37,7 +37,7 @@ export class FoodListService {
                     }
                     newFood = {
                         name: inputNewNoIng.name,
-                        calories:inputNewNoIng.calories,
+                        calories: inputNewNoIng.calories,
                         proteins: inputNewNoIng.proteins,
                         carbs: inputNewNoIng.carbs,
                         fats: inputNewNoIng.fats,
@@ -91,17 +91,18 @@ export class FoodListService {
     }
 
     public async getByName(user: IUserDocument, name: string) {
-        const retFood = await this.FoodListDao.getByName(user, name);
+        const food = await this.FoodListDao.getByName(user, name);
         return {
-            ok: true,
-            result: retFood
+            ok: food ? true : false,
+            result: food ? food : null,
+            message: !food ? 'No food found' : null
         };
     }
 
     public async edit(user: IUserDocument, input: any) {
         const { editType } = input;
         let inputIsValid: any;
-        let editedFood: Food | null = null
+        let editedFood: Food | null = null;
         let oldFoodName = '';
         switch (editType) {
             case 'NEW_NO_ING':
@@ -122,7 +123,7 @@ export class FoodListService {
                     ingredients: [],
                     givenAmount: inputNewNoIng.givenAmount
                 };
-                oldFoodName = inputNewNoIng.oldFoodName
+                oldFoodName = inputNewNoIng.oldFoodName;
                 break;
             case 'NEW_YES_ING':
                 const { inputNewYesIng }: { inputNewYesIng: EditFoodListInput_NewYesIng } = input;
@@ -134,7 +135,7 @@ export class FoodListService {
                     };
                 }
                 editedFood = createFoodWithIng(user, inputNewYesIng.name, inputNewYesIng.ingredientNames, inputNewYesIng.ingredientActualAmounts, inputNewYesIng.givenAmount);
-                oldFoodName = inputNewYesIng.oldFoodName
+                oldFoodName = inputNewYesIng.oldFoodName;
                 break;
             default:
                 break;
@@ -150,7 +151,7 @@ export class FoodListService {
 
     public async delete(user: IUserDocument, foodNameToDelete: string) {
         const deletedFoodName = await this.FoodListDao.delete(user, foodNameToDelete);
-        await services.mealListFoodService.deleteMoreFood(user, foodNameToDelete)
+        await services.mealListFoodService.deleteMoreFood(user, foodNameToDelete);
         return {
             ok: true,
             result: deletedFoodName

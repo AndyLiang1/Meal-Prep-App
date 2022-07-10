@@ -4,40 +4,44 @@ import { createUID } from '../resolvers/Mutations/Auth';
 
 export class MealListMealDao {
     constructor() {}
-
-    public async create(user: IUserDocument, dayIndex: number) {
-        let newMeal: Meal = {
-            name: 'Meal',
-            index: 0,
+    
+    private async createHelper(day: Meal[]) {
+        let newMeal: any = {
+            name: 'Meal ' + `${day.length + 1}`,
+            index: day.length + 1,
             foods: []
         };
+        day.push(newMeal)
+    }
+
+    public async create(user: IUserDocument, dayIndex: number) {
         switch (dayIndex) {
             case 0:
-                user.day1.push(newMeal);
+                this.createHelper(user.day1)
                 break;
             case 1:
-                user.day2.push(newMeal);
+                this.createHelper(user.day2);
                 break;
             case 2:
-                user.day3.push(newMeal);
+                this.createHelper(user.day3);
                 break;
             case 3:
-                user.day4.push(newMeal);
+                this.createHelper(user.day4);
                 break;
             case 4:
-                user.day5.push(newMeal);
+                this.createHelper(user.day5);
                 break;
             case 5:
-                user.day6.push(newMeal);
+                this.createHelper(user.day6);
                 break;
             case 6:
-                user.day7.push(newMeal);
+                this.createHelper(user.day7);
                 break;
             default:
                 break;
         }
         await user.save();
-        return "Successful";
+        return 'Successful';
     }
 
     public async get(user: IUserDocument, dayIndex: number) {

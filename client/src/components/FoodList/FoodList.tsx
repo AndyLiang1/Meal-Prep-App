@@ -5,7 +5,7 @@ import { Food } from '../../generated/graphql-client';
 import { setModalStatus } from '../../state/action-creators';
 import { IRootState } from '../../state/reducers';
 import { AddFoodForm } from '../MealList/FormsAndModals/AddFoodForm';
-// import { FoodInMeal } from '../MealList/Meal/FoodInMeal';
+// import { MealListFood } from '../MealList/Meal/MealListFood';
 import { FoodInFoodList } from './FoodInFoodList';
 import styles from './FoodList.module.css';
 import { SearchBar } from './SearchBar';

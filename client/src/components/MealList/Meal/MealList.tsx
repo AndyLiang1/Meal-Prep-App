@@ -7,11 +7,12 @@ import { addUserToStore, changeDay, triggerRefetch } from '../../../state/action
 import { IRootState } from '../../../state/reducers';
 import { defaultUserInfo } from '../../../state/reducers/UserData';
 import { LeftBtn, RightBtn } from '../../helpers/Icons';
-import { MealInDay } from './MealInMealList';
+import { MealListMeal } from './MealListMeal';
 import styles from './MealList.module.css';
 
 export interface IMealListProps {
     totalStats: totalStats | null;
+    mealStats: totalStats[];
 }
 
 enum Days {
@@ -24,7 +25,7 @@ enum Days {
     Sunday
 }
 
-export function MealList({ totalStats }: IMealListProps) {
+export function MealList({ totalStats, mealStats }: IMealListProps) {
     const dispatch = useDispatch();
     const dayIndex = useSelector((state: IRootState) => state.dayIndex);
     const user = useSelector((state: IRootState) => state.user);
@@ -61,28 +62,36 @@ export function MealList({ totalStats }: IMealListProps) {
     };
 
     return (
-        <div>
+        <div className={styles.container}>
             {user.day ? (
-                <div className={styles.container}>
+                <div className={styles.content_container}>
                     <div className={styles.title_container}>
-                        <LeftBtn type="button" className={styles.left_btn} onClick={() => changeDayIndex('backward')}>
-                            Prev
-                        </LeftBtn>
-                        <div className={styles.dayName_container}>{Days[dayIndex]}</div>
-                        <RightBtn type="button" className={styles.right_btn} onClick={() => changeDayIndex('forward')}>
-                            Next
-                        </RightBtn>
+                        <div className={styles.title}>Meal List</div>
+                        <div className={styles.day_container}>
+                            <div className={styles.btn_container}>
+                                <LeftBtn type="button" className={styles.left_btn} onClick={() => changeDayIndex('backward')}>
+                                    Prev
+                                </LeftBtn>
+                            </div>
+                            <div className={styles.dayName_container}>{Days[dayIndex]}</div>
+                            <div className={styles.btn_container}>
+                                <RightBtn type="button" className={styles.right_btn} onClick={() => changeDayIndex('forward')}>
+                                    Next
+                                </RightBtn>
+                            </div>
+                        </div>
                     </div>
 
                     <div className={styles.mealList_container}>
-                        {user.day.map((meal: Meal, index: number) => {
-                            return (
-                                <div className={styles.meal}>
-                                    <MealInDay key={index} foods={meal.foods} mealId={meal.id}></MealInDay>;
-                                </div>
-                            );
-                        })}
-                        <button
+                        <div className={styles.inner_container}>
+                            {user.day.map((meal: Meal, index: number) => {
+                                return (
+                                    <div className={styles.meal}>
+                                        <MealListMeal key={index} meal={meal} mealStats={mealStats}></MealListMeal>;
+                                    </div>
+                                );
+                            })}
+                            {/* <button
                             style={{
                                 width: '100%',
                                 marginTop: '5px',
@@ -93,9 +102,10 @@ export function MealList({ totalStats }: IMealListProps) {
                             onClick={() => addMeal()}
                         >
                             Add Meal
-                        </button>
+                        </button> */}
+                        </div>
                     </div>
-                    <div className={styles.total_stats_container}>
+                    {/* <div className={styles.total_stats_container}>
                         <div className={styles.total_stats_description}>Day Total</div>
                         {totalStats && (
                             <>
@@ -105,7 +115,7 @@ export function MealList({ totalStats }: IMealListProps) {
                                 <div className={styles.stats_last}>F: {totalStats.fats.toFixed(2)}</div>
                             </>
                         )}
-                    </div>
+                    </div> */}
                 </div>
             ) : (
                 <div>Loading...</div>

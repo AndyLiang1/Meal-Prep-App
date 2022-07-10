@@ -52,7 +52,6 @@ export class MealListFoodDao {
                 const retFood: any = meal.foods[foodIndex];
                 return retFood;
             }
-            break;
         }
     }
 
@@ -84,7 +83,6 @@ export class MealListFoodDao {
                     ...newFood
                 };
             }
-            break;
         }
     }
 

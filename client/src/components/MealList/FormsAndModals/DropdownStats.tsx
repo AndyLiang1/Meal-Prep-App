@@ -8,9 +8,7 @@ export interface IDropdownStatsProps {
 }
 
 export function DropdownStats({ statName, ingredients }: IDropdownStatsProps) {
-    React.useEffect(() => {
-        console.log(ingredients[0]);
-    });
+
     return (
         <div>
             {ingredients.map((food: Food) => {

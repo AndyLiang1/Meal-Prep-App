@@ -31,6 +31,7 @@ export function UserPage(props: IUserPageProps) {
     const [foodList, setFoodList] = useState<any>([]);
     const [totalStats, setTotalStats] = useState<totalStats | null>(null);
     // const { user }: { user: UserInfoInterface } = useSelector((state: IRootState) => state);
+    const [mealStats, setMealStats] = useState<totalStats[]>([]);
     const [getMealListMeal] = useLazyQuery(GetMealListMealsDocument, {
         variables: {
             dayIndex
@@ -56,18 +57,33 @@ export function UserPage(props: IUserPageProps) {
         }
     };
     useEffect(() => {
-        let calories = 0,
-            proteins = 0,
-            carbs = 0,
-            fats = 0;
+        let calories = 0;
+        let proteins = 0;
+        let carbs = 0;
+        let fats = 0;
+        let mealCalories = 0;
+        let mealProteins = 0;
+        let mealCarbs = 0;
+        let mealFats = 0;
+        const mealStatArr = [];
         for (let meal of user.day) {
             for (let food of meal.foods) {
                 calories += food.calories * (food.actualAmount! / food.givenAmount);
                 proteins += food.proteins * (food.actualAmount! / food.givenAmount);
                 carbs += food.carbs * (food.actualAmount! / food.givenAmount);
                 fats += food.fats * (food.actualAmount! / food.givenAmount);
+                mealCalories += food.calories * (food.actualAmount! / food.givenAmount);
+                mealProteins += food.proteins * (food.actualAmount! / food.givenAmount);
+                mealCarbs += food.carbs * (food.actualAmount! / food.givenAmount);
+                mealFats += food.fats * (food.actualAmount! / food.givenAmount);
             }
+            mealStatArr.push({ calories: mealCalories, proteins: mealProteins, carbs: mealCarbs, fats: mealFats });
+            mealCalories = 0;
+            mealProteins = 0;
+            mealCarbs = 0;
+            mealFats = 0;
         }
+        setMealStats(mealStatArr);
         setTotalStats({ calories, proteins, carbs, fats });
     }, [user]);
 
@@ -93,7 +109,7 @@ export function UserPage(props: IUserPageProps) {
         <div>
             <Header></Header>
             <div className={styles.container}>
-                <MealList totalStats={totalStats}></MealList>
+                <MealList totalStats={totalStats} mealStats={mealStats}></MealList>
                 <FoodList></FoodList>
             </div>
         </div>

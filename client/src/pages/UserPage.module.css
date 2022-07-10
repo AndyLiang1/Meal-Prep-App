@@ -1,9 +1,10 @@
-.container { 
-    height: 92vh;
+.container {
+    height: 93vh;
     width: 100vw;
     display: flex;
     justify-content: space-around;
     align-items: center;
     text-align: center;
 
+    background: var(--verylightgrey);
 }

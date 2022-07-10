@@ -142,6 +142,12 @@ const typeDefs = gql`
         mealId: String!
     }
 
+    input GetMealListFoodInputReal {
+        foodIndex: Float!
+        mealId: String!
+        dayIndex: Float!
+    }
+
     enum EditMealListFoodType {
         ACTUAL_AMOUNT
         NEW_NO_ING
@@ -200,7 +206,9 @@ const typeDefs = gql`
         boop: String!
         clearDb: String
         getFoodList: GetFoodListResponse!
+        getFoodListFood(name: String!): GetFoodListFoodResponse!
         getMealListMeal(dayIndex: Float!): GetMealListMealResponse!
+        getMealListFood(input: GetMealListFoodInputReal!): GetMealListFoodResponse
     }
 
     type Mutation {
@@ -251,6 +259,12 @@ const typeDefs = gql`
         message: String
     }
 
+    type GetFoodListFoodResponse {
+        ok: Boolean!
+        result: Food
+        message: String
+    }
+
     type EditFoodListResponse {
         ok: Boolean!
         result: Food
@@ -264,6 +278,12 @@ const typeDefs = gql`
     }
 
     type CreateMealListFoodResponse {
+        ok: Boolean!
+        result: Food
+        message: String
+    }
+
+    type GetMealListFoodResponse {
         ok: Boolean!
         result: Food
         message: String

@@ -37,7 +37,9 @@ const checkAuth = async (resolve: any, parent: any, args: any, context: any, inf
 const authMiddleware = {
     Query: {
         getFoodList: checkAuth,
-        getMealListMeal: checkAuth
+        getFoodListFood: checkAuth,
+        getMealListMeal: checkAuth,
+        getMealListFood: checkAuth
     },
 
     Mutation: {
@@ -45,11 +47,11 @@ const authMiddleware = {
         editFoodList: checkAuth,
         deleteFoodList: checkAuth,
 
-        createMealListMeal: checkAuth, 
-        deleteMealListMeal: checkAuth, 
+        createMealListMeal: checkAuth,
+        deleteMealListMeal: checkAuth,
 
         createMealListFood: checkAuth,
-        editMealListFood: checkAuth, 
+        editMealListFood: checkAuth,
         deleteMealListFood: checkAuth
     }
 };
