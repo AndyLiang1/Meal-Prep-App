@@ -44,7 +44,7 @@ export function FoodList(props: IFoodListProps) {
                                     }
                                 }}
                             >
-                                Create Food
+                                Add Food
                             </button>
                         </div>
                     </div>

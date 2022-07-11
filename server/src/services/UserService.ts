@@ -36,7 +36,7 @@ export class UserService {
     public async register(username: string, email: string, password: string) {
         const valErr = validate.register(username, email, password);
         if (valErr) {
-            return { message: 'Invalid email or form is not complete'};
+            return { message: 'Invalid email or form is not complete' };
         }
 
         const userWithSameEmail = await this.UserDao.getEmail(email);
@@ -72,7 +72,7 @@ export class UserService {
             proteins: 30,
             fats: 2,
             carbs: 15,
-            ingredients: Array(20).fill(ing1),
+            ingredients: Array(6).fill(ing1),
             givenAmount: 300,
             actualAmount: 100
         };
@@ -82,25 +82,25 @@ export class UserService {
             proteins: 10,
             fats: 2,
             carbs: 10,
-            ingredients: Array(20).fill(ing2),
+            ingredients: Array(6).fill(ing2),
             givenAmount: 500,
             actualAmount: 100
         };
-        let mealArr: any[] = []
+        let mealArr: any[] = [];
         if (stressTest) {
-            for(let i = 1; i < 6; i++) {
+            for (let i = 1; i < 6; i++) {
                 const meal = {
                     name: 'Meal ' + i,
-                    index: i-1,
+                    index: i - 1,
                     foods: [food1, food2, food1, food2, food1]
                 };
-                mealArr.push(meal)
+                mealArr.push(meal);
             }
         } else {
-            for(let i = 1; i < 6; i++) {
+            for (let i = 1; i < 6; i++) {
                 const meal = {
                     name: 'Meal ' + i,
-                    index: i-1,
+                    index: i - 1,
                     foods: []
                 };
                 mealArr.push(meal);
@@ -117,7 +117,7 @@ export class UserService {
 
         let foodList: Food[] = [];
         if (stressTest) {
-            foodList = Array(300).fill(food2);
+            foodList = Array(100).fill(food2);
         }
 
         const user = {
@@ -148,11 +148,11 @@ export class UserService {
                 username: newUser.username,
                 email: newUser.email,
                 password: newUser.password,
-                day1: newUser.day1, 
+                day1: newUser.day1,
                 day2: newUser.day2,
                 day3: newUser.day3,
-                day4: newUser.day4, 
-                day5: newUser.day5, 
+                day4: newUser.day4,
+                day5: newUser.day5,
                 day6: newUser.day6,
                 day7: newUser.day7,
                 foodList: newUser.foodList
@@ -162,12 +162,11 @@ export class UserService {
     }
 
     public async login(email: string, password: string) {
-
         const valErr = validate.login(email, password);
         if (valErr) {
-            return { message: 'Invalid email or form is not complete'};
+            return { message: 'Invalid email or form is not complete' };
         }
-        
+
         const userWithSameEmail = await this.UserDao.getEmail(email);
         if (!userWithSameEmail) {
             return { message: 'No user has registered with that email' };

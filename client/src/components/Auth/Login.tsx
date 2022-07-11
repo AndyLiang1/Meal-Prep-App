@@ -100,7 +100,7 @@ export function Login({ setDisplayLoginForm }: ILoginProps) {
                                     }}
                                     type="submit"
                                 >
-                                    Register
+                                    Login
                                 </button>
                             </div>
                         </div>

@@ -7,20 +7,7 @@ query GetFoodList {
             proteins
             carbs
             fats
-            ingredients {
-                name
-                calories
-                proteins
-                carbs
-                fats
-                ingredients {
-                    name
-                }
-                givenAmount
-                actualAmount
-            }
             givenAmount
-            actualAmount
         }
         message
     }

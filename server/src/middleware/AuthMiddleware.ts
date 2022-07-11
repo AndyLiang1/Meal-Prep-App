@@ -36,6 +36,7 @@ const checkAuth = async (resolve: any, parent: any, args: any, context: any, inf
 
 const authMiddleware = {
     Query: {
+        // boop: checkAuth,
         getFoodList: checkAuth,
         getFoodListFood: checkAuth,
         getMealListMeal: checkAuth,
