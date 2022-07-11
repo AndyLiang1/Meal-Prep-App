@@ -86,7 +86,6 @@
     align-items: center;
     text-align: center;
 
-    position: relative;
     overflow-y: auto;
 
     background: linear-gradient(to bottom, var(--meal-top-background), var(--meal-bottom-background));

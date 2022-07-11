@@ -29,7 +29,7 @@ export function DeleteModal({ deleteType, setDeleteModal, mealId, foodName, food
                     await deleteMealListMeal({ variables: { dayIndex, mealId: mealId! } });
                 }
                 break;
-            case 'mealListMeal':
+            case 'mealListFood':
                 if (typeof dayIndex === 'number' && typeof mealId === 'string' && typeof foodIndex === 'number') {
                     const deleteMealListFoodInput: DeleteMealListFoodInputReal = {
                         dayIndex,

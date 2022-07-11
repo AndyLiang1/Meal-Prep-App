@@ -91,16 +91,16 @@ export class UserService {
             for(let i = 1; i < 6; i++) {
                 const meal = {
                     name: 'Meal ' + i,
-                    index: i,
+                    index: i-1,
                     foods: [food1, food2, food1, food2, food1]
                 };
                 mealArr.push(meal)
             }
         } else {
-            for(let i = 0; i < 5; i++) {
+            for(let i = 1; i < 6; i++) {
                 const meal = {
                     name: 'Meal ' + i,
-                    index: i,
+                    index: i-1,
                     foods: []
                 };
                 mealArr.push(meal);

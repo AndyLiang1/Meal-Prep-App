@@ -16,8 +16,10 @@
     align-items: center;
     text-align: center;
 
-    z-index: 100;
+    z-index: 1;
 }
+
+
 .close_btn {
     position: absolute;
     right: 20px;

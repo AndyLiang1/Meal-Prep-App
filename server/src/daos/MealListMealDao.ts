@@ -4,20 +4,20 @@ import { createUID } from '../resolvers/Mutations/Auth';
 
 export class MealListMealDao {
     constructor() {}
-    
+
     private async createHelper(day: Meal[]) {
         let newMeal: any = {
             name: 'Meal ' + `${day.length + 1}`,
             index: day.length + 1,
             foods: []
         };
-        day.push(newMeal)
+        day.push(newMeal);
     }
 
     public async create(user: IUserDocument, dayIndex: number) {
         switch (dayIndex) {
             case 0:
-                this.createHelper(user.day1)
+                this.createHelper(user.day1);
                 break;
             case 1:
                 this.createHelper(user.day2);
@@ -67,10 +67,22 @@ export class MealListMealDao {
 
     // have to make day of type any[] due to meal not have id
     private async deleteMealHelper(day: any[], mealId: string) {
+        let indexOfDeletion = 0;
+        let deleted = false;
         for (let [i, meal] of day.entries()) {
             if (mealId === meal.id) {
+                indexOfDeletion = i;
                 day.splice(i, 1);
+                deleted = true;
+                i = i - 1;
                 break;
+            }
+        }
+        if (deleted) {
+            for (let i = indexOfDeletion; i < day.length; i++) {
+                const mealNum = Number(day[i].name[5]);
+                day[i].name = 'Meal ' + String(mealNum - 1);
+                day[i].index = mealNum - 2;
             }
         }
     }

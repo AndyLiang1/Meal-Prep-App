@@ -32,8 +32,6 @@ export function MealListFood({ food, mealId, foodIndex }: IMealListFoodProps) {
     }, []);
     return (
         <div className={styles.container}>
-            {deleteModal ? <DeleteModal deleteType={'mealListMeal'} setDeleteModal={setDeleteModal} mealId={mealId!} foodIndex={foodIndex}></DeleteModal> : null}
-            {editFoodForm ? <EditFoodForm fromWhere={'mealList'} food={food} setEditFoodForm={setEditFoodForm} mealId={mealId!} foodIndex={foodIndex}></EditFoodForm> : null}
             <div className={styles.title_container}>
                 <div className={styles.title}>{food.name.length <= 33 ? food.name : food.name.substring(0, 30) + '...'}</div>
                 <div className={styles.btn_container}>
@@ -68,6 +66,8 @@ export function MealListFood({ food, mealId, foodIndex }: IMealListFoodProps) {
                 <div className={styles.food_stats}>CRBS: {((food.carbs * food.actualAmount!) / food.givenAmount).toFixed(1)}</div>
                 <div className={styles.food_stats}>FATS: {((food.fats * food.actualAmount!) / food.givenAmount).toFixed(1)}</div>
             </div>
+            {deleteModal ? <DeleteModal deleteType={'mealListFood'} setDeleteModal={setDeleteModal} mealId={mealId!} foodIndex={foodIndex}></DeleteModal> : null}
+            {editFoodForm ? <EditFoodForm fromWhere={'mealList'} food={food} setEditFoodForm={setEditFoodForm} mealId={mealId!} foodIndex={foodIndex}></EditFoodForm> : null}
         </div>
     );
 }
