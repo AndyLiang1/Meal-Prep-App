@@ -77,13 +77,6 @@ export function UserPage(props: IUserPageProps) {
                 mealCarbs += food.carbs * (food.actualAmount! / food.givenAmount);
                 mealFats += food.fats * (food.actualAmount! / food.givenAmount);
             }
-            const mealStats = {
-                calories: mealCalories,
-                proteins: mealProteins,
-                carbs: mealCarbs,
-                fats: mealFats
-            };
-            console.log(mealStats)
             mealStatArr.push({ calories: mealCalories, proteins: mealProteins, carbs: mealCarbs, fats: mealFats });
             mealCalories = 0;
             mealProteins = 0;

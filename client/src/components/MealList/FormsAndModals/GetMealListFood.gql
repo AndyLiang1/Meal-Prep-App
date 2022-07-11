@@ -1,0 +1,27 @@
+query GetMealListFood($input: GetMealListFoodInputReal!) {
+    getMealListFood(input: $input) {
+        ok
+        result {
+            name
+            calories
+            proteins
+            carbs
+            fats
+            ingredients {
+                name
+                calories
+                proteins
+                carbs
+                fats
+                ingredients {
+                    name
+                }
+                givenAmount
+                actualAmount
+            }
+            givenAmount
+            actualAmount
+        }
+        message
+    }
+}

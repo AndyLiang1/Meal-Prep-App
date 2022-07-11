@@ -26,7 +26,8 @@ import {
     EditMealListFoodInput_NewNoIng,
     EditMealListFoodInput_NewYesIng,
     EditMealListFoodType,
-    Food
+    Food,
+    GetFoodListFoodDocument
 } from '../../../generated/graphql-client';
 import { calcTotalStats } from '../../helpers/HelperFunctionsForAddAndEditFood';
 import { CustomErrorMessage } from '../../Others/CustomErrorMessage';
@@ -61,13 +62,17 @@ export type EditFoodFormData = {
 export function EditFoodForm({ fromWhere, food, setEditFoodForm, mealId, foodIndex }: IEditFoodFormProps) {
     const user: UserInfoInterface = useSelector((state: IRootState) => state.user);
     const dayIndex = useSelector((state: IRootState) => state.dayIndex);
-    const [actualAmount, setActualAmount] = useState<number>(0);
     const [newPotentialIngredient, setNewPotentialIngredient] = useState<Food>();
-    const [ingredients, setIngredients] = useState<Food[]>(fromWhere === 'foodList' ? food.ingredients : []);
+    const [ingredients, setIngredients] = useState<any>([]);
 
     const dispatch = useDispatch();
     const [editMealListFood] = useMutation(EditMealListFoodDocument);
     const [editFooodList] = useMutation(EditFoodListDocument);
+    const [getFoodListFood] = useLazyQuery(GetFoodListFoodDocument, {
+        variables: {
+            name: food.name
+        }
+    });
 
     const [totalStats, setTotalStats] = useState({ calories: food.calories, proteins: food.proteins, carbs: food.carbs, fats: food.carbs });
     const [newIngActualAmount, setNewIngActualAmount] = useState(0);
@@ -79,6 +84,24 @@ export function EditFoodForm({ fromWhere, food, setEditFoodForm, mealId, foodInd
 
     const [inputErrorCollection, setInputErrorCollection] = useState<any>(null);
     const [errorMsg, setErrorMsg] = useState<string>('');
+
+    const getFoodInFoodList = async () => {
+        const { data, error, loading } = await getFoodListFood();
+        if (error) {
+            console.error(error);
+        } else if (!data?.getFoodListFood.ok) {
+            console.error(data?.getFoodListFood.message);
+        } else {
+            const ingList = data?.getFoodListFood?.result?.ingredients;
+                setIngredients(ingList);
+            
+        }
+    };
+    useEffect(() => {
+        if (fromWhere === 'foodList') {
+            getFoodInFoodList();
+        }
+    }, []);
 
     useEffect(() => {
         calcTotalStats(ingredients, setTotalStats);
@@ -283,7 +306,7 @@ export function EditFoodForm({ fromWhere, food, setEditFoodForm, mealId, foodInd
             default:
                 break;
         }
-        console.log(editResponse)
+        console.log(editResponse);
         if (!checkResponseOk(editResponse)) {
             return;
         }
@@ -370,7 +393,7 @@ export function EditFoodForm({ fromWhere, food, setEditFoodForm, mealId, foodInd
                     break;
             }
         }
-       
+
         switch (fromWhere) {
             case 'mealList':
                 submitEditMealListFood(submittedData);
