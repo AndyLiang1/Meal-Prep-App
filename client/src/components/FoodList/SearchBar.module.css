@@ -3,33 +3,44 @@
     width: 100%;
 
     display: flex;
-    border-top: 2px solid black;
-    border-bottom: 2px solid black;
     padding-left: 5px;
     padding-right: 5px;
+
+    border-radius: 10px;
 }
 
 .inputBox_container {
     height: 100%;
     width: 95%;
 
+    display: flex;
+    align-items: center;
+
     background-color: white;
     border: 0;
     outline: none;
 
+    font-size: 12px;
+    border-radius: 6px 0px 0px 6px;
+    padding-left: 10px;
 }
 
 .searchIcon_container {
     height: 100%;
-    width: 5%;
+    width: 20%;
 
     display: flex;
     justify-content: center;
     align-items: center;
     text-align: center;
+
+    background: white;
+    color: var(--turquoise);
+
+    border-radius: 0px 6px 6px 0px;
 }
 
 .search_icon {
-    height: 95%;
-    width: 95%;
+    height: 70%;
+    width: 70%;
 }

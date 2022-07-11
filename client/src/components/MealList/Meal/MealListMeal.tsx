@@ -49,11 +49,13 @@ export function MealListMeal({ meal, mealStats }: IMealListMealProps) {
                 </div>
             </div>
             <div className={styles.content_container}>
-                <div className={styles.background_top}></div>
-                <div className={styles.background_bottom}></div>
                 <div className={styles.foods_container}>
                     {meal.foods.map((food: any, index: number) => {
-                        return <MealListFood key={index} mealId={meal.id} food={food} foodIndex={index}></MealListFood>;
+                        return (
+                            <div className={styles.food_container}>
+                                <MealListFood key={index} mealId={meal.id} food={food} foodIndex={index}></MealListFood>
+                            </div>
+                        );
                     })}
                 </div>
                 <div className={styles.btn_container}>
@@ -69,18 +71,6 @@ export function MealListMeal({ meal, mealStats }: IMealListMealProps) {
                     >
                         Add food
                     </AddBtn>
-                    {/* <DeleteBtn
-                    type="button"
-                    className={styles.btn}
-                    onClick={() => {
-                        if (!modalStatus) {
-                            dispatch(setModalStatus(true));
-                            setDeleteModal(true);
-                        }
-                    }}
-                >
-                    Delete Meal
-                </DeleteBtn> */}
                 </div>
             </div>
 

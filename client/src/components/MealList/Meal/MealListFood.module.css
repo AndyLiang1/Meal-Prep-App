@@ -1,26 +1,17 @@
 .container {
-    height: 45%;
-    width: 185px;
+    height: 80%;
+    width: 100%;
 
     background-color: white;
 
+    flex-direction: column;
     display: flex;
     justify-content: space-around;
     align-items: flex-start;
     text-align: center;
 
-    /* display: grid;
-    grid-template-columns: 7fr 3fr;
-    grid-template-rows: 5fr 5fr;
-    grid-template-areas: 
-    "name cals"
-    " card_CRUD"
-    ; */
-    margin-top: 5px;
-    margin-left: 10px; 
+    border-radius: 10px;
 }
-
-
 
 /* 
 .name_container {
@@ -49,15 +40,73 @@
 } */
 
 .title_container {
-    height: 70%;
+    height: 25%;
     width: 100%;
+    background: var(--lightgrey);
 
     display: flex;
-    justify-content: center;
+    justify-content: space-evenly;
+    align-items: center;
+    text-align: center;
+
+    border-radius: 10px 10px 0px 0px;
+}
+
+.title {
+    height: 100%;
+    width: 75%;
+
+    font-size: 14px;
+    font-weight: bold;
+
+    display: flex;
+    justify-content: left;
+    align-items: center;
+    text-align: center;
+
+    padding-left: 12px;
+}
+
+.btn_container {
+    height: 100%;
+    width: 25%;
+
+    display: flex;
+    justify-content: space-evenly;
     align-items: center;
     text-align: center;
 }
 
+.btn {
+    height: 50%;
+    width: 50%;
+}
+
+.stat_container {
+    height: 75%;
+    width: 100%;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    text-align: center;
+}
+
+.food_stats {
+    height: 50%;
+    min-height: 50%;
+    width: 50%;
+    min-width: 50%;
+
+    display: flex;
+    justify-content: left;
+    align-items: center;
+    text-align: center;
+    
+    font-size: 12px;
+
+    padding-left: 16px;
+}
+/* 
 .left_container {
     height: 95%;
     width: 65%;
@@ -79,22 +128,6 @@
     justify-content: center;
     align-items: center;
     text-align: center;
-    
-}
-
-.btn_container {
-    height: 30%;
-    width: 100%;
-
-    display: flex;
-    justify-content: space-around;
-    align-items: center;
-    text-align: center;
-}
-
-.btn {
-    height: 100%;
-    width: 100%;
 }
 
 .right_container {
@@ -118,4 +151,4 @@
 
 .food_stats {
     font-size: 10px;
-}
+} */

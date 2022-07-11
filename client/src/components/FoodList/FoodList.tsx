@@ -19,34 +19,45 @@ export function FoodList(props: IFoodListProps) {
 
     return (
         <div className={styles.container}>
-            <div className={styles.foodList_header}>Food List</div>
-            <div className={styles.searchBar_container}>
-                <SearchBar placeholder={'Food name'} data={user.foodList}></SearchBar>
+            <div className={styles.title_container}>
+                <div className={styles.title}>Food List</div>
+                <div className={styles.searchBar_container}>
+                    <SearchBar placeholder={'Food name'} data={user.foodList}></SearchBar>
+                </div>
             </div>
-            <div className={styles.foodList}>
-                {user.foodList &&
-                    user.foodList.map((food: Food, index: number) => {
-                        return <FoodInFoodList key={index} food={food}></FoodInFoodList>;
-                    })}
-                <div className={styles.foodList_create_btn}>
-                    <button
-                        type="button"
-                        className="btn btn-primary"
-                        style={{
-                            width: '90%',
-                            marginTop: '5px',
-                            marginBottom: '10px',
-                            fontSize: '14px'
-                        }}
-                        onClick={() => {
-                            if (!modalStatus) {
-                                dispatch(setModalStatus(true));
-                                setAddFoodForm(true);
-                            }
-                        }}
-                    >
-                        Create Food
-                    </button>
+
+            <div className={styles.foodList_container}>
+                <div className={styles.stat_container}>
+                    <div className={styles.title_inner_container}>
+                        <div className={styles.stat_header}>CALS</div>
+                        <div className={styles.stat_header}>PRTS</div>
+                        <div className={styles.stat_header}>CRBS</div>
+                        <div className={styles.stat_header}>FATS</div>
+                        <div className={styles.btn_container}>
+                            <button
+                                type="button"
+                                className={styles.btn}
+                                onClick={() => {
+                                    if (!modalStatus) {
+                                        dispatch(setModalStatus(true));
+                                        setAddFoodForm(true);
+                                    }
+                                }}
+                            >
+                                Create Food
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <div className={styles.foodList}>
+                    {user.foodList &&
+                        user.foodList.map((food: Food, index: number) => {
+                            return (
+                                <div className={styles.food}>
+                                    <FoodInFoodList key={index} food={food}></FoodInFoodList>
+                                </div>
+                            );
+                        })}
                 </div>
             </div>
             {addFoodForm ? <AddFoodForm fromWhere="foodList" setAddFoodForm={setAddFoodForm}></AddFoodForm> : null}

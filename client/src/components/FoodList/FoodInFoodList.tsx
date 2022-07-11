@@ -24,42 +24,38 @@ export function FoodInFoodList({ food }: IFoodInFoodListProps) {
         <>
             <div className={styles.container}>
                 <div className={styles.title_container}>
-                    <strong title={food.name}>{food.name.length <= 35 ? food.name : food.name.substring(0, 33) + '...'}</strong>
+                    <strong className = {styles.food_name} title={food.name}>{food.name.length <= 35 ? food.name : food.name.substring(0, 33) + '...'}</strong>
+                    <div className={styles.given_amount}>Given Amt: {food.givenAmount.toFixed(2)}</div>
                 </div>
-                <div className={styles.stats_container}>
-                    <div className={styles.stats}>Cals: {food.calories.toFixed(0)}</div>
-                    <div className={styles.stats}>P: {food.proteins.toFixed(2)}</div>
-                    <div className={styles.stats}>C: {food.carbs.toFixed(2)}</div>
-                    <div className={styles.stats}>F: {food.fats.toFixed(2)}</div>
-                    <div className={styles.stats}>
-                        Given Amt: {food.givenAmount.toFixed(2)}
+                <div className={styles.content_container}>
+                    <div className={styles.stats_container}>
+                        <div className={styles.stats_odd}>{food.calories.toFixed(0)}</div>
+                        <div className={styles.stats_even}>{food.proteins.toFixed(2)}</div>
+                        <div className={styles.stats_odd}>{food.carbs.toFixed(2)}</div>
+                        <div className={styles.stats_even}>{food.fats.toFixed(2)}</div>
                     </div>
-                </div>
-                <div className={styles.btn_container}>
-                    <EditBtn
-                        type="button"
-                        className={styles.button}
-                        onClick={() => {
-                            if (!modalStatus) {
-                                dispatch(setModalStatus(!modalStatus));
-                                setEditFoodForm(true);
-                            }
-                        }}
-                    >
-                        Edit
-                    </EditBtn>
-                    <DeleteBtn
-                        type="button"
-                        className={styles.button}
-                        onClick={() => {
-                            if (!modalStatus) {
-                                dispatch(setModalStatus(!modalStatus));
-                                setDeleteModal(true);
-                            }
-                        }}
-                    >
-                        Delete
-                    </DeleteBtn>
+                    <div className={styles.btn_container}>
+                        <EditBtn
+                            type="button"
+                            className={styles.button}
+                            onClick={() => {
+                                if (!modalStatus) {
+                                    dispatch(setModalStatus(!modalStatus));
+                                    setEditFoodForm(true);
+                                }
+                            }}
+                        />
+                        <DeleteBtn
+                            type="button"
+                            className={styles.button}
+                            onClick={() => {
+                                if (!modalStatus) {
+                                    dispatch(setModalStatus(!modalStatus));
+                                    setDeleteModal(true);
+                                }
+                            }}
+                        />
+                    </div>
                 </div>
             </div>
             {deleteModal ? <DeleteModal deleteType={'foodList'} setDeleteModal={setDeleteModal} foodName={food.name}></DeleteModal> : null}

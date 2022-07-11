@@ -64,7 +64,7 @@ export function MealList({ totalStats, mealStats }: IMealListProps) {
     return (
         <div className={styles.container}>
             {user.day ? (
-                <div className={styles.content_container}>
+                <div className={styles.inner_container}>
                     <div className={styles.title_container}>
                         <div className={styles.title}>Meal List</div>
                         <div className={styles.day_container}>
@@ -86,36 +86,30 @@ export function MealList({ totalStats, mealStats }: IMealListProps) {
                         <div className={styles.inner_container}>
                             {user.day.map((meal: Meal, index: number) => {
                                 return (
-                                    <div className={styles.meal}>
+                                    <div className={styles.meal_container}>
                                         <MealListMeal key={index} meal={meal} mealStats={mealStats}></MealListMeal>;
                                     </div>
                                 );
                             })}
-                            {/* <button
-                            style={{
-                                width: '100%',
-                                marginTop: '5px',
-                                marginBottom: '5px',
-                                fontSize: '14px'
-                            }}
-                            className="btn btn-primary"
-                            onClick={() => addMeal()}
-                        >
-                            Add Meal
-                        </button> */}
                         </div>
                     </div>
-                    {/* <div className={styles.total_stats_container}>
-                        <div className={styles.total_stats_description}>Day Total</div>
-                        {totalStats && (
-                            <>
-                                <div className={styles.stats}>Cals: {totalStats.calories.toFixed(0)}</div>
-                                <div className={styles.stats}>P: {totalStats.proteins.toFixed(2)}</div>
-                                <div className={styles.stats}>C: {totalStats.carbs.toFixed(2)}</div>
-                                <div className={styles.stats_last}>F: {totalStats.fats.toFixed(2)}</div>
-                            </>
-                        )}
-                    </div> */}
+                    <div className={styles.total_stats_container}>
+                        <div className={styles.total_stats_description}>Total:</div>
+                        <div className={styles.total_stats_inner_container}>
+                            {totalStats && (
+                                <div className={styles.total_stats}>
+                                    <div className={styles.stats}>CALS: {totalStats.calories.toFixed(0)}</div>
+                                    <div className={styles.stats}>PRTS: {totalStats.proteins.toFixed(2)}</div>
+                                    <div className={styles.stats}>CRBS: {totalStats.carbs.toFixed(2)}</div>
+                                    <div className={styles.stats}>FATS: {totalStats.fats.toFixed(2)}</div>
+                                </div>
+                            )}
+                        </div>
+
+                        <button className={styles.btn} onClick={() => addMeal()}>
+                            Add Meal
+                        </button>
+                    </div>
                 </div>
             ) : (
                 <div>Loading...</div>
