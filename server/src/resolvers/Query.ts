@@ -19,7 +19,7 @@ const Query = {
     // =========================================================================
 
     clearDb: async () => {
-        await User.deleteMany();
+        await User.deleteOne({ 'user.email': "user1@gmail.com" });
         return null;
     }
 };

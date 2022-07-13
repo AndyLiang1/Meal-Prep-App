@@ -8,11 +8,20 @@ import { UserPage } from './pages/UserPage';
 
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import { setContext } from '@apollo/client/link/context';
+import { config } from './config/config';
 
 function App() {
-    const httpLink = createHttpLink({
-        uri: 'http://localhost:4000/graphql'
-    });
+    let httpLink;
+    if (config.client.env === 'DEV') {
+        httpLink = createHttpLink({
+            uri: 'http://localhost:4000/graphql'
+        });
+    } else {
+        httpLink = createHttpLink({
+            uri: 'https://meal-prep-app-server.herokuapp.com/graphql'
+        });
+    }
+
     const authLink = setContext((_, { headers }) => {
         // get the authentication token from local storage if it exists
         const token = localStorage.getItem('accessToken');

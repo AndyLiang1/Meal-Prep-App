@@ -47,7 +47,7 @@ const startServer = (): void => {
         resolvers
     });
 
-    if (config.server.env === 'dev') {
+    if (config.server.env === 'DEV') {
         const schemaWithMiddleware = applyMiddleware(schema, loggingMiddleware, authMiddleware);
         app = new ApolloServer({
             schema: schemaWithMiddleware,
@@ -56,7 +56,7 @@ const startServer = (): void => {
                 return { authorization };
             }
         });
-    } else {
+    } else if (config.server.env === 'PROD') {
         const schemaWithMiddleware = applyMiddleware(schema, authMiddleware);
         app = new ApolloServer({
             schema: schemaWithMiddleware,
@@ -67,7 +67,13 @@ const startServer = (): void => {
         });
     }
 
-    app.listen().then(({ url }) => {
-        Logging.info(`Server is up at ${url}`);
-    });
+    if (config.server.env === 'DEV') {
+        app?.listen().then(({ url }) => {
+            Logging.info(`Server is up at ${url}`);
+        });
+    } else {
+        app?.listen(config.server.port).then(({ url }) => {
+            Logging.info(`Server is up at ${url}`);
+        });
+    }
 };

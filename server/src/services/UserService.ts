@@ -117,7 +117,7 @@ export class UserService {
 
         let foodList: Food[] = [];
         if (stressTest) {
-            foodList = Array(100).fill(food2);
+            foodList = Array(400).fill(food2);
         }
 
         const user = {
