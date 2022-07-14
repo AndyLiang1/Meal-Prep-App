@@ -77,7 +77,6 @@ export class FoodListService {
     public async get(user: IUserDocument) {
         try {
             const foodList = await this.FoodListDao.get(user);
-            console.log('foodlist lebgth: ', foodList.length)
             const sortedFoodList = foodList.sort((food1, food2) => (food1.name > food2.name ? 1 : -1));
             return {
                 ok: true,

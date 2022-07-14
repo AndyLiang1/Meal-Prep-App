@@ -272,21 +272,25 @@ export class MealListFoodService {
     }
 
     public async delete(user: IUserDocument, input: DeleteMealListFoodInputReal) {
-        let inputIsValid = validator.deleteMealListFood(input);
+        try {
+            let inputIsValid = validator.deleteMealListFood(input);
 
-        if (!inputIsValid.ok && inputIsValid.message) {
+            if (!inputIsValid.ok && inputIsValid.message) {
+                return {
+                    ok: false,
+                    message: inputIsValid.message
+                };
+            }
+
+            const { dayIndex, mealId, foodIndex } = input;
+            await this.MealListFoodDao.delete(user, dayIndex, mealId, foodIndex);
             return {
-                ok: false,
-                message: inputIsValid.message
+                ok: true,
+                result: 'Successfully deleted food'
             };
+        } catch (e) {
+            console.error(e);
         }
-
-        const { dayIndex, mealId, foodIndex } = input;
-        await this.MealListFoodDao.delete(user, dayIndex, mealId, foodIndex);
-        return {
-            ok: true,
-            result: 'Successfully deleted food'
-        };
     }
 
     public async deleteMoreFood(user: IUserDocument, foodNameToDelete: string) {

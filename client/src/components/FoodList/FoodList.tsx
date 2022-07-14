@@ -22,7 +22,7 @@ export function FoodList(props: IFoodListProps) {
             <div className={styles.title_container}>
                 <div className={styles.title}>Food List</div>
                 <div className={styles.searchBar_container}>
-                    <SearchBar placeholder={'Food name'} data={user.foodList}></SearchBar>
+                    {/* <SearchBar placeholder={'Food name'} data={user.foodList}></SearchBar> */}
                 </div>
             </div>
 

@@ -41,7 +41,7 @@ export function MealList({ totalStats, mealStats }: IMealListProps) {
             });
             dispatch(triggerRefetch());
         } catch (error) {
-            console.log(error);
+            console.error(error);
         }
     };
 

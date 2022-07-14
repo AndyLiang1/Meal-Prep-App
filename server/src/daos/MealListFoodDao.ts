@@ -119,8 +119,8 @@ export class MealListFoodDao {
         for (let meal of day) {
             if (mealId === meal.id) {
                 meal.foods.splice(foodIndex, 1);
+                break
             }
-            break;
         }
     }
     public async delete(user: IUserDocument, dayIndex: number, mealId: string, foodIndex: number) {

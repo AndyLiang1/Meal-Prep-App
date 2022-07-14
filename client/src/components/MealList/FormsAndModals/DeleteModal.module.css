@@ -34,7 +34,7 @@
 .warning_icon {
     height: 100%;
     width: 100%;
-    color: var(--lightyellow);
+    color: rgb(196, 188, 86);
 }
 
 .warning_message_container {

@@ -56,7 +56,7 @@ export function Login({ setDisplayLoginForm }: ILoginProps) {
             localStorage.setItem('loggedIn', 'true');
             navigate('./userData');
         } catch (error) {
-            console.log(error);
+            console.error(error);
         }
     };
     return (

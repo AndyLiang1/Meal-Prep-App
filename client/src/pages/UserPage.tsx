@@ -21,7 +21,6 @@ export type totalStats = {
 
 export function UserPage(props: IUserPageProps) {
     const userId: string = localStorage.getItem('id')!;
-    // console.log(dayIndex);
     const dayIndex = useSelector((state: IRootState) => state.dayIndex);
     const user = useSelector((state: IRootState) => state.user);
     const refetchTrigger = useSelector((state: IRootState) => state.refetchTrigger);

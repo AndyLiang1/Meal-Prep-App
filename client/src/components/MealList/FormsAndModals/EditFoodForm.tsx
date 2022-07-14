@@ -75,7 +75,7 @@ export function EditFoodForm({ fromWhere, food, setEditFoodForm, mealId, foodInd
     });
 
     const [totalStats, setTotalStats] = useState({ calories: food.calories, proteins: food.proteins, carbs: food.carbs, fats: food.carbs });
-    const [newIngActualAmount, setNewIngActualAmount] = useState(0);
+    const [newIngActualAmount, setNewIngActualAmount] = useState<any>(0);
 
     const [showIngCals, setShowIngCals] = useState(false);
     const [showIngP, setShowIngP] = useState(false);
@@ -84,6 +84,7 @@ export function EditFoodForm({ fromWhere, food, setEditFoodForm, mealId, foodInd
 
     const [inputErrorCollection, setInputErrorCollection] = useState<any>(null);
     const [errorMsg, setErrorMsg] = useState<string>('');
+    const [errorNewIngAA, setErrorNewIngAA] = useState(false);
 
     const getFoodInFoodList = async () => {
         const { data, error, loading } = await getFoodListFood();
@@ -93,8 +94,7 @@ export function EditFoodForm({ fromWhere, food, setEditFoodForm, mealId, foodInd
             console.error(data?.getFoodListFood.message);
         } else {
             const ingList = data?.getFoodListFood?.result?.ingredients;
-                setIngredients(ingList);
-            
+            setIngredients(ingList);
         }
     };
     useEffect(() => {
@@ -110,15 +110,21 @@ export function EditFoodForm({ fromWhere, food, setEditFoodForm, mealId, foodInd
     const initialValues = {
         newActualAmount: '',
         name: fromWhere === 'foodList' ? food.name : '',
-        calories: fromWhere === 'foodList' ? food.calories : '',
-        proteins: fromWhere === 'foodList' ? food.proteins : '',
-        carbs: fromWhere === 'foodList' ? food.carbs : '',
-        fats: fromWhere === 'foodList' ? food.fats : '',
-        givenAmount: fromWhere === 'foodList' ? food.givenAmount : '',
+        calories: fromWhere === 'foodList' ? food.calories.toFixed(0) : '',
+        proteins: fromWhere === 'foodList' ? food.proteins.toFixed(2) : '',
+        carbs: fromWhere === 'foodList' ? food.carbs.toFixed(2) : '',
+        fats: fromWhere === 'foodList' ? food.fats.toFixed(2) : '',
+        givenAmount: fromWhere === 'foodList' ? food.givenAmount.toFixed(2) : '',
         actualAmount: ''
     };
 
-    const addToIngredientList = (newIngredientActualAmount: number) => {
+    const addToIngredientList = (newIngredientActualAmount: any) => {
+        if (newIngredientActualAmount === '' || newIngredientActualAmount === '0' || newIngredientActualAmount === NaN) {
+            setErrorNewIngAA(true);
+            return;
+        }
+        newIngredientActualAmount = Number(newIngredientActualAmount);
+
         if (newPotentialIngredient) {
             newPotentialIngredient.actualAmount = newIngredientActualAmount;
             const newIngredientsList = [...ingredients];
@@ -162,7 +168,6 @@ export function EditFoodForm({ fromWhere, food, setEditFoodForm, mealId, foodInd
 
     const checkResponseOk = (response: any) => {
         const actualResponse = response.data[Object.keys(response.data)[0]];
-        console.log(actualResponse);
         if (!actualResponse.ok) {
             setErrorMsg(actualResponse.message);
             return false;
@@ -306,7 +311,6 @@ export function EditFoodForm({ fromWhere, food, setEditFoodForm, mealId, foodInd
             default:
                 break;
         }
-        console.log(editResponse);
         if (!checkResponseOk(editResponse)) {
             return;
         }
@@ -429,23 +433,23 @@ export function EditFoodForm({ fromWhere, food, setEditFoodForm, mealId, foodInd
                                     </div>
                                     <div className={styles.label_amount_container}>
                                         <div className={styles.edit_label}>P:</div>
-                                        <div className={styles.amount}>{((food.proteins * food.actualAmount!) / food.givenAmount).toFixed(0)}</div>
+                                        <div className={styles.amount}>{((food.proteins * food.actualAmount!) / food.givenAmount).toFixed(2)}</div>
                                     </div>
                                     <div className={styles.label_amount_container}>
                                         <div className={styles.edit_label}>C:</div>
-                                        <div className={styles.amount}>{((food.carbs * food.actualAmount!) / food.givenAmount).toFixed(0)}</div>
+                                        <div className={styles.amount}>{((food.carbs * food.actualAmount!) / food.givenAmount).toFixed(2)}</div>
                                     </div>
                                     <div className={styles.label_amount_container}>
                                         <div className={styles.edit_label}>F:</div>
-                                        <div className={styles.amount}>{((food.fats * food.actualAmount!) / food.givenAmount).toFixed(0)}</div>
+                                        <div className={styles.amount}>{((food.fats * food.actualAmount!) / food.givenAmount).toFixed(2)}</div>
                                     </div>
                                     <div className={styles.label_amount_container}>
                                         <div className={styles.edit_label}>Given Amount:</div>
-                                        <div className={styles.amount}>{food.givenAmount.toFixed(0)}</div>
+                                        <div className={styles.amount}>{food.givenAmount.toFixed(2)}</div>
                                     </div>
                                     <div className={styles.label_amount_container}>
                                         <div className={styles.edit_label}>Actual Amount:</div>
-                                        <div className={styles.amount}>{food.actualAmount!.toFixed(0)}</div>
+                                        <div className={styles.amount}>{food.actualAmount!.toFixed(2)}</div>
                                     </div>
                                     <div className={styles.label_amount_container}>
                                         <div className={styles.edit_label}>New Actual Amount:</div>
@@ -482,11 +486,13 @@ export function EditFoodForm({ fromWhere, food, setEditFoodForm, mealId, foodInd
                             >
                                 <option value=""></option>
                                 {user.foodList.map((food: Food, index: number) => {
-                                    return (
-                                        <option key={index} value={food.name}>
-                                            {food.name}
-                                        </option>
-                                    );
+                                    if (!food.ingredients.length) {
+                                        return (
+                                            <option key={index} value={food.name}>
+                                                {food.name}
+                                            </option>
+                                        );
+                                    }
                                 })}
                             </Field>
                             <div className={styles.ing_container}>
@@ -495,26 +501,27 @@ export function EditFoodForm({ fromWhere, food, setEditFoodForm, mealId, foodInd
                                 })}
                             </div>
                             {newPotentialIngredient && (
-                                <div className={styles.potentialNewIng}>
-                                    <div>
-                                        {newPotentialIngredient.name} | Given Amt: {newPotentialIngredient.givenAmount}
-                                        {''}
-                                    </div>
-                                    <div className={styles.potentialNewIng_AA_container}>
-                                        <div>Actual Amt</div>
-                                        <div> </div>
-                                        <Field
-                                            className={styles.potentialIngActualAmount}
-                                            type="number"
-                                            onChange={(e: React.ChangeEvent<HTMLInputElement>) => setNewIngActualAmount(parseInt(e.target.value))}
-                                            value={newIngActualAmount}
-                                        ></Field>
-                                    </div>
+                                <>
+                                    <div className={styles.potentialNewIng}>
+                                        <div>
+                                            {newPotentialIngredient.name} | Given Amt: {newPotentialIngredient.givenAmount}
+                                            {''}
+                                        </div>
+                                        <div className={styles.potentialNewIng_AA_container}>
+                                            <div>Actual Amt</div>
+                                            <div> </div>
+                                            <Field
+                                                className={styles.potentialIngActualAmount}
+                                                onChange={(e: React.ChangeEvent<HTMLInputElement>) => setNewIngActualAmount(e.target.value)}
+                                                value={newIngActualAmount}
+                                            ></Field>
+                                        </div>
 
-                                    <button type="button" className="btn btn-primary" onClick={() => addToIngredientList(newIngActualAmount)}>
-                                        Add Ingredient to Food
-                                    </button>
-                                </div>
+                                        <button type="button" className="btn btn-primary" onClick={() => addToIngredientList(newIngActualAmount)}>
+                                            Add Ingredient to Food
+                                        </button>
+                                    </div>
+                                </>
                             )}
                             {!ingredients.length ? (
                                 <div>

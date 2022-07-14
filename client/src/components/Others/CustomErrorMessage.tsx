@@ -20,9 +20,6 @@ export function CustomErrorMessage({ errorMessage, displayFixedMessage, errorCol
     useEffect(() => {
         for (let i = 0; i < errorCollection?.errorPaths?.length!; i++) {
             if (errorCollection?.errorPaths[i] === name) {
-                if(name === 'calories') {
-                    console.log('setting cals')
-                }
                 setErrIndex(i);
                 return 
             }

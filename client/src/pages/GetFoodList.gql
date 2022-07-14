@@ -7,6 +7,9 @@ query GetFoodList {
             proteins
             carbs
             fats
+            ingredients {
+                name
+            }
             givenAmount
         }
         message

@@ -1,8 +1,10 @@
 import jwt from 'jsonwebtoken';
 import { config } from '../config/config';
+import Logging from '../library/Logging';
 import services from '../services/services';
 
 const checkAuth = async (resolve: any, parent: any, args: any, context: any, info: any) => {
+    Logging.info('here')
     if (!context.authorization) {
         console.error(`Error in ${info.path.key}: no auth token`);
         return {

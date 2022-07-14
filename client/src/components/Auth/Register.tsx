@@ -43,8 +43,8 @@ export function Register({setDisplayRegisterForm}: IRegisterProps) {
                 setRegisterErrorMsg((data!.register as RegisterError).message);
             }
         } catch (error: any) {
-            console.log('Error with registering: ');
-            console.log(error);
+            console.error('Error with registering: ');
+            console.error(error);
         }
     };
 
