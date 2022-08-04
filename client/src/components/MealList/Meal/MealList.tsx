@@ -105,21 +105,21 @@ export function MealList({ totalStats, mealStats }: IMealListProps) {
                                             PRTS: {totalStats.proteins.toFixed(2)}
                                             {'\u00A0'}
                                         </div>
-                                        <div className={styles.stats_percentage}>({((totalStats.proteins / totalStats.calories) * 100).toFixed(0)}%)</div>
+                                        <div className={styles.stats_percentage}>({((totalStats.proteins / totalStats.calories) * 100 * 4).toFixed(0)}%)</div>
                                     </div>
                                     <div className={styles.stats_and_percentage}>
                                         <div className={styles.stats}>
                                             CRBS: {totalStats.carbs.toFixed(2)}
                                             {'\u00A0'}
                                         </div>
-                                        <div className={styles.stats_percentage}>({((totalStats.carbs / totalStats.calories) * 100).toFixed(0)}%)</div>
+                                        <div className={styles.stats_percentage}>({((totalStats.carbs / totalStats.calories) * 100 * 4).toFixed(0)}%)</div>
                                     </div>
                                     <div className={styles.stats_and_percentage}>
                                         <div className={styles.stats}>
                                             FATS: {totalStats.fats.toFixed(2)}
                                             {'\u00A0'}
                                         </div>
-                                        <div className={styles.stats_percentage}>({((totalStats.fats / totalStats.calories) * 100).toFixed(0)}%)</div>
+                                        <div className={styles.stats_percentage}>({((totalStats.fats / totalStats.calories) * 100 * 9).toFixed(0)}%)</div>
                                     </div>
                                 </div>
                             )}
