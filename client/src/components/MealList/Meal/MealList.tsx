@@ -100,13 +100,13 @@ export function MealList({ totalStats, mealStats }: IMealListProps) {
                                 <div className={styles.total_stats}>
                                     <div className={styles.stats}>CALS: {totalStats.calories.toFixed(0)}</div>
                                     <div className={styles.stats}>
-                                        PRTS: {totalStats.proteins.toFixed(2)} ({(totalStats.proteins / totalStats.calories).toFixed(0)}%)
+                                        PRTS: {totalStats.proteins.toFixed(2)} ({((totalStats.proteins / totalStats.calories)*100).toFixed(0)}%)
                                     </div>
                                     <div className={styles.stats}>
-                                        CRBS: {totalStats.carbs.toFixed(2)} ({(totalStats.carbs / totalStats.calories).toFixed(0)}%)
+                                        CRBS: {totalStats.carbs.toFixed(2)} ({((totalStats.carbs / totalStats.calories)*100).toFixed(0)}%)
                                     </div>
                                     <div className={styles.stats}>
-                                        FATS: {totalStats.fats.toFixed(2)} ({(totalStats.fats / totalStats.calories).toFixed(0)}%)
+                                        FATS: {totalStats.fats.toFixed(2)} ({((totalStats.fats / totalStats.calories)*100).toFixed(0)}%)
                                     </div>
                                 </div>
                             )}
