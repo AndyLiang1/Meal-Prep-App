@@ -98,15 +98,28 @@ export function MealList({ totalStats, mealStats }: IMealListProps) {
                         <div className={styles.total_stats_inner_container}>
                             {totalStats && (
                                 <div className={styles.total_stats}>
-                                    <div className={styles.stats}>CALS: {totalStats.calories.toFixed(0)}</div>
-                                    <div className={styles.stats}>
-                                        PRTS: {totalStats.proteins.toFixed(2)} ({((totalStats.proteins / totalStats.calories)*100).toFixed(0)}%)
+                                    <div className={styles.stats_cals}>CALS: {totalStats.calories.toFixed(0)}</div>
+
+                                    <div className={styles.stats_and_percentage}>
+                                        <div className={styles.stats}>
+                                            PRTS: {totalStats.proteins.toFixed(2)}
+                                            {'\u00A0'}
+                                        </div>
+                                        <div className={styles.stats_percentage}>({((totalStats.proteins / totalStats.calories) * 100).toFixed(0)}%)</div>
                                     </div>
-                                    <div className={styles.stats}>
-                                        CRBS: {totalStats.carbs.toFixed(2)} ({((totalStats.carbs / totalStats.calories)*100).toFixed(0)}%)
+                                    <div className={styles.stats_and_percentage}>
+                                        <div className={styles.stats}>
+                                            CRBS: {totalStats.carbs.toFixed(2)}
+                                            {'\u00A0'}
+                                        </div>
+                                        <div className={styles.stats_percentage}>({((totalStats.carbs / totalStats.calories) * 100).toFixed(0)}%)</div>
                                     </div>
-                                    <div className={styles.stats}>
-                                        FATS: {totalStats.fats.toFixed(2)} ({((totalStats.fats / totalStats.calories)*100).toFixed(0)}%)
+                                    <div className={styles.stats_and_percentage}>
+                                        <div className={styles.stats}>
+                                            FATS: {totalStats.fats.toFixed(2)}
+                                            {'\u00A0'}
+                                        </div>
+                                        <div className={styles.stats_percentage}>({((totalStats.fats / totalStats.calories) * 100).toFixed(0)}%)</div>
                                     </div>
                                 </div>
                             )}
