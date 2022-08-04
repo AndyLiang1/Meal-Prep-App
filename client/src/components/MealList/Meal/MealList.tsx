@@ -87,7 +87,7 @@ export function MealList({ totalStats, mealStats }: IMealListProps) {
                             {user.day.map((meal: Meal, index: number) => {
                                 return (
                                     <div className={styles.meal_container}>
-                                        <MealListMeal key={index} meal={meal} mealStats={mealStats}></MealListMeal>;
+                                        <MealListMeal key={index} meal={meal} mealStats={mealStats}></MealListMeal>
                                     </div>
                                 );
                             })}
@@ -99,9 +99,15 @@ export function MealList({ totalStats, mealStats }: IMealListProps) {
                             {totalStats && (
                                 <div className={styles.total_stats}>
                                     <div className={styles.stats}>CALS: {totalStats.calories.toFixed(0)}</div>
-                                    <div className={styles.stats}>PRTS: {totalStats.proteins.toFixed(2)}</div>
-                                    <div className={styles.stats}>CRBS: {totalStats.carbs.toFixed(2)}</div>
-                                    <div className={styles.stats}>FATS: {totalStats.fats.toFixed(2)}</div>
+                                    <div className={styles.stats}>
+                                        PRTS: {totalStats.proteins.toFixed(2)} ({(totalStats.proteins / totalStats.calories).toFixed(0)}%)
+                                    </div>
+                                    <div className={styles.stats}>
+                                        CRBS: {totalStats.carbs.toFixed(2)} ({(totalStats.carbs / totalStats.calories).toFixed(0)}%)
+                                    </div>
+                                    <div className={styles.stats}>
+                                        FATS: {totalStats.fats.toFixed(2)} ({(totalStats.fats / totalStats.calories).toFixed(0)}%)
+                                    </div>
                                 </div>
                             )}
                         </div>
