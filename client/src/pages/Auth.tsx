@@ -45,3 +45,4 @@ export function Auth(props: IAuthProps) {
         </div>
     );
 }
+

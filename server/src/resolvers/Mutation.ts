@@ -10,7 +10,6 @@ import { createFoodList, editFoodList, deleteFoodList } from './Mutations/FoodLi
 import {createMealListMeal, deleteMealListMeal} from './Mutations/MealListMealResolver'
 import {createMealListFood, deleteMealListFood, editMealListFood} from './Mutations/MealListFoodResolver'
 
-
 const Mutation = {
     register,
     login,
@@ -28,3 +27,5 @@ const Mutation = {
 };
 
 export default Mutation;
+
+
